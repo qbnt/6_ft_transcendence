@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: node:16
+    container_name: pong_frontend
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    command: >
+      sh -c "npm install && npm start"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - oui
+
+  backend:
+    image: ruby:2.7
+    container_name: pong_backend
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    command: >
+      sh -c "bundle install && ruby app.rb"
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+    networks:
+      - oui
+
+  db:
+    image: postgres:13
+    container_name: pong_db
+    env_file: .env
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - oui
+
+  websocket:
+    image: node:14
+    container_name: pong_websocket
+    working_dir: /app
+    volumes:
+      - ./websocket:/app
+    command: >
+      sh -c "npm install && npm run start:ws"
+    ports:
+      - "8080:8080"
+    networks:
+      - oui
+
+  nginx:
+    image: nginx:latest
+    container_name: pong_nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - oui
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  oui:
+    driver: bridge
