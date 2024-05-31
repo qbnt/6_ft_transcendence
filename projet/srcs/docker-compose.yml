@@ -1,76 +1,188 @@
 version: '3.8'
 
 services:
-  frontend:
-    image: node:16
-    container_name: pong_frontend
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    command: >
-      sh -c "npm install && npm start"
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-    networks:
-      - oui
-
-  backend:
-    image: ruby:2.7
-    container_name: pong_backend
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-    command: >
-      sh -c "bundle install && ruby app.rb"
-    ports:
-      - "4000:4000"
-    depends_on:
-      - db
-    networks:
-      - oui
-
-  db:
-    image: postgres:13
-    container_name: pong_db
-    env_file: .env
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    networks:
-      - oui
-
-  websocket:
-    image: node:14
-    container_name: pong_websocket
-    working_dir: /app
-    volumes:
-      - ./websocket:/app
-    command: >
-      sh -c "npm install && npm run start:ws"
-    ports:
-      - "8080:8080"
-    networks:
-      - oui
+#-----------------------------------Frontend-----------------------------------#
 
   nginx:
     image: nginx:latest
-    container_name: pong_nginx
+    container_name: nginx
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./requirements/Nginx/nginx.conf:/etc/nginx/nginx.conf
+    networks:
+      - app_network
     ports:
       - "80:80"
+      - "8080:8080"
       - "443:443"
     depends_on:
       - frontend
-      - backend
-    networks:
-      - oui
 
-volumes:
-  pgdata:
-    driver: local
+  frontend:
+    image: frontend:1.0.0
+    container_name: frontend
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/usr/src/app
+    networks:
+      - app_network
+    ports:
+      - "6001:6001"
+      - "6002:6002"
+    env_file:
+      - .env
+    depends_on:
+      - liveChat
+      - userService
+      - tournamentService
+
+#-----------------------------------Backend------------------------------------#
+
+  liveChat:
+    image: liveChat:1.0.0
+    container_name: liveChat
+    build:
+      context: ./backend/liveChat
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/liveChat:/usr/src/app
+    networks:
+      - app_network
+    ports:
+      - "6003:6003"
+    env_file:
+      - .env
+    depends_on:
+      - postgresql
+
+  userService:
+    image: userService:1.0.0
+    container_name: userService
+    build:
+      context: ./backend/userService
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/userService:/usr/src/app
+    networks:
+      - app_network
+    ports:
+      - "6004:6004"
+    env_file:
+      - .env
+    depends_on:
+      - postgresql
+
+  tournamentService:
+    image: tournamentService:1.0.0
+    container_name: tournamentService
+    build:
+      context: ./backend/tournamentService
+      dockerfile: Dockerfile
+    volumes:
+      - ./backend/tournamentService:/usr/src/app
+    networks:
+      - app_network
+    ports:
+      - "6005:6005"
+    env_file:
+      - .env
+    depends_on:
+      - postgresql
+
+#-------------------------------Base de donnee---------------------------------#
+
+  postgresql:
+    image: postgres:13
+    container_name: appDb
+    env_file:
+      - .env
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - app_network
+    restart: on-failure
+
+#----------------------------------ELK stack-----------------------------------#
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.1
+    container_name: elasticsearch
+    env_file:
+      - .env
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - app_network
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.10.1
+    container_name: logstash
+    env_file:
+      - .env
+    volumes:
+      - ./requirements/ELK/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./requirements/ELK/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5044:5044"  # Beats input port
+      - "9600:9600"  # Monitoring API
+    networks:
+      - app_network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.1
+    container_name: kibana
+    networks:
+      - app_network
+    ports:
+      - "5601:5601"
+    env_file:
+      - .env
+
+#----------------------------------Monitoring----------------------------------#
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./requirements/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - app_network
+    restart: on-failure
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    volumes:
+      - ./requirements/Grafana/grafana-storage:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus
+    networks:
+      - app_network
+    restart: on-failure
+
 
 networks:
-  oui:
+  app_network:
     driver: bridge
+
+volumes:
+  db:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/PostgreSQL/db/
+  esdata:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./requirements/ELK/esdata/
