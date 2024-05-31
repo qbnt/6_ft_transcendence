@@ -40,13 +40,13 @@ services:
 #-----------------------------------Backend------------------------------------#
 
   liveChat:
-    image: liveChat:1.0.0
+    image: live_chat:1.0.0
     container_name: liveChat
     build:
-      context: ./backend/liveChat
+      context: ./backend/live_chat
       dockerfile: Dockerfile
     volumes:
-      - ./backend/liveChat:/usr/src/app
+      - ./backend/live_chat:/usr/src/app
     networks:
       - app_network
     ports:
@@ -57,13 +57,13 @@ services:
       - postgresql
 
   userService:
-    image: userService:1.0.0
+    image: user_service:1.0.0
     container_name: userService
     build:
-      context: ./backend/userService
+      context: ./backend/user_service
       dockerfile: Dockerfile
     volumes:
-      - ./backend/userService:/usr/src/app
+      - ./backend/user_service:/usr/src/app
     networks:
       - app_network
     ports:
@@ -74,13 +74,13 @@ services:
       - postgresql
 
   tournamentService:
-    image: tournamentService:1.0.0
+    image: tournament_service:1.0.0
     container_name: tournamentService
     build:
-      context: ./backend/tournamentService
+      context: ./backend/tournament_service
       dockerfile: Dockerfile
     volumes:
-      - ./backend/tournamentService:/usr/src/app
+      - ./backend/tournament_service:/usr/src/app
     networks:
       - app_network
     ports:
@@ -110,6 +110,8 @@ services:
     container_name: elasticsearch
     env_file:
       - .env
+    environment:
+      - discovery.type=single-node
     volumes:
       - esdata:/usr/share/elasticsearch/data
     ports:
@@ -159,7 +161,7 @@ services:
     image: grafana/grafana:latest
     container_name: grafana
     volumes:
-      - ./requirements/Grafana/grafana-storage:/var/lib/grafana
+      - grafana-storage:/var/lib/grafana
     ports:
       - "3000:3000"
     depends_on:
@@ -179,10 +181,16 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ./requirements/PostgreSQL/db/
+      device: ./db/db
   esdata:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ./requirements/ELK/esdata/
+      device: ./db/esdata/
+  grafana-storage:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./db/grafana-db
