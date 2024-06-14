@@ -218,7 +218,7 @@ volumes:
         cap_add:
           - IPC_LOCK
         volumes:
-          - vault-volume:/data
+          - ./HashiCorpVault:/data
         healthcheck:
           retries: 5
         command: server -dev -dev-root-token-id="00000000-0000-0000-0000-000000000000"
