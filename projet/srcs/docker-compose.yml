@@ -198,6 +198,8 @@ volumes:
     driver: local
   grafana-storage:
     driver: local
+  HashiCorp:
+    driver: local
 
 #----------------------------------Hashicorp----------------------------------#
 
