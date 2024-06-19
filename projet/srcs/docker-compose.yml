@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
 #-----------------------------------Frontend-----------------------------------#
@@ -14,28 +14,28 @@ services:
       - "80:80"
       - "8080:8080"
       - "443:443"
-    depends_on:
-      - frontend
-
-  frontend:
-    image: frontend:1.0.0
-    container_name: frontend
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/usr/src/app
-    networks:
-      - app_network
-    ports:
-      - "6001:6001"
-      - "6002:6002"
-    env_file:
-      - .env
     # depends_on:
-    #   - liveChat
-    #   - userService
-    #   - tournamentService
+    #   - frontend
+
+  # frontend:
+  #   image: frontend:1.0.0
+  #   container_name: frontend
+  #   build:
+  #     context: ./frontend/
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend:/usr/src/app
+  #   networks:
+  #     - app_network
+  #   ports:
+  #     - "6001:6001"
+  #     - "6002:6002"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - liveChat
+  #     - userService
+  #     - tournamentService
 
 #-----------------------------------Backend------------------------------------#
 
@@ -106,86 +106,81 @@ services:
 #----------------------------------ELK stack-----------------------------------#
 
   elasticsearch:
-    image: elasticsearch:8.13.4
-    container_name: elasticsearch
+    image: elasticsearch:7.16.1
+    container_name: es
     environment:
-      - discovery.type=single-node
-      - cluster.name=docker-cluster
-      - network.host=0.0.0.0
-      - http.port=9200
-      - xpack.security.enabled=false
-    volumes:
-      - ELKdata:/usr/share/elasticsearch/data
+      discovery.type: single-node
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
       - "9300:9300"
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 10s
+      retries: 3
     networks:
       - app_network
 
   logstash:
-    image: logstash:8.13.4
-    container_name: logstash
-    depends_on:
-      - elasticsearch
+    image: logstash:7.16.1
+    container_name: log
     environment:
-      - xpack.monitoring.elasticsearch.hosts=http://elasticsearch:9200
-      - path.data=/usr/share/logstash/data
-      - config.reload.automatic=true
-      - config.reload.interval=3s
+      discovery.seed_hosts: logstash
+      LS_JAVA_OPTS: "-Xms512m -Xmx512m"
     volumes:
-      - ./requirements/ELK/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./requirements/ELK/test.log:/usr/share/logstash/test.log
+      - ./requirements/ELK/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash-nginx.config
+      - ./requirements/ELK/nginx.log:/home/nginx.log
     ports:
+      - "5001:5001/tcp"
+      - "5001:5001/udp"
       - "5044:5044"
       - "9600:9600"
+    depends_on:
+      - elasticsearch
     networks:
       - app_network
+    command: logstash -f /usr/share/logstash/pipeline/logstash-nginx.config
 
   kibana:
-    image: kibana:8.13.4
-    container_name: kibana
-    depends_on:
-      - logstash
-    networks:
-      - app_network
+    image: kibana:7.16.1
+    container_name: kib
     ports:
       - "5601:5601"
-    environment:
-      - server.name=kibana
-      - server.host=0.0.0.0
-      - elasticsearch.hosts=http://elasticsearch:9200
-      - logstash.hosts=http://logstash:9600
-      - xpack.monitoring.ui.container.elasticsearch.enabled=true
-      - xpack.monitoring.collection.enabled=true
-      - xpack.observability_ai_assistant.enabled=false
-
+    depends_on:
+      - elasticsearch
+    networks:
+      - app_network
 
 #----------------------------------Monitoring----------------------------------#
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   volumes:
-  #     - ./requirements/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   ports:
-  #     - "9090:9090"
-  #   networks:
-  #     - app_network
-  #   restart: on-failure
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./requirements/prometheus:/etc/prometheus
+      - prom_data:/prometheus
+    networks:
+      - app_network
 
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   container_name: grafana
-  #   volumes:
-  #     - grafana-storage:/var/lib/grafana
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - prometheus
-  #   networks:
-  #     - app_network
-  #   restart: on-failure
-
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./requirements/grafana:/etc/grafana/provisioning/datasources
+    networks:
+      - app_network
 
 networks:
   app_network:
@@ -196,5 +191,5 @@ volumes:
     driver: local
   ELKdata:
     driver: local
-  grafana-storage:
+  prom_data:
     driver: local
