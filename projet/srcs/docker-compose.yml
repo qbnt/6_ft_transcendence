@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
 #-----------------------------------Frontend-----------------------------------#
@@ -14,28 +14,28 @@ services:
       - "80:80"
       - "8080:8080"
       - "443:443"
-    depends_on:
-      - frontend
-
-  frontend:
-    image: frontend:1.0.0
-    container_name: frontend
-    build:
-      context: ./frontend/
-      dockerfile: Dockerfile
-    volumes:
-      - ./frontend:/usr/src/app
-    networks:
-      - app_network
-    ports:
-      - "6001:6001"
-      - "6002:6002"
-    env_file:
-      - .env
     # depends_on:
-    #   - liveChat
-    #   - userService
-    #   - tournamentService
+    #   - frontend
+
+  # frontend:
+  #   image: frontend:1.0.0
+  #   container_name: frontend
+  #   build:
+  #     context: ./frontend/
+  #     dockerfile: Dockerfile
+  #   volumes:
+  #     - ./frontend:/usr/src/app
+  #   networks:
+  #     - app_network
+  #   ports:
+  #     - "6001:6001"
+  #     - "6002:6002"
+  #   env_file:
+  #     - .env
+  #   depends_on:
+  #     - liveChat
+  #     - userService
+  #     - tournamentService
 
 #-----------------------------------Backend------------------------------------#
 
@@ -156,36 +156,33 @@ services:
       - elasticsearch.hosts=http://elasticsearch:9200
       - logstash.hosts=http://logstash:9600
       - xpack.monitoring.ui.container.elasticsearch.enabled=true
-      - xpack.monitoring.collection.enabled=true
       - xpack.observability_ai_assistant.enabled=false
-
+      - xpack.monitoring.collection.enabled=true
 
 #----------------------------------Monitoring----------------------------------#
 
-  # prometheus:
-  #   image: prom/prometheus:latest
-  #   container_name: prometheus
-  #   volumes:
-  #     - ./requirements/Prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-  #   ports:
-  #     - "9090:9090"
-  #   networks:
-  #     - app_network
-  #   restart: on-failure
-
-  # grafana:
-  #   image: grafana/grafana:latest
-  #   container_name: grafana
-  #   volumes:
-  #     - grafana-storage:/var/lib/grafana
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - prometheus
-  #   networks:
-  #     - app_network
-  #   restart: on-failure
-
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+    volumes:
+      - ./requirements/prometheus:/etc/prometheus
+      - prom_data:/prometheus
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=grafana
+    volumes:
+      - ./requirements/grafana:/etc/grafana/provisioning/datasources
 
 networks:
   app_network:
@@ -196,7 +193,7 @@ volumes:
     driver: local
   ELKdata:
     driver: local
-  grafana-storage:
+  prom_data:
     driver: local
   HashiCorp:
     driver: local
