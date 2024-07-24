@@ -119,6 +119,8 @@ services:
     volumes:
       - ./requirements/grafana:/etc/grafana/provisioning/datasources
 
+#----------------------------------HashiCorpV----------------------------------#
+
   # HashiCorpVault:
   #   version: '3.6'
   #   services:
@@ -159,5 +161,3 @@ volumes:
     driver: local
   HashiCorp:
     driver: local
-
-#----------------------------------Hashicorp----------------------------------#
