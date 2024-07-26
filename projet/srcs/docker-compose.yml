@@ -18,6 +18,8 @@ services:
   django:
     container_name: django
     build: web/
+    volumes:
+    - "./web/:/usr/src/app"
     networks:
       - app_network
     ports:
