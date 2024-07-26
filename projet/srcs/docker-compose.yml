@@ -30,6 +30,7 @@ services:
       - "8000:8000"
     depends_on:
       - postgresql
+    restart: on-failure
 
 #-------------------------------Base de donnee---------------------------------#
 
