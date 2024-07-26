@@ -1,13 +1,5 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-	<meta charset="utf-8">
-	<title>Un pong en cours de construction</title>
-	<link rel="stylesheet" href="{% static 'home/css/main.css' %}">
-</head>
-<body>
-	<h1>Hello word!</h1>
+{% extends 'base.html' %}
+{% block content %}
+	<h1>Page de l'application pong</h1>
 	<p> {{ message }}</p>
-</body>
-</html>
+{%endblock%}
