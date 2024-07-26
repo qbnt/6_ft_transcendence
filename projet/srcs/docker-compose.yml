@@ -14,10 +14,14 @@ services:
       - "80:80"
       - "8080:8080"
       - "443:443"
+    depends_on:
+      - django
 
   django:
     container_name: django
     build: web/
+    env_file:
+      - .env
     volumes:
     - "./web/:/usr/src/app"
     networks:
@@ -31,13 +35,15 @@ services:
 
   postgresql:
     image: postgres:13
-    container_name: appDb
+    container_name: postgresql
     env_file:
       - .env
     volumes:
       - db:/var/lib/postgresql/data
     networks:
       - app_network
+    ports:
+      - "5432:5432"
     restart: on-failure
 
 #----------------------------------ELK stack-----------------------------------#
@@ -126,29 +132,29 @@ services:
   # HashiCorpVault:
   #   version: '3.6'
   #   services:
-  vault:
-    image: vault:1.13.3
-    container_name: vault
-    restart: on-failure:10
-    ports:
-      - "8201:8201"
-    environment:
-      VAULT_ADDR: 'https://0.0.0.0:8201'
-      VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8201","tls_disable":"0", \
-                          "tls_cert_file":"/HashiCorpVault/requirements/certificate.pem", \
-                          "tls_key_file":"/HashiCorpVault/requirements/key.pem"}}], \
-                          "default_lease_ttl": "168h", "max_lease_ttl": "720h"}, "ui": true}'
-      VAULT_DEV_ROOT_TOKEN_ID: '3f6104e8-af38-48fd-b2d0-475797cc04a5'
-      VAULT_TOKEN: 'hvs.07jE2OHP3ysgy1Y9pdkwKT16'
-    cap_add:
-      - IPC_LOCK
-    volumes:
-      - ./HashiCorpVault:/data
-    healthcheck:
-      retries: 5
-    command: server -dev -dev-root-token-id="3f6104e8-af38-48fd-b2d0-475797cc04a5"
-    networks:
-      - app_network
+  # vault:
+  #   image: vault:1.13.3
+  #   container_name: vault
+  #   restart: on-failure:10
+  #   ports:
+  #     - "8201:8201"
+  #   environment:
+  #     VAULT_ADDR: 'https://0.0.0.0:8201'
+  #     VAULT_LOCAL_CONFIG: '{"listener": [{"tcp":{"address": "0.0.0.0:8201","tls_disable":"0", \
+  #                         "tls_cert_file":"/HashiCorpVault/requirements/certificate.pem", \
+  #                         "tls_key_file":"/HashiCorpVault/requirements/key.pem"}}], \
+  #                         "default_lease_ttl": "168h", "max_lease_ttl": "720h"}, "ui": true}'
+  #     VAULT_DEV_ROOT_TOKEN_ID: '3f6104e8-af38-48fd-b2d0-475797cc04a5'
+  #     VAULT_TOKEN: 'hvs.07jE2OHP3ysgy1Y9pdkwKT16'
+  #   cap_add:
+  #     - IPC_LOCK
+  #   volumes:
+  #     - ./HashiCorpVault:/data
+  #   healthcheck:
+  #     retries: 5
+  #   command: server -dev -dev-root-token-id="3f6104e8-af38-48fd-b2d0-475797cc04a5"
+  #   networks:
+  #     - app_network
 
 networks:
   app_network:
