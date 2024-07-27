@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Détail de l'Utilisateur
+{% endblock %}
+
+{% block content %}
+	<h2>Utilisateurs</h2>
+    <h3>Détail de l'Utilisateur</h3>
+    <div class="user-details">
+        <p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+    <a href="{% url 'user_list' %}">Retour à la liste des utilisateurs</a>
+{% endblock %}
