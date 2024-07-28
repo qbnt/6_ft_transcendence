@@ -11,5 +11,7 @@
         <p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
         <p><strong>Email:</strong> {{ user.email }}</p>
     </div>
-    <a href="{% url 'user_list' %}">Retour à la liste des utilisateurs</a>
+
+	<a href="{% url 'user_edit' user.id %}"> Modifier le profil de {{ user.username }} <br></a>
+    <a href="{% url 'user_list' %}"> Retour à la liste des utilisateurs </a>
 {% endblock %}

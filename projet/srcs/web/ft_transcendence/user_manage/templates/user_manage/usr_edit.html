@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Éditer l'Utilisateur
+{% endblock %}
+
+{% block content %}
+    <h2>Éditer l'Utilisateur</h2>
+    <form action="{% url 'user_edit' user.id %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    </form>
+    <br>
+    <button onclick="location.href='{% url 'user_list' %}';" class="btn btn-secondary">Retour à la liste des utilisateurs</button>
+{% endblock %}
