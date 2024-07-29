@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Créer un compte</h1>
+
+{% for message in messages %}
+	<p>{{ message }}</p>
+{% endfor %}
+
+<form method="post">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Valider">
+</form>
+
+{% endblock content %}

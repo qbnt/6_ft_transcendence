@@ -108,6 +108,10 @@ main h3 {
     font-weight: 300;
 }
 
+main h1 {
+    text-align: center;
+}
+
 ul {
     list-style-type: none;
     padding: 0;
@@ -204,5 +208,17 @@ footer p {
 }
 
 .button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.user-details {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
 }
