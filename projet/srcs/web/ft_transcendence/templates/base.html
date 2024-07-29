@@ -12,9 +12,9 @@
 
 <body>
     <header>
-        <h1>ft_transcendence</h1>
+        <h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
 		{% if user.is_authenticated %}
-			<p>Connecté sous {{ user.username }} | <a href="{% url 'user_manage:logout' %}">Déconnexion</a></p>
+			<p>Connecté sous <a href= {% url 'user_manage:edit' %}>{{ user.username }}</a> | <a href="{% url 'user_manage:logout' %}">Déconnexion</a></p>
 		{% else %}
 			<p><a href="{% url 'user_manage:login' %}">Connextion</a> | 
 				<a href="{% url 'user_manage:register' %}">Créer un compte</a></p>

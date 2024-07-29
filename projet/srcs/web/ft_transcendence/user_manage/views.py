@@ -1,7 +1,10 @@
-from django.contrib.auth.forms	import AuthenticationForm, UserCreationForm, UserChangeForm
-from django.contrib.auth		import authenticate, login, logout
-from django.contrib				import messages
-from django.shortcuts			import render, redirect
+from django.contrib.auth			import authenticate, login, logout
+from django.contrib.auth.forms		import AuthenticationForm
+from django.contrib.auth.models		import User
+from django.contrib.auth.decorators	import login_required
+from django.contrib					import messages
+from django.shortcuts				import render, redirect
+from .forms							import CustomUserUpdateForm, CustomUserCreationForm
 
 
 def	login_user(request):
@@ -26,12 +29,26 @@ def	logout_user(request):
 
 def	register_user(request):
 	if request.method == 'POST':
-		form = UserCreationForm(request.POST)
+		form = CustomUserCreationForm(request.POST)
 		if form.is_valid():
 			user = form.save()
 			login(request, user)
 			return redirect("home:index")
 	else:
-		form = UserCreationForm()
+		form = CustomUserCreationForm()
 
 	return render(request, "user_manage/register.html", {'form': form})
+
+@login_required
+def edit_user(request):
+    user = request.user
+    if request.method == 'POST':
+        form = CustomUserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            messages.success(request, 'Vos informations ont été mises à jour avec succès.')
+            return redirect('home:index')
+    else:
+        form = CustomUserUpdateForm(instance=user)
+    return render(request, 'user_manage/edit.html', {'form': form})
