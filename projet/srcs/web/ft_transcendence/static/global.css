@@ -1,169 +1,208 @@
-/* Reset des styles par défaut du navigateur */
-* {
+/* Global Styles */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f6f9;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-/* Style du corps de la page */
-body {
-    font-family: Arial, sans-serif;
-    line-height: 1.6;
-    background-color: #f4f4f4;
     color: #333;
-    margin: 20px;
 }
 
-/* Styles des en-têtes */
-h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 15px;
-    color: #222;
-}
-
-h1 {
-    font-size: 2.5em;
-}
-
-h2 {
-    font-size: 2em;
-}
-
-h3 {
-    font-size: 1.75em;
-}
-
-h4 {
-    font-size: 1.5em;
-}
-
-h5 {
-    font-size: 1.25em;
-}
-
-h6 {
-    font-size: 1em;
-}
-
-/* Style des paragraphes */
-p {
-    margin-bottom: 20px;
-}
-
-/* Style des liens */
-a {
-    color: #3498db;
-    text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-/* Style des listes */
-ul, ol {
-    margin-bottom: 20px;
-    padding-left: 20px;
-}
-
-li {
-    margin-bottom: 10px;
-}
-
-/* Style des boutons */
-button, .button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 1em;
-    color: #fff;
-    background-color: #3498db;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+/* Header Styles */
+header {
+    background-color: #343a40;
+    color: white;
+    padding: 20px;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 400;
+}
+
+nav {
+    margin: 10px 0;
+}
+
+.nav-menu {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-item {
+    margin: 0 20px;
+}
+
+.nav-item a {
+    color: white;
     text-decoration: none;
-}
-
-button:hover, .button:hover {
-    background-color: #2980b9;
-}
-
-/* Style des formulaires */
-input, textarea, select {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
+    padding: 10px 15px;
     border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
-textarea {
-    height: 150px;
+.nav-item a:hover {
+    background-color: #495057;
 }
 
-input[type="submit"] {
-    background-color: #3498db;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-input[type="submit"]:hover {
-    background-color: #2980b9;
-}
-
-/* Style des tables */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-th, td {
-    padding: 10px;
-    border: 1px solid #ccc;
-    text-align: left;
-}
-
-th {
-    background-color: #f4f4f4;
-}
-
-/* Classes utilitaires */
-.text-center {
-    text-align: center;
-}
-
-.text-right {
-    text-align: right;
-}
-
-.text-left {
-    text-align: left;
-}
-
-.margin-top {
+/* Login Form Styles */
+.login-form {
     margin-top: 20px;
 }
 
-.margin-bottom {
+.login-form form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"],
+.login-form button {
+    padding: 10px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    flex: 1;
+}
+
+.login-form button {
+    background-color: #495057;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-form button:hover {
+    background-color: #343a40;
+}
+
+/* Main Content Styles */
+main {
+    padding: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+main h2 {
+    font-size: 24px;
     margin-bottom: 20px;
+    font-weight: 300;
 }
 
-.padding {
+main h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+    font-weight: 300;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.user-list .user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.user-list .user-item:hover {
+    transform: translateY(-5px);
+}
+
+.user-list .user-item .button-group a {
+    margin-left: 10px;
+}
+
+form {
+    background-color: #fff;
     padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.bg-primary {
-    background-color: #3498db;
-    color: #fff;
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form input[type="submit"],
+form button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
 }
 
-.bg-secondary {
-    background-color: #2ecc71;
-    color: #fff;
+form input[type="submit"],
+form button {
+    background-color: #343a40;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.bg-danger {
-    background-color: #e74c3c;
-    color: #fff;
+form input[type="submit"]:hover,
+form button:hover {
+    background-color: #495057;
+}
+
+/* Footer Styles */
+footer {
+    background-color: #343a40;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    margin: 0;
+}
+
+/* Additional Styles */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #343a40;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #495057;
+}
+
+.button-container {
+    margin-bottom: 20px;
 }
