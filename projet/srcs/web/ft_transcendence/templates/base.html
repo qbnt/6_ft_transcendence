@@ -9,25 +9,33 @@
     <link rel="stylesheet" href="{% static 'global.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
+
 <body>
     <header>
-        <h1>ft_transcendence</h1>
-        <nav>
-            <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/user/">User</a></li>
-                <li><a href="/live-chat/">Live Chat</a></li>
-            </ul>
-        </nav>
+        <h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <p>
+                    Connecté sous {{ user.username }}<br>
+                    <a href="{% url 'user_manage:edit' %}">Modifier le profil</a> / 
+                    <a href="{% url 'user_manage:logout' %}">Déconnexion</a>
+                </p>
+            {% else %}
+                <p>
+                    <a href="{% url 'user_manage:login' %}">Connexion</a> | 
+                    <a href="{% url 'user_manage:register' %}">Créer un compte</a>
+                </p>
+            {% endif %}
+        </div>
     </header>
+
     <main>
         {% block content %}
         {% endblock %}
     </main>
+
     <footer>
         <p>&copy; 2024 ft_transcendence</p>
     </footer>
-    {% comment %} <script src="{% static 'js/scripts.js' %}"></script>
-    {% block extra_scripts %}{% endblock %} {% endcomment %}
 </body>
 </html>

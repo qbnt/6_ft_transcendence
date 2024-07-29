@@ -17,10 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-	path('', include('home.urls')),
-	path('pong/', include('pong_game.urls')),
-	path('tournament/', include('tournament.urls')),
-	path('live-chat/', include('live_chat.urls')),
-	path('user/', include('user_manage.urls')),
+	path('', include('home.urls'), name='home'),
+	path('pong/', include('pong_game.urls'), name='pong'),
+	path('tournament/', include('tournament.urls'), name='tournament'),
+	path('live-chat/', include('live_chat.urls'), name='chat'),
+	path('acconts/', include('user_manage.urls'), name='accounts'),
     path('admin/', admin.site.urls),
 ]

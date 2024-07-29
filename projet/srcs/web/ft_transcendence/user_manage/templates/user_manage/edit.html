@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Modifier Utilisateur
+{% endblock %}
+
+{% block content %}
+    <h2>Modifier Utilisateur</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+    <div class="password-change-container">
+        <a href="{% url 'user_manage:pw_update' %}" class="btn btn-secondary">Changer de mot de passe</a>
+    </div>
+{% endblock %}
