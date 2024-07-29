@@ -13,12 +13,20 @@
 <body>
     <header>
         <h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
-		{% if user.is_authenticated %}
-			<p>Connecté sous <a href= {% url 'user_manage:edit' %}>{{ user.username }}</a> | <a href="{% url 'user_manage:logout' %}">Déconnexion</a></p>
-		{% else %}
-			<p><a href="{% url 'user_manage:login' %}">Connextion</a> | 
-				<a href="{% url 'user_manage:register' %}">Créer un compte</a></p>
-		{% endif %}
+        <div class="user-info">
+            {% if user.is_authenticated %}
+                <p>
+                    Connecté sous {{ user.username }}<br>
+                    <a href="{% url 'user_manage:edit' %}">Modifier le profil</a> / 
+                    <a href="{% url 'user_manage:logout' %}">Déconnexion</a>
+                </p>
+            {% else %}
+                <p>
+                    <a href="{% url 'user_manage:login' %}">Connexion</a> | 
+                    <a href="{% url 'user_manage:register' %}">Créer un compte</a>
+                </p>
+            {% endif %}
+        </div>
     </header>
 
     <main>

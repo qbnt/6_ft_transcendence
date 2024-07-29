@@ -12,9 +12,8 @@ header {
     background-color: #19491f;
     color: white;
     padding: 20px;
-    text-align: center;
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 
@@ -24,6 +23,28 @@ header h1 {
     font-weight: 400;
 }
 
+header h1 a {
+    color: white;
+    text-decoration: none;
+}
+
+.user-info p {
+    margin: 0;
+	text-align:center;
+}
+
+.user-info a {
+    color: white;
+    text-decoration: none;
+    margin: 0 5px;
+    transition: color 0.3s;
+}
+
+.user-info a:hover {
+    color: #8c8c8c;
+}
+
+/* Navigation Menu Styles */
 nav {
     margin: 10px 0;
 }
@@ -100,6 +121,7 @@ main h2 {
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: 300;
+    text-align: center;
 }
 
 main h3 {
@@ -221,4 +243,10 @@ footer p {
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-bottom: 20px;
+}
+
+/* Styles for the edit user form and password change button */
+.password-change-container {
+    text-align: center; /* Center the button */
+    margin-top: 20px; /* Space between form and button */
 }
