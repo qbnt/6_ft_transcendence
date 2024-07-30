@@ -21,12 +21,12 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
     
     Ajoutez-y les variables nécessaires :
        # .env
-       POSTGRES_USER=user
-       POSTGRES_PASSWORD=password
-       POSTGRES_DB=pongdb
-       DJANGO_ADMIN_USER: admin
-       DJANGO_ADMIN_MAIL: admin@test.test
-       DJANGO_ADMIN_PASS: admin
+       POSTGRES_USER=user  
+       POSTGRES_PASSWORD=password  
+       POSTGRES_DB=pongdb  
+       DJANGO_ADMIN_USER: admin  
+       DJANGO_ADMIN_MAIL: admin@test.test  
+       DJANGO_ADMIN_PASS: admin  
 
 4. Démarrez les services avec Docker Compose :
     bash
