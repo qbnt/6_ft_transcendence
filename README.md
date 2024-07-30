@@ -12,20 +12,20 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
 
 1. Clonez le dépôt :  
    ```
-    bash  
+   bash  
       git clone https://github.com/qbnt/6_ft_transcendence.git  
       cd 6_ft_transcendence
    ```
 
 3. Configurez les variables d'environnement :
    ```
-    bash  
+   bash  
       touch .env
    ```
     
     Ajoutez-y les variables nécessaires :
    ```
-       # .env  
+   # .env  
        POSTGRES_USER=user  
        POSTGRES_PASSWORD=password  
        POSTGRES_DB=pongdb  
@@ -36,7 +36,7 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
 
 5. Démarrez les services avec Docker Compose :
    ```
-    bash
+   bash
       docker-compose up --build
    ```
 
