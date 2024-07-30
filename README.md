@@ -10,17 +10,17 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
 
 ## Installation
 
-1. Clonez le dépôt :
-    bash
-      git clone https://github.com/qbnt/6_ft_transcendence.git
-      cd 6_ft_transcendence
+1. Clonez le dépôt :  
+    bash  
+      git clone https://github.com/qbnt/6_ft_transcendence.git  
+      cd 6_ft_transcendence  
 
-2. Configurez les variables d'environnement :
-    bash
-      touch .env
+2. Configurez les variables d'environnement :  
+    bash  
+      touch .env  
     
-    Ajoutez-y les variables nécessaires :
-       # .env
+    Ajoutez-y les variables nécessaires :  
+       # .env  
        POSTGRES_USER=user  
        POSTGRES_PASSWORD=password  
        POSTGRES_DB=pongdb  
