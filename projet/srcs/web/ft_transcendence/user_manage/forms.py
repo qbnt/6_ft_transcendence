@@ -2,26 +2,9 @@ from django						import forms
 from django.contrib.auth		import authenticate
 from django.contrib.auth.forms	import UserCreationForm
 from django.contrib.auth.models	import User
+from .models					import Profile
 
-class CustomUserUpdateForm(forms.ModelForm):
-    current_password = forms.CharField(
-        label="Mot de passe actuel",
-        widget=forms.PasswordInput,
-        required=True,
-        help_text="Entrez votre mot de passe actuel pour confirmer les modifications."
-    )
-
-    class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
-
-    def clean_current_password(self):
-        current_password = self.cleaned_data['current_password']
-        user = authenticate(username=self.instance.username, password=current_password)
-        if user is None:
-            raise forms.ValidationError("Le mot de passe actuel est incorrect.")
-        return current_password
-
+# ---------------------------------------------------------------------------- #
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text="Un email valide est requis.")
@@ -46,3 +29,29 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class CustomUserUpdateForm(forms.ModelForm):
+    current_password = forms.CharField(
+        label="Mot de passe actuel",
+        widget=forms.PasswordInput,
+        required=True,
+        help_text="Entrez votre mot de passe actuel pour confirmer les modifications."
+    )
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+    def clean_current_password(self):
+        current_password = self.cleaned_data['current_password']
+        user = authenticate(username=self.instance.username, password=current_password)
+        if user is None:
+            raise forms.ValidationError("Le mot de passe actuel est incorrect.")
+        return current_password
+
+# ---------------------------------------------------------------------------- #
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar']

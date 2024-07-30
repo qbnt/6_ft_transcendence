@@ -28,9 +28,14 @@ header h1 a {
     text-decoration: none;
 }
 
+.user-info {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
 .user-info p {
     margin: 0;
-	text-align:center;
 }
 
 .user-info a {
@@ -42,6 +47,21 @@ header h1 a {
 
 .user-info a:hover {
     color: #8c8c8c;
+}
+
+.image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.profile-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
 }
 
 /* Navigation Menu Styles */
@@ -117,21 +137,22 @@ main {
     margin: 0 auto;
 }
 
+main h1,
+main h2,
+main h3 {
+    text-align: center;
+}
+
 main h2 {
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: 300;
-    text-align: center;
 }
 
 main h3 {
     font-size: 20px;
     margin-bottom: 15px;
     font-weight: 300;
-}
-
-main h1 {
-    text-align: center;
 }
 
 ul {

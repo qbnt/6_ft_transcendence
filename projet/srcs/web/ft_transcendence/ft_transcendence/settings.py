@@ -68,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+				'user_manage.context_processors.user_profile',
             ],
         },
     },
@@ -75,6 +76,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases

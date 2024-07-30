@@ -29,5 +29,5 @@ venv/
 .idea/
 .vscode/
 *.swp
-projet/srcs/web/ft_transcendence/user_manage/migrations/0002_auto_20240728_1709.py
-projet/srcs/web/ft_transcendence/user_manage/migrations/0003_auto_20240729_0733.py
+projet/srcs/web/ft_transcendence/user_manage/migrations/*
+projet/srcs/web/ft_transcendence/media/profile_avatars/*
