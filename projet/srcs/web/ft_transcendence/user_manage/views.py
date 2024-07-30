@@ -48,6 +48,12 @@ def register_user(request):
         'profile_form': profile_form,
     })
 
+def detail_user(request):
+    return render(request, 'user_manage/detail.html', {
+        	'user': request.user,
+            'profile': request.user.profile
+        })
+
 # ------------------------------Edition--------------------------------------- #
 
 @login_required
