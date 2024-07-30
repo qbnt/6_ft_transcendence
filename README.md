@@ -11,28 +11,34 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
 ## Installation
 
 1. Clonez le dépôt :  
-   '''
+   ```
     bash  
       git clone https://github.com/qbnt/6_ft_transcendence.git  
       cd 6_ft_transcendence
-   '''
+   ```
 
-3. Configurez les variables d'environnement :  
+3. Configurez les variables d'environnement :
+   ```
     bash  
-      touch .env  
+      touch .env
+   ```
     
-    Ajoutez-y les variables nécessaires :  
+    Ajoutez-y les variables nécessaires :
+   ```
        # .env  
        POSTGRES_USER=user  
        POSTGRES_PASSWORD=password  
        POSTGRES_DB=pongdb  
        DJANGO_ADMIN_USER: admin  
        DJANGO_ADMIN_MAIL: admin@test.test  
-       DJANGO_ADMIN_PASS: admin  
+       DJANGO_ADMIN_PASS: admin
+   ```
 
-4. Démarrez les services avec Docker Compose :
+5. Démarrez les services avec Docker Compose :
+   ```
     bash
       docker-compose up --build
+   ```
 
 ## Utilisation
 
