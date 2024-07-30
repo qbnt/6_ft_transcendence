@@ -3,7 +3,8 @@ from django.contrib.auth.forms		import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators	import login_required
 from django.contrib					import messages
 from django.shortcuts				import render, redirect
-from .forms							import CustomUserUpdateForm, CustomUserCreationForm
+from .forms							import CustomUserUpdateForm, CustomUserCreationForm, ProfileForm
+from .models						import Profile
 
 # -------------------------Creation et connections---------------------------- #
 
@@ -27,34 +28,56 @@ def	logout_user(request):
 	logout(request)
 	return redirect("home:index")
 
-def	register_user(request):
-	if request.method == 'POST':
-		form = CustomUserCreationForm(request.POST)
-		if form.is_valid():
-			user = form.save()
-			login(request, user)
-			return redirect("home:index")
-	else:
-		form = CustomUserCreationForm()
+def register_user(request):
+    if request.method == 'POST':
+        user_form = CustomUserCreationForm(request.POST)
+        profile_form = ProfileForm(request.POST, request.FILES)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            login(request, user)  # Connexion de l'utilisateur après l'enregistrement
+            return redirect("home:index")
+    else:
+        user_form = CustomUserCreationForm()
+        profile_form = ProfileForm()
 
-	return render(request, "user_manage/register.html", {'form': form})
+    return render(request, "user_manage/register.html", {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
+
+def detail_user(request):
+    return render(request, 'user_manage/detail.html', {
+        	'user': request.user,
+            'profile': request.user.profile
+        })
 
 # ------------------------------Edition--------------------------------------- #
 
 @login_required
 def edit_user(request):
-	user = request.user
-	if request.method == 'POST':
-		form = CustomUserUpdateForm(request.POST, instance=user)
-		if form.is_valid():
-			user = form.save(commit=False)
-			user.save()
-			messages.success(request, 'Vos informations ont été mises à jour avec succès.')
-			login(request, user)
-			return redirect('home:index')
-	else:
-		form = CustomUserUpdateForm(instance=user)
-	return render(request, 'user_manage/edit.html', {'form': form})
+    user = request.user
+    profile, created = Profile.objects.get_or_create(user=user)
+
+    if request.method == 'POST':
+        user_form = CustomUserUpdateForm(request.POST, instance=user)
+        profile_form = ProfileForm(request.POST, request.FILES, instance=profile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user = user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.user = user
+            profile.save()
+            return redirect("home:index")
+    else:
+        user_form = CustomUserUpdateForm(instance=user)
+        profile_form = ProfileForm(instance=profile)
+
+    return render(request, 'user_manage/edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form,
+    })
 
 @login_required
 def pw_update(request):

@@ -6,9 +6,10 @@
 
 {% block content %}
     <h2>Modifier Utilisateur</h2>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+		{{ profile_form.as_p }}
+        {{ user_form.as_p }}
         <button type="submit" class="btn btn-primary">Enregistrer</button>
     </form>
     <div class="password-change-container">

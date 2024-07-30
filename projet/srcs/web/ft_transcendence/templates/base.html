@@ -7,19 +7,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}ft_transcendence{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'global.css' %}">
+    <link rel="icon" href="{% static 'favicon.ico' %}">
     {% block extra_head %}{% endblock %}
 </head>
-
 <body>
     <header>
         <h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
         <div class="user-info">
             {% if user.is_authenticated %}
-                <p>
-                    Connecté sous {{ user.username }}<br>
-                    <a href="{% url 'user_manage:edit' %}">Modifier le profil</a> / 
+			<p>
+					Connecté comme <strong><a href="{% url 'user_manage:detail' %}">{{ profile.user.username }}</a></strong>
                     <a href="{% url 'user_manage:logout' %}">Déconnexion</a>
                 </p>
+                <div class="image-container">
+                    <img src="{{ profile.avatar.url }}" alt="Image Profil" class="profile-image">
+                </div>
             {% else %}
                 <p>
                     <a href="{% url 'user_manage:login' %}">Connexion</a> | 

@@ -28,20 +28,40 @@ header h1 a {
     text-decoration: none;
 }
 
-.user-info p {
-    margin: 0;
-	text-align:center;
+header .user-info {
+    display: flex;
+    align-items: center;
+    text-align: center;
 }
 
-.user-info a {
+header .user-info p {
+    margin: 0;
+}
+
+header .user-info a {
     color: white;
     text-decoration: none;
     margin: 0 5px;
     transition: color 0.3s;
 }
 
-.user-info a:hover {
+header .user-info a:hover {
     color: #8c8c8c;
+}
+
+header .image-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+header .profile-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
 }
 
 /* Navigation Menu Styles */
@@ -117,21 +137,22 @@ main {
     margin: 0 auto;
 }
 
+main h1,
+main h2,
+main h3 {
+    text-align: center;
+}
+
 main h2 {
     font-size: 24px;
     margin-bottom: 20px;
     font-weight: 300;
-    text-align: center;
 }
 
 main h3 {
     font-size: 20px;
     margin-bottom: 15px;
     font-weight: 300;
-}
-
-main h1 {
-    text-align: center;
 }
 
 ul {
@@ -249,4 +270,66 @@ footer p {
 .password-change-container {
     text-align: center; /* Center the button */
     margin-top: 20px; /* Space between form and button */
+}
+
+/* Styles for the account details page */
+.account-details-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Center the content */
+}
+
+.profile-section {
+    display: flex;
+    flex-direction: column; /* Arrange items in a column */
+    align-items: center; /* Center items horizontally */
+    justify-content: center; /* Center items vertically */
+}
+
+.profile-picture {
+    margin-bottom: 20px; /* Add space below the profile picture */
+}
+
+.profile-image {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #19491f;
+}
+
+.profile-info p {
+    margin: 5px 0;
+}
+
+.account-actions {
+    margin-top: 20px;
+}
+
+.account-actions .btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right: 10px;
+    text-decoration: none;
+    color: white;
+    background-color: #343a40;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.account-actions .btn-primary {
+    background-color: #007bff;
+}
+
+.account-actions .btn-secondary {
+    background-color: #6c757d;
+}
+
+.account-actions .btn:hover {
+    background-color: #495057;
 }

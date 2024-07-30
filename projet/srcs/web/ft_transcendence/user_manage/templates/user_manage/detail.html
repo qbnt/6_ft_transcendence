@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Détails du Compte
+{% endblock %}
+
+{% block content %}
+    <div class="account-details-container">
+        <h2>Détails du Compte</h2>
+        <div class="profile-section">
+            <div class="profile-picture">
+                <img src="{{ profile.avatar.url }}" alt="Photo de profil" class="profile-image">
+            </div>
+            <div class="profile-info">
+                <p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <!-- Ajoutez d'autres détails de l'utilisateur ici -->
+            </div>
+        </div>
+        <div class="account-actions">
+            <a href="{% url 'user_manage:edit' %}" class="btn btn-primary">Modifier le profil</a>
+        </div>
+    </div>
+{% endblock %}
