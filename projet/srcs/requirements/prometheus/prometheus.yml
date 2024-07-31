@@ -14,8 +14,16 @@ alerting:
 scrape_configs:
   - job_name: prometheus
     static_configs:
-    - targets:
-      - localhost:9090
-  - job_name: 'postgres_exporter'
+    - targets: ['localhost:9090']
+
+  - job_name: 'postgresql'
     static_configs:
       - targets: ['postgres_exporter:9187']
+
+  - job_name: 'django'
+    static_configs:
+      - targets: ['django:8000']
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx_exporter:9113']

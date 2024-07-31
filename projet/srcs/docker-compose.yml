@@ -18,6 +18,17 @@ services:
     depends_on:
       - django
 
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx_exporter
+    command: -nginx.scrape-uri=http://nginx:80/stub_status
+    ports:
+      - "9113:9113"
+    depends_on:
+      - nginx
+    networks:
+      - app_network
+
   django:
     container_name: django
     build: web/
