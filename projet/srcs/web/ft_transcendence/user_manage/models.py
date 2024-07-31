@@ -1,6 +1,6 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.db import models
-from PIL import Image, ImageOps
+from django.contrib.auth.models	import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.db					import models
+from PIL						import Image, ImageOps
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -24,16 +24,17 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(unique=True, max_length=42)
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    avatar = models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
-    win_count = models.IntegerField(default=0)
-    lose_count = models.IntegerField(default=0)
-    is_active = models.BooleanField(default=True)
-    is_ingame = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
+    username 	= models.CharField(unique=True, max_length=42)
+    email 		= models.EmailField(unique=True)
+    first_name	= models.CharField(max_length=30)
+    last_name 	= models.CharField(max_length=30)
+    avatar 		= models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
+    friends 	= models.ManyToManyField('self', blank=True)
+    win_count 	= models.IntegerField(default=0)
+    lose_count 	= models.IntegerField(default=0)
+    is_active 	= models.BooleanField(default=True)
+    is_ingame	= models.BooleanField(default=False)
+    is_staff 	= models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
