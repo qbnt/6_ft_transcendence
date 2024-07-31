@@ -333,3 +333,16 @@ footer p {
 .account-actions .btn:hover {
     background-color: #495057;
 }
+
+/* Ajoutez ce CSS dans votre fichier global.css ou dans un bloc <style> */
+.content-wrapper {
+    text-align: center;
+    margin: 0 auto;
+}
+
+.content-wrapper img {
+    display: block;
+    margin: 0 auto;
+	width:400px;
+	height: auto;
+}

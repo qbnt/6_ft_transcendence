@@ -18,6 +18,17 @@ services:
     depends_on:
       - django
 
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx_exporter
+    command: -nginx.scrape-uri=http://nginx:80/stub_status
+    ports:
+      - "9113:9113"
+    depends_on:
+      - nginx
+    networks:
+      - app_network
+
   django:
     container_name: django
     build: web/
@@ -26,6 +37,8 @@ services:
     environment:
       - DEBUG=1
       - ALLOWED_HOSTS=localhost
+      - ELASTICSEARCH_HOST=elasticsearch
+      - LOGSTASH_HOST=logstash
     volumes:
     - "./web/:/usr/src/app"
     networks:
@@ -34,6 +47,8 @@ services:
       - "8000:8000"
     depends_on:
       - postgresql
+      - elasticsearch
+      - logstash
     restart: on-failure
 
 #-------------------------------Base de donnee---------------------------------#
@@ -50,6 +65,20 @@ services:
     ports:
       - "5432:5432"
     restart: on-failure
+
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter
+    container_name: postgres_exporter
+    env_file:
+      - .env
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgresql:5432/${POSTGRES_DB}?sslmode=disable
+    depends_on:
+      - postgresql
+    ports:
+      - "9187:9187"
+    networks:
+      - app_network
 
 #----------------------------------ELK stack-----------------------------------#
 
@@ -82,7 +111,7 @@ services:
       - config.reload.interval=3s
     volumes:
       - ./requirements/ELK/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./requirements/ELK/test.log:/usr/share/logstash/test.log
+      - ./requirements/ELK/test.json:/usr/share/logstash/test.json
     ports:
       - "5044:5044"
       - "9600:9600"
@@ -104,7 +133,6 @@ services:
       - elasticsearch.hosts=http://elasticsearch:9200
       - logstash.hosts=http://logstash:9600
       - xpack.monitoring.ui.container.elasticsearch.enabled=true
-      - xpack.observability_ai_assistant.enabled=false
       - xpack.monitoring.collection.enabled=true
 
 #----------------------------------Monitoring----------------------------------#
@@ -112,25 +140,22 @@ services:
   prometheus:
     image: prom/prometheus
     container_name: prometheus
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-    ports:
-      - 9090:9090
-    restart: unless-stopped
     volumes:
-      - ./requirements/prometheus:/etc/prometheus
-      - prom_data:/prometheus
+      - ./requirements/prometheus:/etc/prometheus/
+    ports:
+      - "9090:9090"
+    networks:
+      - app_network
+    restart: unless-stopped
+
   grafana:
     image: grafana/grafana
     container_name: grafana
     ports:
-      - 3000:3000
+      - "3000:3000"
+    networks:
+      - app_network
     restart: unless-stopped
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=grafana
-    volumes:
-      - ./requirements/grafana:/etc/grafana/provisioning/datasources
 
 #----------------------------------HashiCorpV----------------------------------#
 

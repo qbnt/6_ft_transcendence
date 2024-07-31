@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-l940snh=!msg^xy)=^q4@*n08szdxjy+hhm)-)vwei4cuyn9x(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'django']
 
 
 # Application definition
@@ -43,9 +43,11 @@ INSTALLED_APPS = [
 	'live_chat',
 	'pong_game',
 	'tournament',
+	'django_prometheus',
 ]
 
 MIDDLEWARE = [
+	'django_prometheus.middleware.PrometheusBeforeMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -53,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'ft_transcendence.urls'
@@ -74,7 +77,32 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'logstash': {
+            'level': 'DEBUG',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': 'logstash',
+            'port': 5044,
+            'version': 1,
+            'message_type': 'django',
+            'fqdn': False,
+            'tags': ['django'],
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logstash'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
+ASGI_APPLICATION = 'ft_transcendence.asgi.application'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
