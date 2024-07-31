@@ -16,11 +16,11 @@
         <div class="user-info">
             {% if user.is_authenticated %}
 			<p>
-					Connecté comme <strong><a href="{% url 'user_manage:detail' %}">{{ profile.user.username }}</a></strong>
+					Connecté comme <strong><a href="{% url 'user_manage:detail' %}">{{ user.username }}</a></strong>
                     <a href="{% url 'user_manage:logout' %}">Déconnexion</a>
                 </p>
                 <div class="image-container">
-                    <img src="{{ profile.avatar.url }}" alt="Image Profil" class="profile-image">
+                    <img src="{{ user.avatar.url }}" alt="Image Profil" class="profile-image">
                 </div>
             {% else %}
                 <p>
