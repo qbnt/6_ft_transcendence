@@ -24,6 +24,7 @@ urlpatterns = [
 	path('tournament/', include('tournament.urls'), name='tournament'),
 	path('live-chat/', include('live_chat.urls'), name='chat'),
 	path('acconts/', include('user_manage.urls'), name='accounts'),
+    path('prometheus/', include('django_prometheus.urls')),
     path('admin/', admin.site.urls),
 ]
 
