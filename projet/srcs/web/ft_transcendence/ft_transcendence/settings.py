@@ -26,8 +26,26 @@ SECRET_KEY = 'django-insecure-l940snh=!msg^xy)=^q4@*n08szdxjy+hhm)-)vwei4cuyn9x(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'django']
+ALLOWED_HOSTS = [
+	'localhost',
+	'127.0.0.1',
+	'[::1]',
+	'django'
+]
 
+INTERNAL_IPS = [
+	"localhost",
+	'django',
+    "127.0.0.1",
+]
+
+import socket
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
 
 # Application definition
 
@@ -38,12 +56,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'django_prometheus',
+    'debug_toolbar',
 	'home',
 	'user_manage',
 	'live_chat',
 	'pong_game',
 	'tournament',
-	'django_prometheus',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	"debug_toolbar.middleware.DebugToolbarMiddleware",
 	'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
