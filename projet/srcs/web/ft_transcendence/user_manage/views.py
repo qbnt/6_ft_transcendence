@@ -1,10 +1,10 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from .forms import CustomUserUpdateForm, CustomUserCreationForm, AddFriendForm
-from .models import CustomUser
+from django.contrib.auth			import authenticate, login, logout
+from django.contrib.auth.forms		import AuthenticationForm, PasswordChangeForm
+from django.contrib.auth.decorators	import login_required
+from django.contrib					import messages
+from django.shortcuts				import render, redirect
+from .models						import CustomUser
+from . 								import forms
 
 # -------------------------Creation et connections---------------------------- #
 
@@ -17,6 +17,7 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
+            user.is_active = True
             return redirect("home:index")
         else:
             messages.info(request, "Identifiant ou mot de passe incorrect.")
@@ -24,19 +25,22 @@ def login_user(request):
     form = AuthenticationForm()
     return render(request, "user_manage/login.html", {'form': form})
 
+@login_required
 def logout_user(request):
-    logout(request)
-    return redirect("home:index")
+	request.user.is_active = False
+	request.user.save()
+	logout(request)
+	return redirect("home:index")
 
 def register_user(request):
     if request.method == 'POST':
-        user_form = CustomUserCreationForm(request.POST, request.FILES)
+        user_form = forms.CustomUserCreationForm(request.POST, request.FILES)
         if user_form.is_valid():
             user = user_form.save()
-            login(request, user)  # Connexion de l'utilisateur après l'enregistrement
+            login(request, user)
             return redirect("home:index")
     else:
-        user_form = CustomUserCreationForm()
+        user_form = forms.CustomUserCreationForm()
 
     return render(request, "user_manage/register.html", {
         'user_form': user_form,
@@ -53,12 +57,12 @@ def edit_user(request):
     user = request.user
 
     if request.method == 'POST':
-        user_form = CustomUserUpdateForm(request.POST, request.FILES, instance=user)
+        user_form = forms.CustomUserUpdateForm(request.POST, request.FILES, instance=user)
         if user_form.is_valid():
             user_form.save()
             return redirect("home:index")
     else:
-        user_form = CustomUserUpdateForm(instance=user)
+        user_form = forms.CustomUserUpdateForm(instance=user)
 
     return render(request, 'user_manage/edit.html', {
         'user_form': user_form,
@@ -79,12 +83,12 @@ def pw_update(request):
         form = PasswordChangeForm(request.user)
     return render(request, 'user_manage/pw_update.html', {'form': form})
 
-# ------------------------------Social---------------------------------------- #
+# ----------------------------------Social------------------------------------ #
 
 @login_required
 def add_friend(request):
     if request.method == 'POST':
-        form = AddFriendForm(request.POST)
+        form = forms.AddFriendForm(request.POST)
         if form.is_valid():
             try:
                 friend = CustomUser.objects.get(username=form.cleaned_data['username'])
@@ -94,7 +98,7 @@ def add_friend(request):
             except CustomUser.DoesNotExist:
                 messages.error(request, 'Cet utilisateur n\'existe pas.')
     else:
-        form = AddFriendForm()
+        form = forms.AddFriendForm()
 
     return render(request, 'user_manage/add_friend.html', {'form': form})
 

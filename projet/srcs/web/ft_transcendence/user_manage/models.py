@@ -24,29 +24,33 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username 	= models.CharField(unique=True, max_length=42)
-    email 		= models.EmailField(unique=True)
-    first_name	= models.CharField(max_length=30)
-    last_name 	= models.CharField(max_length=30)
-    avatar 		= models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
-    friends 	= models.ManyToManyField('self', blank=True)
-    win_count 	= models.IntegerField(default=0)
-    lose_count 	= models.IntegerField(default=0)
-    is_active 	= models.BooleanField(default=True)
-    is_ingame	= models.BooleanField(default=False)
-    is_staff 	= models.BooleanField(default=False)
+	username 	= models.CharField(unique=True, max_length=42)
+	email 		= models.EmailField(unique=True)
+	first_name	= models.CharField(max_length=30)
+	last_name 	= models.CharField(max_length=30)
+	avatar 		= models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
 
-    objects = CustomUserManager()
+	friends 	= models.ManyToManyField('self', blank=True)
+	blockeds	= models.ManyToManyField('self', blank=True)
 
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+	win_count 	= models.IntegerField(default=0)
+	lose_count 	= models.IntegerField(default=0)
+	is_ingame	= models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.email
+	is_active 	= models.BooleanField(default=True)
+	is_staff 	= models.BooleanField(default=False)
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        img = Image.open(self.avatar.path)
-        if img.height > 300 or img.width > 300:
-            img = ImageOps.fit(img, (300, 300))
-            img.save(self.avatar.path)
+	objects = CustomUserManager()
+
+	USERNAME_FIELD = 'username'
+	REQUIRED_FIELDS = ['email']
+
+	def __str__(self):
+		return self.email
+
+	def save(self, *args, **kwargs):
+		super().save(*args, **kwargs)
+		img = Image.open(self.avatar.path)
+		if img.height > 300 or img.width > 300:
+			img = ImageOps.fit(img, (300, 300))
+			img.save(self.avatar.path)

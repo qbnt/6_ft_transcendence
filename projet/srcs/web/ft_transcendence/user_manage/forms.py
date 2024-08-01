@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import CustomUser
 
+# ----------------------Création et modification du User---------------------- #
+
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text="Un email valide est requis.")
     first_name = forms.CharField(max_length=30, required=False, help_text="Optionnel.")
@@ -49,6 +51,8 @@ class CustomUserUpdateForm(forms.ModelForm):
         if user is None:
             raise forms.ValidationError("Le mot de passe actuel est incorrect.")
         return current_password
+
+# --------------------------------Social-------------------------------------- #
 
 class AddFriendForm(forms.Form):
     username = forms.CharField(max_length=42, help_text="Entrez le nom d'utilisateur de l'ami à ajouter")
