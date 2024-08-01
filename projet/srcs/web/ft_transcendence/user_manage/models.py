@@ -26,9 +26,10 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
 	username 	= models.CharField(unique=True, max_length=42)
 	email 		= models.EmailField(unique=True)
-	first_name	= models.CharField(max_length=30)
-	last_name 	= models.CharField(max_length=30)
+	first_name	= models.CharField(max_length=30, blank=True)
+	last_name 	= models.CharField(max_length=30, blank=True)
 	avatar 		= models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
+	is_onsite 	= models.BooleanField(default=True)
 
 	friends 	= models.ManyToManyField('self', blank=True)
 	blockeds	= models.ManyToManyField('self', blank=True)

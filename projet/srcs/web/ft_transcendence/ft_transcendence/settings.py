@@ -74,6 +74,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+	'user_manage.middlewares.SessionTimeoutMiddleware',
 	"debug_toolbar.middleware.DebugToolbarMiddleware",
 	'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
@@ -188,3 +190,6 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SESSION_COOKIE_AGE = 1 * 60 # La durée de la session en secondes
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Expire la session à la fermeture du navigateur

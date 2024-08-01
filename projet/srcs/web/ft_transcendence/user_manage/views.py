@@ -10,27 +10,34 @@ from . 								import forms
 
 def login_user(request):
     if request.method == 'POST':
-        username = request.POST["username"]
-        password = request.POST["password"]
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
 
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            user.is_active = True
-            return redirect("home:index")
+            if user is not None:
+                user.is_onsite = True
+                user.save()
+                login(request, user)
+                messages.success(request, f'Welcome back, {user.username}!')
+                return redirect('home:index')
+            else:
+                messages.error(request, 'Invalid username or password.')
         else:
-            messages.info(request, "Identifiant ou mot de passe incorrect.")
+            messages.error(request, 'Invalid username or password.')
+    else:
+        form = AuthenticationForm()
 
-    form = AuthenticationForm()
-    return render(request, "user_manage/login.html", {'form': form})
+    return render(request, 'user_manage/login.html', {'form': form})
 
 @login_required
 def logout_user(request):
-	request.user.is_active = False
-	request.user.save()
-	logout(request)
-	return redirect("home:index")
+    request.user.is_onsite = False
+    request.user.save()
+    logout(request)
+    messages.success(request, 'You have been logged out successfully.')
+    return redirect('home:index')
 
 def register_user(request):
     if request.method == 'POST':
