@@ -7,6 +7,9 @@
 	<p>{{ message }}</p>
 {% endfor %}
 
+<form action="{% url 'user_manage:api_42_login' %}" method="get">
+	<button type="submit">Se connecter via 42</button>
+</form>
 <form method="post" enctype="multipart/form-data">
 	{% csrf_token %}
 	{{ user_form.as_p }}

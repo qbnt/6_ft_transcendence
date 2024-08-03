@@ -1,10 +1,14 @@
 from django.contrib.auth			import authenticate, login, logout
 from django.contrib.auth.forms		import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.decorators	import login_required
+from django.core.files 				import File
 from django.contrib					import messages
+from django.conf					import settings
 from django.shortcuts				import render, redirect
 from .models						import CustomUser
 from . 								import forms
+from io								import BytesIO
+import requests
 
 # -------------------------Creation et connections---------------------------- #
 
@@ -118,3 +122,58 @@ def remove_friend(request, username):
     except CustomUser.DoesNotExist:
         messages.error(request, 'Cet utilisateur n\'existe pas.')
     return redirect('user_manage:profile')
+
+# ----------------------------------API 42------------------------------------ #
+
+def api_42_login(request):
+    client_id = settings.CLIENT_ID_42
+    redirect_uri = request.build_absolute_uri('/accounts/api_42_callback/')
+    return redirect(f'https://api.intra.42.fr/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&response_type=code')
+
+def api_42_callback(request):
+    try:
+        code = request.GET.get('code')
+        client_id = settings.CLIENT_ID_42
+        client_secret = settings.CLIENT_SECRET_42
+        redirect_uri = request.build_absolute_uri('/accounts/api_42_callback/')
+
+        token_response = requests.post('https://api.intra.42.fr/oauth/token', data={
+            'grant_type': 'authorization_code',
+            'client_id': client_id,
+            'client_secret': client_secret,
+            'code': code,
+            'redirect_uri': redirect_uri,
+        }).json()
+
+        access_token = token_response.get('access_token')
+
+        user_response = requests.get('https://api.intra.42.fr/v2/me', headers={
+            'Authorization': f'Bearer {access_token}',
+		}).json()
+        username = user_response['login']
+        email = user_response['email']
+        first_name = user_response.get('first_name')
+        last_name = user_response.get('last_name')
+        image_url = user_response['image']['link']
+        user, created = CustomUser.objects.get_or_create(username=username, defaults={
+			'email': email,
+			'first_name': first_name,
+			'last_name': last_name,
+			'is_onsite': True,
+		})
+
+        if not created:
+            user.is_onsite = True
+            user.save()
+
+        if image_url:
+            response = requests.get(image_url)
+            response.raise_for_status()
+            img_temp = BytesIO(response.content)
+            user.avatar.save(f"{username}_avatar.jpg", File(img_temp), save=True)
+        login(request, user)
+        return redirect('home:index')
+
+    except Exception as e:
+        print(e)
+        return redirect('user_manage:register')

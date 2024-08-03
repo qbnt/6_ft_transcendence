@@ -23,6 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-l940snh=!msg^xy)=^q4@*n08szdxjy+hhm)-)vwei4cuyn9x('
 
+# 42 API informations
+CLIENT_ID_42 = os.getenv('UID_42')
+CLIENT_SECRET_42 = os.getenv('SECRET_42')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -44,7 +48,7 @@ hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    'SHOW_TOOLBAR_CALLBACK': lambda request: False,
 }
 
 # Application definition
@@ -56,8 +60,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
 	'django_prometheus',
     'debug_toolbar',
+	'channels',
+
 	'home',
 	'user_manage',
 	'live_chat',
@@ -67,6 +74,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
 	'django_prometheus.middleware.PrometheusBeforeMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -75,8 +83,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-	'user_manage.middlewares.SessionTimeoutMiddleware',
-	"debug_toolbar.middleware.DebugToolbarMiddleware",
+	'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 	'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
@@ -190,6 +198,3 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-SESSION_COOKIE_AGE = 1 * 60 # La durée de la session en secondes
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Expire la session à la fermeture du navigateur

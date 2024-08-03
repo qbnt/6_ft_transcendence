@@ -1,6 +1,10 @@
-from django.contrib.auth.models	import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.db					import models
-from PIL						import Image, ImageOps
+# models.py
+
+from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from PIL import Image, ImageOps
+from django.core.files import File
+from io import BytesIO
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, username, email, password=None, **extra_fields):
@@ -24,34 +28,34 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-	username 	= models.CharField(unique=True, max_length=42)
-	email 		= models.EmailField(unique=True)
-	first_name	= models.CharField(max_length=30, blank=True)
-	last_name 	= models.CharField(max_length=30, blank=True)
-	avatar 		= models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
-	is_onsite 	= models.BooleanField(default=True)
+    username = models.CharField(unique=True, max_length=42)
+    email = models.EmailField(unique=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    avatar = models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
+    is_onsite = models.BooleanField(default=True)
 
-	friends 	= models.ManyToManyField('self', blank=True)
-	blockeds	= models.ManyToManyField('self', blank=True)
+    friends = models.ManyToManyField('self', blank=True)
+    blockeds = models.ManyToManyField('self', blank=True)
 
-	win_count 	= models.IntegerField(default=0)
-	lose_count 	= models.IntegerField(default=0)
-	is_ingame	= models.BooleanField(default=False)
+    win_count = models.IntegerField(default=0)
+    lose_count = models.IntegerField(default=0)
+    is_ingame = models.BooleanField(default=False)
 
-	is_active 	= models.BooleanField(default=True)
-	is_staff 	= models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
 
-	objects = CustomUserManager()
+    objects = CustomUserManager()
 
-	USERNAME_FIELD = 'username'
-	REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email']
 
-	def __str__(self):
-		return self.email
+    def __str__(self):
+        return self.email
 
-	def save(self, *args, **kwargs):
-		super().save(*args, **kwargs)
-		img = Image.open(self.avatar.path)
-		if img.height > 300 or img.width > 300:
-			img = ImageOps.fit(img, (300, 300))
-			img.save(self.avatar.path)
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.avatar.path)
+        if img.height > 300 or img.width > 300:
+            img = ImageOps.fit(img, (300, 300))
+            img.save(self.avatar.path)

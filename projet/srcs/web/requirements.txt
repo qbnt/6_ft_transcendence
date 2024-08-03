@@ -4,3 +4,5 @@ Pillow
 python-logstash
 django-prometheus
 django-debug-toolbar
+channels
+requests
