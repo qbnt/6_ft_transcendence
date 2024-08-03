@@ -17,6 +17,7 @@ services:
       - "443:443"
     depends_on:
       - django
+    restart: on-failure
 
   nginx_exporter:
     image: nginx/nginx-prometheus-exporter:latest
@@ -28,6 +29,7 @@ services:
       - nginx
     networks:
       - app_network
+    restart: on-failure
 
   django:
     container_name: django
@@ -79,6 +81,7 @@ services:
       - "9187:9187"
     networks:
       - app_network
+    restart: on-failure
 
 #----------------------------------ELK stack-----------------------------------#
 
@@ -98,6 +101,7 @@ services:
       - "9300:9300"
     networks:
       - app_network
+    restart: on-failure
 
   logstash:
     image: logstash:8.13.4
@@ -117,6 +121,7 @@ services:
       - "9600:9600"
     networks:
       - app_network
+    restart: on-failure
 
   kibana:
     image: kibana:8.13.4
@@ -134,6 +139,7 @@ services:
       - logstash.hosts=http://logstash:9600
       - xpack.monitoring.ui.container.elasticsearch.enabled=true
       - xpack.monitoring.collection.enabled=true
+    restart: on-failure
 
 #----------------------------------Monitoring----------------------------------#
 
@@ -146,7 +152,7 @@ services:
       - "9090:9090"
     networks:
       - app_network
-    restart: unless-stopped
+    restart: on-failure
 
   grafana:
     image: grafana/grafana
@@ -155,7 +161,7 @@ services:
       - "3000:3000"
     networks:
       - app_network
-    restart: unless-stopped
+    restart: on-failure
 
 #----------------------------------HashiCorpV----------------------------------#
 
