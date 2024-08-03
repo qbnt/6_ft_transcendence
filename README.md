@@ -26,12 +26,14 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
     Ajoutez-y les variables nécessaires :
    ```
    # .env  
-       POSTGRES_USER=user  
-       POSTGRES_PASSWORD=password  
-       POSTGRES_DB=pongdb  
-       DJANGO_ADMIN_USER: admin  
-       DJANGO_ADMIN_MAIL: admin@test.test  
-       DJANGO_ADMIN_PASS: admin
+      POSTGRES_USER=user  
+      POSTGRES_PASSWORD=password  
+      POSTGRES_DB=pongdb  
+      DJANGO_ADMIN_USER: admin  
+      DJANGO_ADMIN_MAIL: admin@test.test  
+      DJANGO_ADMIN_PASS: admin
+      UID_42: ***************
+      SECRET_42: *****************
    ```
 
 5. Démarrez les services avec Docker Compose :
@@ -48,18 +50,22 @@ Ce projet consiste à créer un site web permettant de jouer à Pong en local se
 2. Jouez à Pong et expérimentez les fonctionnalités
 
 3. Visualisez les métriques de surveillance sur Grafana :
-    http://localhost:3001
+    http://localhost:3000
+
+4. Visualisez les recapitulatif de Logs sur Kibana :
+    http://localhost:5601
 
 ## Services Configurés
 
-- **frontend** : Serveur frontend (Node.js)
-- **backend** : Serveur backend (Django)
-- **db** : Base de données (PostgreSQL)
-- **nginx** : Reverse proxy (Nginx)
-- **blockchain** : Nœud blockchain (Ethereum)
-- **prometheus** : Surveillance (Prometheus)
-- **grafana** : Visualisation (Grafana)
-- **vault** : Gestion des secrets (HashiCorp Vault)
+- **frontend**      : Serveur frontend (Node.js)
+- **backend**       : Serveur backend (Django)
+- **db**            : Base de données (PostgreSQL)
+- **nginx**         : Reverse proxy (Nginx)
+- **blockchain**    : Nœud blockchain (Ethereum)
+- **prometheus**    : Surveillance (Prometheus)
+- **grafana**       : Visualisation (Grafana)
+- **vault**         : Gestion des secrets (HashiCorp Vault)
+- **ELK**           : Gestion des Logs (Elasticsearch/Logstash/Kibana)
 
 ## Contributions
 
