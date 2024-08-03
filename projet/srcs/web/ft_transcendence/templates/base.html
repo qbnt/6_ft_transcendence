@@ -11,27 +11,37 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header>
-        <h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
-        <div class="user-info">
-            {% if user.is_authenticated %}
-			<p>
-					Connecté comme <strong><a href="{% url 'user_manage:profile' %}">{{ user.username }}</a></strong>
-                    <a href="{% url 'user_manage:logout' %}">Déconnexion</a>
-                </p>
-                <div class="image-container">
-                    <img src="{{ user.avatar.url }}" alt="Image Profil" class="profile-image">
-                </div>
-            {% else %}
-                <p>
-                    <a href="{% url 'user_manage:login' %}">Connexion</a> | 
-                    <a href="{% url 'user_manage:register' %}">Créer un compte</a>
-                </p>
-            {% endif %}
-        </div>
-    </header>
+	<header>
+		<h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
+		<div class="user-info">
+			<div class="actions">
+				<form action="{% url 'user_manage:search' %}" method="get" class="search-form">
+					<input type="text" name="query" placeholder="Rechercher un utilisateur..." class="search-input">
+					<button type="submit" class="search-button">
+						<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon">
+					</button>
+				</form>
+			</div>
+			{% if request.user.is_authenticated %}
+				<div class="image-container">
+					<a href="{% url 'user_manage:profile' request.user.username %}">
+						<img src="{{ request.user.avatar.url }}" alt="Image Profil" class="profile-image">
+					</a>
+				</div>
+			{% else %}
+				<div class="image-container">
+					<a href="{% url 'user_manage:connexion' %}">
+						<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion" class="profile-image">
+					</a>
+				</div>
+			{% endif %}
+		</div>
+	</header>
 
     <main>
+		{% for message in messages %}
+			<p>{{ message }}</p>
+		{% endfor %}
         {% block content %}
         {% endblock %}
     </main>

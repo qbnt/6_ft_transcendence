@@ -9,51 +9,28 @@ body {
 
 /* Header Styles */
 header {
-    background-color: #19491f;
-    color: white;
-    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
 }
 
-header h1 {
-    margin: 0;
-    font-size: 28px;
-    font-weight: 400;
-}
-
-header h1 a {
-    color: white;
+h1 a {
     text-decoration: none;
+    color: #333;
 }
 
 header .user-info {
     display: flex;
     align-items: center;
-    text-align: center;
-}
-
-header .user-info p {
-    margin: 0;
-}
-
-header .user-info a {
-    color: white;
-    text-decoration: none;
-    margin: 0 5px;
-    transition: color 0.3s;
-}
-
-header .user-info a:hover {
-    color: #8c8c8c;
 }
 
 header .image-container {
     display: flex;
-    justify-content: center;
     align-items: center;
-    margin-left: 10px;
+    margin-left: 10px; /* Espacement entre la barre de recherche et l'image de profil */
 }
 
 header .profile-image {
@@ -62,6 +39,48 @@ header .profile-image {
     object-fit: cover;
     border-radius: 50%;
     border: 2px solid #ffffff;
+}
+
+header .actions {
+    display: flex;
+    align-items: center;
+    height: 40px; /* Même hauteur que l'image de profil */
+    margin-right: 10px; /* Espacement entre le titre et la barre de recherche */
+}
+
+header .search-form {
+    display: flex;
+    align-items: center;
+    height: 100%; /* Assurez-vous que le formulaire remplit la hauteur de la div parent */
+}
+
+header .search-input {
+    padding: 5px 10px;
+    font-size: 14px; /* Ajustez selon vos besoins */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 5px; /* Espacement entre le champ de saisie et le bouton */
+    outline: none;
+    height: calc(100% - 10px); /* Assurez-vous que l'input remplit la hauteur de la div parent */
+}
+
+header .search-input:focus {
+    border-color: #666;
+}
+
+header .search-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    height: 100%; /* Assurez-vous que le bouton remplit la hauteur de la div parent */
+    display: flex;
+    align-items: center;
+}
+
+header .search-icon {
+    width: 20px; /* Ajustez selon vos besoins */
+    height: 20px; /* Ajustez selon vos besoins */
 }
 
 /* Navigation Menu Styles */

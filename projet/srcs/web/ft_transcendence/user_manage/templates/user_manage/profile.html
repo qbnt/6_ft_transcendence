@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="account-details-container">
+        <h2>Détails du Compte</h2>
+        <div class="profile-section">
+            <div class="profile-picture">
+                <img src="{{ user.avatar.url }}" alt="Photo de profil" class="profile-image">
+            </div>
+            <div class="profile-info">
+                <p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Prénom:</strong> {{ user.first_name }}</p>
+                <p><strong>Nom:</strong> {{ user.last_name }}</p>
+                <h3>Liste d'amis</h3>
+                <ul>
+                    {% for friend in user.friends.all %}
+                        <li><a href="{% url 'user_manage:profile' friend.username %}">{{ friend.username }}</a></li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+        </div>
+		{% if request.user.is_authenticated %}
+			<div class="account-actions">
+				{% if user == request.user %}
+					<a href="{% url 'user_manage:edit' %}" class="btn btn-primary">Modifier le profil</a>
+					<a href="{% url 'user_manage:logout' %}" class="btn btn-primary">Déconnexion</a>
+				{% else %}
+					{% if user not in request.user.friends.all %}
+						<a href=" {% url 'user_manage:add_friend' user.username %}" class="btn btn-primary">Ajouter en ami</a>
+					{% else %}
+						<a href="{% url 'user_manage:remove_friend' user.username %}" class="btn btn-primary">Retirer de la liste d'amis</a>
+					{% endif %}
+				{% endif %}
+			</div>
+        {% endif %}
+    </div>
+{% endblock %}
