@@ -4,31 +4,31 @@
 <h1>Page de connexion</h1>
 
 <div style="display: flex; justify-content: space-between;">
-    <!-- Connexion Form -->
-    <div style="width: 45%;">
-        <h2>Connexion</h2>
-        <form action="{% url 'user_manage:api_42_login' %}" method="get">
-            <button type="submit">Se connecter via 42</button>
-        </form>
-        <form method="post">
-            {% csrf_token %}
-            {{ login_form.as_p }}
-            <input type="submit" name="login" value="Se connecter">
-        </form>
-    </div>
+	<!-- Connexion Form -->
+	<div style="width: 45%;">
+		<h2>Connexion</h2>
+		<form action="{% url 'user_manage:api_42_login' %}" method="get">
+			<button type="submit">Se connecter via 42</button>
+		</form>
+		<form method="post">
+			{% csrf_token %}
+			{{ login_form.as_p }}
+			<input type="submit" name="login" value="Se connecter">
+		</form>
+	</div>
 
-    <!-- Inscription Form -->
-    <div style="width: 45%;">
-        <h2>Créer un compte</h2>
-        <form action="{% url 'user_manage:api_42_login' %}" method="get">
-            <button type="submit">Se connecter via 42</button>
-        </form>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ register_form.as_p }}
-            <input type="submit" name="register" value="Valider">
-        </form>
-    </div>
+	<!-- Inscription Form -->
+	<div style="width: 45%;">
+		<h2>Créer un compte</h2>
+		<form action="{% url 'user_manage:api_42_login' %}" method="get">
+			<button type="submit">Se connecter via 42</button>
+		</form>
+		<form method="post" enctype="multipart/form-data">
+			{% csrf_token %}
+			{{ register_form.as_p }}
+			<input type="submit" name="register" value="Valider">
+		</form>
+	</div>
 </div>
 
 {% endblock content %}
