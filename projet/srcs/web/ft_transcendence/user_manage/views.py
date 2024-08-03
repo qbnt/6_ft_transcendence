@@ -12,28 +12,38 @@ import requests
 
 # -------------------------Creation et connections---------------------------- #
 
-def login_user(request):
-    if request.method == 'POST':
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password')
-            user = authenticate(request, username=username, password=password)
+def login_or_register(request):
+    login_form = AuthenticationForm()
+    register_form = forms.CustomUserCreationForm()
 
-            if user is not None:
-                user.is_onsite = True
-                user.save()
-                login(request, user)
-                messages.success(request, f'Welcome back, {user.username}!')
-                return redirect('home:index')
+    if request.method == 'POST':
+        if 'login' in request.POST:
+            login_form = AuthenticationForm(request, data=request.POST)
+            if login_form.is_valid():
+                username = login_form.cleaned_data.get('username')
+                password = login_form.cleaned_data.get('password')
+                user = authenticate(request, username=username, password=password)
+                if user is not None:
+                    user.is_onsite = True
+                    user.save()
+                    login(request, user)
+                    messages.success(request, f'Welcome back, {user.username}!')
+                    return redirect('home:index')
+                else:
+                    messages.error(request, 'Invalid username or password.')
             else:
                 messages.error(request, 'Invalid username or password.')
-        else:
-            messages.error(request, 'Invalid username or password.')
-    else:
-        form = AuthenticationForm()
+        elif 'register' in request.POST:
+            register_form = forms.CustomUserCreationForm(request.POST, request.FILES)
+            if register_form.is_valid():
+                user = register_form.save()
+                login(request, user)
+                return redirect("home:index")
 
-    return render(request, 'user_manage/login.html', {'form': form})
+    return render(request, 'user_manage/connexion.html', {
+        'login_form': login_form,
+        'register_form': register_form,
+    })
 
 @login_required
 def logout_user(request):
@@ -43,23 +53,11 @@ def logout_user(request):
     messages.success(request, 'You have been logged out successfully.')
     return redirect('home:index')
 
-def register_user(request):
-    if request.method == 'POST':
-        user_form = forms.CustomUserCreationForm(request.POST, request.FILES)
-        if user_form.is_valid():
-            user = user_form.save()
-            login(request, user)
-            return redirect("home:index")
-    else:
-        user_form = forms.CustomUserCreationForm()
-
-    return render(request, "user_manage/register.html", {
-        'user_form': user_form,
+def profile(request, username):
+    user = CustomUser.objects.get(username=username)
+    return render(request, 'user_manage/profile.html', {
+        'user': user,
     })
-
-@login_required
-def profile(request):
-    return render(request, 'user_manage/detail.html', {'user': request.user})
 
 # ------------------------------Edition--------------------------------------- #
 
@@ -97,21 +95,14 @@ def pw_update(request):
 # ----------------------------------Social------------------------------------ #
 
 @login_required
-def add_friend(request):
-    if request.method == 'POST':
-        form = forms.AddFriendForm(request.POST)
-        if form.is_valid():
-            try:
-                friend = CustomUser.objects.get(username=form.cleaned_data['username'])
-                request.user.friends.add(friend)
-                messages.success(request, f'{friend.username} a été ajouté à votre liste d\'amis.')
-                return redirect('user_manage:profile')
-            except CustomUser.DoesNotExist:
-                messages.error(request, 'Cet utilisateur n\'existe pas.')
-    else:
-        form = forms.AddFriendForm()
-
-    return render(request, 'user_manage/add_friend.html', {'form': form})
+def add_friend(request, friend):
+    friend_add = CustomUser.objects.get(username=friend)
+    try:
+        request.user.friends.add(friend_add)
+        messages.success(request, f'{friend_add.username} a été ajouté à votre liste d\'amis.')
+    except CustomUser.DoesNotExist:
+        messages.error(request, 'Cet utilisateur n\'existe pas.')
+    return redirect('user_manage:profile', friend_add.username)
 
 @login_required
 def remove_friend(request, username):
@@ -121,7 +112,20 @@ def remove_friend(request, username):
         messages.success(request, f'{friend.username} a été retiré de votre liste d\'amis.')
     except CustomUser.DoesNotExist:
         messages.error(request, 'Cet utilisateur n\'existe pas.')
-    return redirect('user_manage:profile')
+    return redirect('user_manage:profile', friend.username)
+
+def search(request):
+    query = request.GET.get('query')
+    if query:
+        try:
+            user = CustomUser.objects.get(username=query)
+            return redirect('user_manage:profile', username=user.username)
+        except CustomUser.DoesNotExist:
+            messages.error(request, 'Profil non trouvé')
+            return redirect('home:index')
+    else:
+        messages.error(request, 'Veuillez entrer un pseudonyme pour la recherche.')
+        return redirect('home:index')
 
 # ----------------------------------API 42------------------------------------ #
 

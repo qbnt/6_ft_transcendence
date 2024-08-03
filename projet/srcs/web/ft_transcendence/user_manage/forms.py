@@ -52,7 +52,3 @@ class CustomUserUpdateForm(forms.ModelForm):
             raise forms.ValidationError("Le mot de passe actuel est incorrect.")
         return current_password
 
-# --------------------------------Social-------------------------------------- #
-
-class AddFriendForm(forms.Form):
-    username = forms.CharField(max_length=42, help_text="Entrez le nom d'utilisateur de l'ami à ajouter")
