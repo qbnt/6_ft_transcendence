@@ -23,11 +23,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-l940snh=!msg^xy)=^q4@*n08szdxjy+hhm)-)vwei4cuyn9x('
 
+# 42 API informations
+CLIENT_ID_42 = os.getenv('UID_42')
+CLIENT_SECRET_42 = os.getenv('SECRET_42')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'django']
+ALLOWED_HOSTS = [
+	'localhost',
+	'127.0.0.1',
+	'[::1]',
+	'django'
+]
 
+INTERNAL_IPS = [
+	"localhost",
+	'django',
+    "127.0.0.1",
+]
+
+import socket
+hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: False,
+}
 
 # Application definition
 
@@ -38,16 +60,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+	'django_prometheus',
+    'debug_toolbar',
+	'channels',
+
 	'home',
 	'user_manage',
 	'live_chat',
 	'pong_game',
 	'tournament',
-	'django_prometheus',
 ]
 
 MIDDLEWARE = [
 	'django_prometheus.middleware.PrometheusBeforeMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,6 +82,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+	'debug_toolbar.middleware.DebugToolbarMiddleware',
+
 	'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
@@ -71,7 +101,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-				'user_manage.context_processors.user_profile',
             ],
         },
     },
@@ -124,6 +153,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = 'user_manage.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

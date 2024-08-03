@@ -9,9 +9,15 @@ urlpatterns = [
 	path('pong/', include('pong_game.urls'), name='pong'),
 	path('tournament/', include('tournament.urls'), name='tournament'),
 	path('live-chat/', include('live_chat.urls'), name='chat'),
-	path('acconts/', include('user_manage.urls'), name='accounts'),
+	path('accounts/', include('user_manage.urls'), name='accounts'),
     path('admin/', admin.site.urls),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        path('__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

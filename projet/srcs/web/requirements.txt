@@ -3,3 +3,6 @@ psycopg2-binary>=2.8
 Pillow
 python-logstash
 django-prometheus
+django-debug-toolbar
+channels
+requests

@@ -1,23 +1,25 @@
-from django						import forms
-from django.contrib.auth		import authenticate
-from django.contrib.auth.forms	import UserCreationForm
-from django.contrib.auth.models	import User
-from .models					import Profile
+from django import forms
+from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from .models import CustomUser
 
-# ---------------------------------------------------------------------------- #
+# ----------------------Création et modification du User---------------------- #
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, help_text="Un email valide est requis.")
     first_name = forms.CharField(max_length=30, required=False, help_text="Optionnel.")
     last_name = forms.CharField(max_length=30, required=False, help_text="Optionnel.")
+    avatar = forms.ImageField(required=False)
+    win_count = forms.IntegerField(required=False, initial=0, widget=forms.HiddenInput())
+    lose_count = forms.IntegerField(required=False, initial=0, widget=forms.HiddenInput())
 
     class Meta:
-        model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
+        model = CustomUser
+        fields = ('username', 'email', 'first_name', 'last_name', 'avatar', 'password1', 'password2')
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
-        if User.objects.filter(email=email).exists():
+        if CustomUser.objects.filter(email=email).exists():
             raise forms.ValidationError("Un utilisateur avec cet email existe déjà.")
         return email
 
@@ -37,10 +39,11 @@ class CustomUserUpdateForm(forms.ModelForm):
         required=True,
         help_text="Entrez votre mot de passe actuel pour confirmer les modifications."
     )
+    avatar = forms.ImageField(required=False)
 
     class Meta:
-        model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
+        model = CustomUser
+        fields = ['username', 'first_name', 'last_name', 'email', 'avatar']
 
     def clean_current_password(self):
         current_password = self.cleaned_data['current_password']
@@ -49,9 +52,7 @@ class CustomUserUpdateForm(forms.ModelForm):
             raise forms.ValidationError("Le mot de passe actuel est incorrect.")
         return current_password
 
-# ---------------------------------------------------------------------------- #
+# --------------------------------Social-------------------------------------- #
 
-class ProfileForm(forms.ModelForm):
-    class Meta:
-        model = Profile
-        fields = ['avatar']
+class AddFriendForm(forms.Form):
+    username = forms.CharField(max_length=42, help_text="Entrez le nom d'utilisateur de l'ami à ajouter")
