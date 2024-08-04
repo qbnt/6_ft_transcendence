@@ -24,7 +24,7 @@ jobs:
 
     - name: Build and push Docker image
       run: |
-        docker buildx build --platform linux/amd64 --tag your-dockerhub-username/your-django-app:latest --push .
+        docker buildx build --platform linux/amd64 --file project/srcs/web/Dockerfile --tag your-dockerhub-username/your-django-app:latest --push .
 
     - name: Create .env file
       run: |
