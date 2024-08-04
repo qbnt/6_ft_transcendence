@@ -37,5 +37,10 @@ jobs:
         echo UID_42=${{ secrets.UID_42 }} >> .env
         echo SECRET_42=${{ secrets.SECRET_42 }} >> .env
 
+    - name: Install Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+
     - name: Deploy with Docker Compose
-      run: docker-compose -f docker-compose.yml up -d
+      run: docker-compose -f projet/srcs/docker-compose.yml up -d
