@@ -23,7 +23,7 @@ class CustomUserAdmin(UserAdmin):
 	list_filter = ('is_staff', 'is_onsite', 'is_ingame')
 	fieldsets = (
 		(None, {'fields': ('username', 'password')}),
-		('Personal info', {'fields': ('email', 'first_name', 'last_name', 'avatar', 'friends', 'blockeds', 'win_count', 'lose_count')}),
+		('Personal info', {'fields': ('email', 'first_name', 'last_name', 'avatar', 'friends', 'friends_request', 'blockeds', 'win_count', 'lose_count')}),
 		('Permissions', {'fields': ('is_staff', 'is_onsite', 'is_ingame')}),
 		('Important dates', {'fields': ('last_login',)}),
 	)

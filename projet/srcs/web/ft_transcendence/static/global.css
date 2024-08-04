@@ -51,6 +51,7 @@ header .actions {
 header .search-form {
 	display: flex;
 	align-items: center;
+
 	height: 100%; /* Assurez-vous que le formulaire remplit la hauteur de la div parent */
 }
 
@@ -69,16 +70,17 @@ header .search-input:focus {
 }
 
 header .search-button {
+	display: flexbox;
 	background: none;
 	border: none;
 	padding: 0;
 	cursor: pointer;
 	height: 100%; /* Assurez-vous que le bouton remplit la hauteur de la div parent */
-	display: flex;
 	align-items: center;
 }
 
 header .search-icon {
+	display: flexbox;
 	width: 20px; /* Ajustez selon vos besoins */
 	height: 20px; /* Ajustez selon vos besoins */
 }

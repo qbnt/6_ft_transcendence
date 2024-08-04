@@ -45,6 +45,12 @@ def login_or_register(request):
 		'register_form': register_form,
 	})
 
+def profile(request, username):
+	user = CustomUser.objects.get(username=username)
+	return render(request, 'user_manage/profile.html', {
+		'user': user,
+	})
+
 @login_required
 def logout_user(request):
 	request.user.is_onsite = False
@@ -84,12 +90,6 @@ def pw_update(request):
 		form = PasswordChangeForm(request.user)
 	return render(request, 'user_manage/pw_update.html', {'form': form})
 
-def profile(request, username):
-	user = CustomUser.objects.get(username=username)
-	return render(request, 'user_manage/profile.html', {
-		'user': user,
-	})
-
 # ----------------------------------Social------------------------------------ #
 
 def search(request):
@@ -109,13 +109,46 @@ def search(request):
 def add_friend(request, friend):
 	friend_add = CustomUser.objects.get(username=friend)
 	try:
-		request.user.friends.add(friend_add)
-		if friend_add in request.user.blockeds.all():
-			request.user.blockeds.remove(friend_add)
-		messages.success(request, f'{friend_add.username} a été ajouté à votre liste d\'amis.')
+		if request.user in friend_add.blockeds.all():
+			messages.error(request, 'Cet utilisateur vous a bloqué.')
+		else:
+			friend_add.friends_request.add(request.user)
+			if friend_add in request.user.blockeds.all():
+				request.user.blockeds.remove(friend_add)
+				messages.success(request, f'{friend_add.username} a été retiré de vos utilisateurs bloqués.')
+			messages.success(request, f'{friend_add.username} a reçu une demande d\'ami.')
 	except CustomUser.DoesNotExist:
 		messages.error(request, 'Cet utilisateur n\'existe pas.')
 	return redirect('user_manage:profile', friend_add.username)
+
+@login_required
+def accept_friend(request, friend):
+	friend_request = CustomUser.objects.get(username=friend)
+	if friend_request in request.user.friends_request.all():
+		request.user.friends_request.remove(friend_request)
+		request.user.friends.add(friend_request)
+		friend_request.friends.add(request.user)
+		messages.success(request, f'Vous êtes maintenant ami avec {friend_request.username}.')
+	else:
+		messages.error(request, 'Cette demande d\'ami n\'existe pas.')
+	return redirect('user_manage:profile', username=request.user.username)
+
+@login_required
+def refuse_friend(request, friend):
+	friend_request = CustomUser.objects.get(username=friend)
+	if friend_request in request.user.friends_request.all():
+		request.user.friends_request.remove(friend_request)
+		messages.success(request, f'La demande d\'ami de {friend_request.username} a été refusée.')
+	else:
+		messages.error(request, 'Cette demande d\'ami n\'existe pas.')
+	return redirect('user_manage:profile', username=request.user.username)
+
+@login_required
+def	remove_friend_request(request, friend):
+	friend_request = CustomUser.objects.get(username=friend)
+	request.user.users_requested.remove(friend_request)
+	messages.success(request, f'La demande d\'ami pour {friend_request.username} a bien été supprimée.')
+	return redirect('user_manage:profile', username=friend_request.username)
 
 @login_required
 def remove_friend(request, username):
@@ -127,6 +160,7 @@ def remove_friend(request, username):
 		messages.error(request, 'Cet utilisateur n\'existe pas.')
 	return redirect('user_manage:profile', friend.username)
 
+@login_required
 def	block_user(request, username):
 	block_usr = CustomUser.objects.get(username=username)
 	try:
@@ -138,6 +172,7 @@ def	block_user(request, username):
 		messages.error(request, 'Cet utilisateur n\'existe pas.')
 	return redirect('user_manage:profile', block_usr.username)
 
+@login_required
 def unblock_user(request, username):
 	try:
 		friend = CustomUser.objects.get(username=username)

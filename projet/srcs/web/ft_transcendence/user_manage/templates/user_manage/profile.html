@@ -4,21 +4,39 @@
 	<div class="account-details-container">
 		<h2>Détails du Compte</h2>
 		<div class="profile-section">
+
 			<div class="profile-picture">
 				<img src="{{ user.avatar.url }}" alt="Photo de profil" class="profile-image">
 			</div>
+
 			<div class="profile-info">
+
 				<p><strong>Nom d'utilisateur:</strong> {{ user.username }}</p>
 				<p><strong>Email:</strong> {{ user.email }}</p>
 				<p><strong>Prénom:</strong> {{ user.first_name }}</p>
 				<p><strong>Nom:</strong> {{ user.last_name }}</p>
+
 				<h3>Liste d'amis</h3>
 				<ul>
 					{% for user in user.friends.all %}
 						<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
 					{% endfor %}
 				</ul>
+
 				{% if user == request.user %}
+					<h3>Demandes d'amis reçus</h3>
+					<ul>
+						{% for user in user.friends_request.all %}
+							<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a> - <a href="{% url 'user_manage:accept_friend' user.username %}">✅</a> / <a href="{% url 'user_manage:refuse_friend' user.username %}">❌</a></li>
+						{% endfor %}
+					</ul>
+					<h3>Demandes d'amis en attente</h3>
+					<ul>
+						{% for user in user.users_requested.all %}
+							<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
+						{% endfor %}
+					</ul>
+
 					<h3>Liste des utilisateur bloqués</h3>
 					<ul>
 						{% for user in user.blockeds.all %}
@@ -26,18 +44,24 @@
 						{% endfor %}
 					</ul>
 				{% endif %}
+
 			</div>
 		</div>
+
 		{% if request.user.is_authenticated %}
 			<div class="account-actions">
+
 				{% if user == request.user %}
 					<a href="{% url 'user_manage:edit' %}" class="btn btn-primary">Modifier le profil</a>
 					<a href="{% url 'user_manage:logout' %}" class="btn btn-primary">Déconnexion</a>
+
 				{% else %}
-					{% if user not in request.user.friends.all %}
-						<a href=" {% url 'user_manage:add_friend' user.username %}" class="btn btn-primary">Ajouter en ami</a>
-					{% else %}
+					{% if user not in request.user.friends.all and user not in request.user.users_requested.all %}
+						<a href="{% url 'user_manage:add_friend' user.username %}" class="btn btn-primary">Ajouter en ami</a>
+					{% elif user in request.user.friends.all %}
 						<a href="{% url 'user_manage:remove_friend' user.username %}" class="btn btn-primary">Retirer de la liste d'amis</a>
+					{% elif user in request.user.users_requested.all %}
+						<a href="{% url 'user_manage:remove_friend_request' user.username %}" class="btn btn-primary">Annuler la demande d'amis</a>
 					{% endif %}
 
 					{% if user not in request.user.blockeds.all %}

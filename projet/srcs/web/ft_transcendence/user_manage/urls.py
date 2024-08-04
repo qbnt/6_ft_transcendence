@@ -12,6 +12,9 @@ urlpatterns = [
 
 	path ('search/', views.search, name='search'),
 	path ('add_friend/<str:friend>', views.add_friend, name='add_friend'),
+	path ('accept_friend/<str:friend>', views.accept_friend, name='accept_friend'),
+	path ('refuse_friend/<str:friend>', views.refuse_friend, name='refuse_friend'),
+	path ('remove_friend_request/<str:friend>', views.remove_friend_request, name='remove_friend_request'),
 	path ('remove_friend/<str:username>/', views.remove_friend, name='remove_friend'),
 	path ('block_user/<str:username>/', views.block_user, name='block'),
 	path ('unblock_user/<str:username>/', views.unblock_user, name='unblock'),

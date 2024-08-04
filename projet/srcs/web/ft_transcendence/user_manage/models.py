@@ -35,8 +35,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	avatar = models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
 	is_onsite = models.BooleanField(default=True)
 
-	friends = models.ManyToManyField('self', blank=True)
-	blockeds = models.ManyToManyField('self', blank=True)
+	friends_request = models.ManyToManyField('self', symmetrical=False, related_name='users_requested')
+	friends = models.ManyToManyField('self', blank=True, related_name='friend_with')
+	blockeds = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by')
 
 	win_count = models.IntegerField(default=0)
 	lose_count = models.IntegerField(default=0)
