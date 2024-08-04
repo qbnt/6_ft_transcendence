@@ -42,7 +42,7 @@ services:
       - ELASTICSEARCH_HOST=elasticsearch
       - LOGSTASH_HOST=logstash
     volumes:
-    - "./web/:/usr/src/app"
+     - "./web/:/usr/src/app"
     networks:
       - app_network
     ports:
@@ -198,10 +198,10 @@ networks:
 
 volumes:
   db:
-    driver: local
+   driver: local
   ELKdata:
-    driver: local
+   driver: local
   prom_data:
-    driver: local
+   driver: local
   HashiCorp:
-    driver: local
+   driver: local
