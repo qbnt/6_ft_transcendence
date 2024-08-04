@@ -115,9 +115,10 @@ services:
       - config.reload.interval=3s
     volumes:
       - ./requirements/ELK/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./requirements/ELK/test.json:/usr/share/logstash/test.json
+      - ./requirements/ELK/pipeline/patterns:/etc/logstash/patterns
     ports:
       - "5044:5044"
+      - "5045:5045"
       - "9600:9600"
     networks:
       - app_network
