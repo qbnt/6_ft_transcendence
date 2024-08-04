@@ -40,7 +40,7 @@ ALLOWED_HOSTS = [
 INTERNAL_IPS = [
 	"localhost",
 	'django',
-    "127.0.0.1",
+	"127.0.0.1",
 ]
 
 import socket
@@ -48,21 +48,21 @@ hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
 
 DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': lambda request: False,
+	'SHOW_TOOLBAR_CALLBACK': lambda request: False,
 }
 
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+	'django.contrib.admin',
+	'django.contrib.auth',
+	'django.contrib.contenttypes',
+	'django.contrib.sessions',
+	'django.contrib.messages',
+	'django.contrib.staticfiles',
 
 	'django_prometheus',
-    'debug_toolbar',
+	'debug_toolbar',
 	'channels',
 
 	'home',
@@ -75,13 +75,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 	'django_prometheus.middleware.PrometheusBeforeMiddleware',
 
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'django.middleware.security.SecurityMiddleware',
+	'django.contrib.sessions.middleware.SessionMiddleware',
+	'django.middleware.common.CommonMiddleware',
+	'django.middleware.csrf.CsrfViewMiddleware',
+	'django.contrib.auth.middleware.AuthenticationMiddleware',
+	'django.contrib.messages.middleware.MessageMiddleware',
+	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 	'debug_toolbar.middleware.DebugToolbarMiddleware',
 
@@ -91,43 +91,43 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'ft_transcendence.urls'
 
 TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+	{
+		'BACKEND': 'django.template.backends.django.DjangoTemplates',
+		'DIRS': [os.path.join(BASE_DIR, 'templates')],
+		'APP_DIRS': True,
+		'OPTIONS': {
+			'context_processors': [
+				'django.template.context_processors.debug',
+				'django.template.context_processors.request',
+				'django.contrib.auth.context_processors.auth',
+				'django.contrib.messages.context_processors.messages',
+			],
+		},
+	},
 ]
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'logstash': {
-            'level': 'DEBUG',
-            'class': 'logstash.TCPLogstashHandler',
-            'host': 'logstash',
-            'port': 5044,
-            'version': 1,
-            'message_type': 'django',
-            'fqdn': False,
-            'tags': ['django'],
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['logstash'],
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    },
+	'version': 1,
+	'disable_existing_loggers': False,
+	'handlers': {
+		'logstash': {
+			'level': 'DEBUG',
+			'class': 'logstash.TCPLogstashHandler',
+			'host': 'logstash',
+			'port': 5044,
+			'version': 1,
+			'message_type': 'django',
+			'fqdn': False,
+			'tags': ['django'],
+		},
+	},
+	'loggers': {
+		'django': {
+			'handlers': ['logstash'],
+			'level': 'DEBUG',
+			'propagate': True,
+		},
+	},
 }
 
 # WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
@@ -140,14 +140,14 @@ MEDIA_URL = '/media/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB'),
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql',
+		'NAME': os.getenv('POSTGRES_DB'),
 		'USER': os.getenv('POSTGRES_USER'),
 		'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
 		'HOST': 'postgresql',
 		'POST': '5432'
-    }
+	}
 }
 
 
@@ -157,18 +157,18 @@ DATABASES = {
 AUTH_USER_MODEL = 'user_manage.CustomUser'
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+	{
+		'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+	},
+	{
+		'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+	},
 ]
 
 

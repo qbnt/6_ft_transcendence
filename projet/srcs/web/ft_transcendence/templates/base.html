@@ -3,12 +3,12 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ft_transcendence{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'global.css' %}">
-    <link rel="icon" href="{% static 'favicon.ico' %}">
-    {% block extra_head %}{% endblock %}
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}ft_transcendence{% endblock %}</title>
+	<link rel="stylesheet" href="{% static 'global.css' %}">
+	<link rel="icon" href="{% static 'favicon.ico' %}">
+	{% block extra_head %}{% endblock %}
 </head>
 <body>
 	<header>
@@ -38,16 +38,16 @@
 		</div>
 	</header>
 
-    <main>
+	<main>
 		{% for message in messages %}
 			<p>{{ message }}</p>
 		{% endfor %}
-        {% block content %}
-        {% endblock %}
-    </main>
+		{% block content %}
+		{% endblock %}
+	</main>
 
-    <footer>
-        <p>&copy; 2024 ft_transcendence</p>
-    </footer>
+	<footer>
+		<p>&copy; 2024 ft_transcendence</p>
+	</footer>
 </body>
 </html>
