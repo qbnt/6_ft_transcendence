@@ -1,0 +1,2 @@
+NGINX_ACCESS %{IPORHOST:remote_addr} - %{DATA:remote_user} \[%{HTTPDATE:time_local}\] "%{DATA:host}" "%{WORD:method} %{DATA:request} HTTP/%{NUMBER:http_version}" %{NUMBER:status} %{NUMBER:body_bytes_sent} "%{DATA:referrer}" "%{DATA:user_agent}"
+NGINX_ERROR %{DATESTAMP:timestamp} \[%{LOGLEVEL:loglevel}\] %{NUMBER:pid}#%{NUMBER:tid}: \*%{NUMBER} %{GREEDYDATA:error_message}
