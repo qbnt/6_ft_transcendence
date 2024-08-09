@@ -48,7 +48,7 @@ hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
 INTERNAL_IPS += [ip[:-1] + "1" for ip in ips]
 
 DEBUG_TOOLBAR_CONFIG = {
-	'SHOW_TOOLBAR_CALLBACK': lambda request: False,
+	'SHOW_TOOLBAR_CALLBACK': lambda request: True,
 }
 
 # Application definition
@@ -84,6 +84,7 @@ MIDDLEWARE = [
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
 	'debug_toolbar.middleware.DebugToolbarMiddleware',
+	'django_htmx.middleware.HtmxMiddleware',
 
 	'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
