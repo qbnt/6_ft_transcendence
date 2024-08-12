@@ -54,17 +54,15 @@ DEBUG_TOOLBAR_CONFIG = {
 # Application definition
 
 INSTALLED_APPS = [
+	'daphne',
 	'django.contrib.admin',
 	'django.contrib.auth',
 	'django.contrib.contenttypes',
 	'django.contrib.sessions',
 	'django.contrib.messages',
 	'django.contrib.staticfiles',
-
 	'django_prometheus',
 	'debug_toolbar',
-	'channels',
-
 	'home',
 	'user_manage',
 	'live_chat',
@@ -108,31 +106,42 @@ TEMPLATES = [
 ]
 
 LOGGING = {
-	'version': 1,
-	'disable_existing_loggers': False,
-	'handlers': {
-		'logstash': {
-			'level': 'DEBUG',
-			'class': 'logstash.TCPLogstashHandler',
-			'host': 'logstash',
-			'port': 5044,
-			'version': 1,
-			'message_type': 'django',
-			'fqdn': False,
-			'tags': ['django'],
-		},
-	},
-	'loggers': {
-		'django': {
-			'handlers': ['logstash'],
-			'level': 'DEBUG',
-			'propagate': True,
-		},
-	},
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'logstash': {
+            'level': 'DEBUG',
+            'class': 'logstash.TCPLogstashHandler',
+            'host': 'logstash',
+            'port': 5044,
+            'version': 1,
+            'message_type': 'django',
+            'fqdn': False,
+            'tags': ['django'],
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logstash', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
 }
 
 # WSGI_APPLICATION = 'ft_transcendence.wsgi.application'
 ASGI_APPLICATION = 'ft_transcendence.asgi.application'
+
+CHANNEL_LAYERS = {
+        'default': {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'

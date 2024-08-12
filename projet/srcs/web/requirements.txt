@@ -6,5 +6,5 @@ python-logstash
 django-prometheus
 django-debug-toolbar
 django-htmx
-channels
+channels[daphne]
 requests

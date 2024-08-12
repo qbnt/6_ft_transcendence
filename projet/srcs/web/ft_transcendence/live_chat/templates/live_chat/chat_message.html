@@ -1,4 +1,4 @@
-{% if message.author == request.user %}
+{% if message.author == user %}
 <li class="user-message">
 	<div class="message-content">
 		<span>{{message.body}}</span>
