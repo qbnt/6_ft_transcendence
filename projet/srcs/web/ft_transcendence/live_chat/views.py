@@ -20,7 +20,7 @@ def chat_view(request):
 				'message': message,
 				'user': request.user
 			}
-			return render(request, 'live_chat/partials/chat_p.html', context)
+			return render(request, 'live_chat/partials/chat_message_p.html', context)
 
 	return render (request, 'live_chat/chat.html', {
 		'chat_messages' : chat_messages,

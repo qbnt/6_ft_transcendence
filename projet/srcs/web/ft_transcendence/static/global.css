@@ -488,3 +488,32 @@ body {
 .message-input::placeholder {
     color: #6b7280; /* Gris pour le placeholder */
 }
+
+/* Classe pour le point vert lorsque l'utilisateur est en ligne */
+.green-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #28a745; /* Vert */
+    border-radius: 50%; /* Pour que le point soit circulaire */
+}
+
+/* Classe pour le point gris lorsque l'utilisateur est hors ligne */
+.gray-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #6c757d; /* Gris */
+    border-radius: 50%; /* Pour que le point soit circulaire */
+}
+
+/* Positionnement absolu pour placer le point en haut à gauche */
+.absolute {
+    position: absolute;
+}
+
+.top-2 {
+    top: 0.5rem; /* Positionnement depuis le haut */
+}
+
+.left-2 {
+    left: 0.5rem; /* Positionnement depuis la gauche */
+}
