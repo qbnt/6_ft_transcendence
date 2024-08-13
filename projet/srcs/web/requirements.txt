@@ -5,5 +5,7 @@ Pillow
 python-logstash
 django-prometheus
 django-debug-toolbar
-channels
+django-htmx
+channels[daphne]
 requests
+shortuuid
