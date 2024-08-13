@@ -9,15 +9,28 @@
 	<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
 	<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
 	<title>{% block title %}ft_transcendence{% endblock %}</title>
-	<link rel="stylesheet" href="{% static 'global.css' %}">
+	{% comment %} <link rel="stylesheet" href="{% static 'global.css' %}"> {% endcomment %}
 	<link rel="icon" href="{% static 'favicon.ico' %}">
 	{% block extra_head %}{% endblock %}
 </head>
 <body>
 	<header>
 		<h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
-		<div class="user-info">
-			<div class="actions">
+		<nav class="navbar">
+			<div class="chat">
+				<ul>
+					<li><a href="{% url 'chat:chat_view' %}">Channel publique</a></li>
+					{% for chatroom in user.chat_groups.all %}
+						{% if chatroom.is_private %}
+							{% for member in chatroom.members.all %}
+								{% if member != user %}
+									<li><a href="{% url 'chat:chatroom' chatroom.group_name %}">{{ member.username }}</a></li>
+								{% endif %}
+							{%endfor %}
+						{% endif %}
+					{% endfor %}
+			</div>
+			<div class="search">
 				<form action="{% url 'user_manage:search' %}" method="get" class="search-form">
 					<input type="text" name="query" placeholder="Rechercher un utilisateur..." class="search-input">
 					<button type="submit" class="search-button">
@@ -25,19 +38,21 @@
 					</button>
 				</form>
 			</div>
-			{% if request.user.is_authenticated %}
-				<div class="image-container">
-					<a href="{% url 'user_manage:profile' request.user.username %}">
-						<img src="{{ request.user.avatar.url }}" alt="Image Profil" class="profile-image">
-					</a>
-				</div>
-			{% else %}
-				<div class="image-container">
-					<a href="{% url 'user_manage:connexion' %}">
-						<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion" class="profile-image">
-					</a>
-				</div>
-			{% endif %}
+			<div class="profil">
+				{% if request.user.is_authenticated %}
+					<div class="image-container">
+						<a href="{% url 'user_manage:profile' request.user.username %}">
+							<img src="{{ request.user.avatar.url }}" alt="Image Profil" class="profile-image">
+						</a>
+					</div>
+				{% else %}
+					<div class="image-container">
+						<a href="{% url 'user_manage:connexion' %}">
+							<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion" class="profile-image">
+						</a>
+					</div>
+				{% endif %}
+			</div>
 		</div>
 	</header>
 

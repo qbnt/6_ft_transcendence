@@ -63,6 +63,7 @@ INSTALLED_APPS = [
 	'django.contrib.staticfiles',
 	'django_prometheus',
 	'debug_toolbar',
+	'shortuuid',
 	'home',
 	'user_manage',
 	'live_chat',

@@ -5,4 +5,6 @@ app_name = 'chat'
 
 urlpatterns = [
     path('', views.chat_view, name='chat_view'),
+	path('<username>', views.get_or_create_chatroom, name='start_chat'),
+	path('room/<chatroom_name>', views.chat_view, name='chatroom'),
 ]
