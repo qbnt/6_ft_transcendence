@@ -15,36 +15,26 @@
 				<p><strong>Email:</strong> {{ user.email }}</p>
 				<p><strong>Prénom:</strong> {{ user.first_name }}</p>
 				<p><strong>Nom:</strong> {{ user.last_name }}</p>
-
-				<h3>Liste d'amis</h3>
-				<ul>
-					{% for user in user.friends.all %}
-						<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
-					{% endfor %}
-				</ul>
-
 				{% if user == request.user %}
 					<h3>Demandes d'amis reçus</h3>
-					<ul>
-						{% for user in user.friends_request.all %}
-							<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a> - <a href="{% url 'user_manage:accept_friend' user.username %}">✅</a> / <a href="{% url 'user_manage:refuse_friend' user.username %}">❌</a></li>
-						{% endfor %}
-					</ul>
+						<ul>
+							{% for user in user.friends_request.all %}
+								<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a> - <a href="{% url 'user_manage:accept_friend' user.username %}">✅</a> / <a href="{% url 'user_manage:refuse_friend' user.username %}">❌</a></li>
+							{% endfor %}
+						</ul>
 					<h3>Demandes d'amis en attente</h3>
-					<ul>
-						{% for user in user.users_requested.all %}
-							<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
-						{% endfor %}
-					</ul>
-
+						<ul>
+							{% for user in user.users_requested.all %}
+								<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
+							{% endfor %}
+						</ul>
 					<h3>Liste des utilisateur bloqués</h3>
-					<ul>
-						{% for user in user.blockeds.all %}
-							<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
-						{% endfor %}
-					</ul>
+						<ul>
+							{% for user in user.blockeds.all %}
+								<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
+							{% endfor %}
+						</ul>
 				{% endif %}
-
 			</div>
 		</div>
 
