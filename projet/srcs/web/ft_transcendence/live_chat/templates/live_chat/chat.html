@@ -8,7 +8,9 @@
 			<div id="mp-online-icon"></div>
 			<a href="{% url 'user_manage:profile' other_user.username %}">
 				<div class="mp-user-info">
-					<img src={{ other_user.avatar.url }}>
+					<div class="mini-pp">
+						<img src={{ other_user.avatar.url }}>
+					</div>
 					<span>{{other_user.username}}</span>
 				</div>
 			</a>

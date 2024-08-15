@@ -57,6 +57,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	def save(self, *args, **kwargs):
 		super().save(*args, **kwargs)
 		img = Image.open(self.avatar.path)
-		if img.height > 300 or img.width > 300:
-			img = ImageOps.fit(img, (300, 300))
+		if img.height > 150 or img.width > 150:
+			img = ImageOps.fit(img, (150, 150))
 			img.save(self.avatar.path)

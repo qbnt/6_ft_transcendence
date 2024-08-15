@@ -33,7 +33,7 @@
 		<nav class="navbar">
 			<section class="profil">
 				{% if request.user.is_authenticated %}
-					<div class="pp-container">
+					<div class="mid-pp">
 						<a href="{% url 'user_manage:profile' request.user.username %}">
 							<img src="{{ request.user.avatar.url }}" alt="Image Profil">
 						</a>
@@ -62,8 +62,15 @@
 			<div id="friend_list" class="socialbar-item">
 				<h3>Liste d'amis</h3>
 				<ul>
-					{% for user in user.friends.all %}
-						<li><a href="{% url 'user_manage:profile' user.username %}">{{ user.username }}</a></li>
+					{% for friend in user.friends.all %}
+						<div class="friend">
+							<li>
+								<div class="mini-pp">
+									<img src="{{ friend.avatar.url }}" alt="friend pp">
+								</div>
+								<a href="{% url 'user_manage:profile' friend.username %}">{{ friend.username }}</a>
+							</li>
+						</div>
 					{% endfor %}
 				</ul>
 			</div>

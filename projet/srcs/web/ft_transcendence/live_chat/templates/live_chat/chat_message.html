@@ -8,7 +8,9 @@
 <li class="message-item other-message">
 	<div class="message-avatar">
 		<a href="{% url 'user_manage:profile' message.author.username %}">
-			<img class="avatar-image" src="{{message.author.avatar.url }}">
+			<div class="mini-pp">
+				<img class="avatar-image" src="{{message.author.avatar.url }}">
+			</div>
 		</a>
 	</div>
 	<div class="message-content other-message-content">
