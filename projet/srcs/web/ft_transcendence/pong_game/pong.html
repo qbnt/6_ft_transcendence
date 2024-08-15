@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Transcendance Pong</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+	<h1>Transcendance Pong</h1>
+
+    <div id="login-container">
+        <form id="startGameForm">
+            <div class="player-container">
+                <div class="player" id="player1">
+                    <label for="player1Username">Player 1 Username:</label>
+                    <input type="text" id="player1Username" name="player1Username" required>
+                </div>
+                <div class="player" id="player2">
+                    <label for="player2Username">Player 2 Username:</label>
+                    <input type="text" id="player2Username" name="player2Username" required>
+                </div>
+            </div>
+            <button type="submit">Start Game</button>
+        </form>
+    </div>
+
+    <div id="game-container">
+        <canvas></canvas>
+        <p>Control the left player by using 'w' and 's' keys<br>
+            Control the right player by using up and down arrow keys
+        </p>
+    </div>
+    
+    <script src="./start_game.js"></script>
+    <script src="./script.js"></script>
+	
+    <script>
+        fetch('/get-user-data/')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Username:', data.username);
+            })
+            .catch(error => console.error('Error:', error));
+    </script>
+</body>
+
+</html>
