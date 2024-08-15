@@ -29,8 +29,16 @@ venv/
 .idea/
 .vscode/
 *.swp
+projet/srcs/web/ft_transcendence/ft_transcendence/migrations/*
+projet/srcs/web/ft_transcendence/home/migrations/*
+projet/srcs/web/ft_transcendence/live_chat/migrations/*
+projet/srcs/web/ft_transcendence/pong_game/migrations/*
+projet/srcs/web/ft_transcendence/tournament/migrations/*
 projet/srcs/web/ft_transcendence/user_manage/migrations/*
+
 projet/srcs/web/ft_transcendence/media/profile_avatars/*
+
+projet/srcs/web/ft_transcendence/ft_transcendence/__pycache__/*
 projet/srcs/web/ft_transcendence/home/__pycache__/*
 projet/srcs/web/ft_transcendence/live_chat/__pycache__/*
 projet/srcs/web/ft_transcendence/pong_game/__pycache__/*

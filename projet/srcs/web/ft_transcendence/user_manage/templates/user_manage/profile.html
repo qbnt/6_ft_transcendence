@@ -56,6 +56,8 @@
 					<a href="{% url 'user_manage:logout' %}" class="btn btn-primary">Déconnexion</a>
 
 				{% else %}
+					<a href="{% url 'chat:start_chat' user.username %}" class="btn btn-primary">Envoyer un message</a>
+
 					{% if user not in request.user.friends.all and user not in request.user.users_requested.all %}
 						<a href="{% url 'user_manage:add_friend' user.username %}" class="btn btn-primary">Ajouter en ami</a>
 					{% elif user in request.user.friends.all %}
