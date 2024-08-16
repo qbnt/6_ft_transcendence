@@ -6,7 +6,10 @@ from .forms							import *
 
 @login_required
 def chat_view(request, chatroom_name='public-chat'):
-	chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
+	try:
+		chat_group = ChatGroup.objects.get(group_name=chatroom_name)
+	except ChatGroup.DoesNotExist:
+		chat_group = ChatGroup.objects.create(group_name=chatroom_name, is_private=False)
 	chat_messages = chat_group.chat_messages.all()[:30]
 	form = ChatmessageCreateForm()
 

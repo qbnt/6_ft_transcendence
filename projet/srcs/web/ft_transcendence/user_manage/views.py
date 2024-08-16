@@ -67,6 +67,7 @@ def edit_user(request):
 		user_form = forms.CustomUserUpdateForm(request.POST, request.FILES, instance=user)
 		if user_form.is_valid():
 			user_form.save()
+			messages.success(request, f'Vos modifications ont bien étaient enregistrés {user.username}!')
 			return redirect("home:index")
 	else:
 		user_form = forms.CustomUserUpdateForm(instance=user)
@@ -232,6 +233,7 @@ def api_42_callback(request):
 			img_temp = BytesIO(response.content)
 			user.avatar.save(f"{username}_avatar.jpg", File(img_temp), save=True)
 		login(request, user)
+		messages.success(request, f'Welcome back, {user.username}!')
 		return redirect('home:index')
 
 	except Exception as e:
