@@ -1,7 +1,10 @@
 from django.urls import path
 from . import views
 
+app_name = 'chat'
+
 urlpatterns = [
-    path('some-path/', views.some_view, name='some_name'),
-    # Ajoute d'autres patterns d'URL ici
+    path('', views.chat_view, name='chat_view'),
+	path('<username>', views.get_or_create_chatroom, name='start_chat'),
+	path('room/<chatroom_name>', views.chat_view, name='chatroom'),
 ]

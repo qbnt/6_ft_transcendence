@@ -35,9 +35,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	avatar = models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
 	is_onsite = models.BooleanField(default=True)
 
-	friends_request = models.ManyToManyField('self', symmetrical=False, related_name='users_requested')
+	friends_request = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='users_requested')
 	friends = models.ManyToManyField('self', blank=True, related_name='friend_with')
-	blockeds = models.ManyToManyField('self', symmetrical=False, related_name='blocked_by')
+	blockeds = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='blocked_by')
 
 	win_count = models.IntegerField(default=0)
 	lose_count = models.IntegerField(default=0)
@@ -57,6 +57,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	def save(self, *args, **kwargs):
 		super().save(*args, **kwargs)
 		img = Image.open(self.avatar.path)
-		if img.height > 300 or img.width > 300:
-			img = ImageOps.fit(img, (300, 300))
+		if img.height > 150 or img.width > 150:
+			img = ImageOps.fit(img, (150, 150))
 			img.save(self.avatar.path)

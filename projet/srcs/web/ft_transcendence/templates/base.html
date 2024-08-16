@@ -2,52 +2,194 @@
 
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+	<script src="https://unpkg.com/hyperscript.org@0.9.12"></script>
+	<script src="https://unpkg.com/htmx.org@1.9.12/dist/ext/ws.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
 	<title>{% block title %}ft_transcendence{% endblock %}</title>
+
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 	<link rel="stylesheet" href="{% static 'global.css' %}">
 	<link rel="icon" href="{% static 'favicon.ico' %}">
-	{% block extra_head %}{% endblock %}
 </head>
+
 <body>
 	<header>
-		<h1><a href="{% url 'home:index' %}">ft_transcendence</a></h1>
-		<div class="user-info">
-			<div class="actions">
-				<form action="{% url 'user_manage:search' %}" method="get" class="search-form">
-					<input type="text" name="query" placeholder="Rechercher un utilisateur..." class="search-input">
-					<button type="submit" class="search-button">
-						<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon">
-					</button>
-				</form>
-			</div>
-			{% if request.user.is_authenticated %}
-				<div class="image-container">
-					<a href="{% url 'user_manage:profile' request.user.username %}">
-						<img src="{{ request.user.avatar.url }}" alt="Image Profil" class="profile-image">
-					</a>
-				</div>
-			{% else %}
-				<div class="image-container">
-					<a href="{% url 'user_manage:connexion' %}">
-						<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion" class="profile-image">
-					</a>
-				</div>
-			{% endif %}
-		</div>
+		<a href="{% url 'home:index' %}">
+			<img src="{% static 'images/logo.png' %}" alt="Logo" id="logo">
+		</a>
 	</header>
 
+	<nav class="navbar-container">
+		<button class="btn navbar-toggle btn-outline-secondary" type="button" id="navbarToggle">
+			{% if request.user.is_authenticated %}
+				<div class="mid-pp rounded-circle overflow-hidden" style="width: 40px; height: 40px;">
+					<img src="{{ request.user.avatar.url }}" alt="Image Profil" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+				</div>
+			{% else %}
+				<div class="pp-container rounded-circle overflow-hidden" style="width: 40px; height: 40px;">
+					<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+				</div>
+			{% endif %}
+		</button>
+
+		<div class="navbar container-fluid border rounded shadow-sm" id="navbarContent" style="height: 100vh; flex-direction: column; align-items: center;">
+
+			<!-- Search Bar -->
+			<div class="row mb-4 w-100" style="margin-top: 54px;">
+				<section class="search w-100">
+					<form action="{% url 'user_manage:search' %}" method="get" class="search-form d-flex">
+						<input type="search" name="query" placeholder="Chercher un joueur" class="form-control rounded-pill" style="font-size: 1.2rem;">
+						<button type="submit" class="btn btn-sm btn-secondary rounded-pill ms-2" style="width: 45px;">
+							<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon" style="width: 100%;">
+						</button>
+					</form>
+				</section>
+			</div>
+
+			<!-- Navigation Links -->
+			 {% if request.user.is_authenticated %}
+				<div class="row mb-4 w-100" style="margin-top: 54px;">
+					<section class="nav-links w-100">
+						<ul class="list-unstyled">
+							<!-- Access Profile -->
+							<li class="mb-3">
+								<a href="{% url 'user_manage:profile' request.user.username %}" class="text-decoration-none btn btn-primary w-100 rounded-pill" style="font-size: 1.2rem;">
+									Mon Profil
+								</a>
+							</li>
+							<!-- Create Tournament (to be added) -->
+							<li class="mb-3">
+								<a href="#" class="text-decoration-none btn btn-outline-primary w-100 rounded-pill" style="font-size: 1.2rem;">
+									Créer un Tournoi
+								</a>
+							</li>
+						</ul>
+					</section>
+				</div>
+			{% endif %}
+
+			<!-- Friend List (Collapsible) -->
+			<div class="row mb-4 w-100 bordered" style="margin-top: 54px;">
+				<section class="friend-list w-100">
+					{% if request.user.is_authenticated %}
+						<div class="accordion" id="friendAccordion">
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="headingFriends">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFriends" aria-expanded="false" aria-controls="collapseFriends">
+										Liste d'amis
+									</button>
+								</h2>
+								<div id="collapseFriends" class="accordion-collapse collapse" aria-labelledby="headingFriends" data-bs-parent="#friendAccordion">
+									<div class="accordion-body">
+										<ul class="list-unstyled">
+											{% for friend in request.user.friends.all %}
+												<li class="friend mb-2 d-flex align-items-center">
+													<div class="mini-pp rounded-circle overflow-hidden me-2" style="width: 30px; height: 30px;">
+														<img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+													</div>
+													<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none">{{ friend.username }}</a>
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</section>
+			</div>
+
+			<!-- Chat Section -->
+			<div class="row flex-grow-1 w-100" style="margin-top: 10px;">
+				<section class="chat-section w-100">
+					{% if request.user.is_authenticated %}
+						<div class="accordion" id="chatAccordion">
+							<div class="accordion-item mb-3">
+								<h2 class="accordion-header" id="headingPublicChat">
+									<a href="{% url 'chat:chat_view' %}" class="text-decoration-none btn btn-outline-secondary w-100" style="font-size: 1.2rem;">
+										Channel Public
+									</a>
+								</h2>
+							</div>
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="headingChats">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChats" aria-expanded="false" aria-controls="collapseChats">
+										Autres Chats
+									</button>
+								</h2>
+								<div id="collapseChats" class="accordion-collapse collapse" aria-labelledby="headingChats" data-bs-parent="#chatAccordion">
+									<div class="accordion-body">
+										<ul class="list-unstyled">
+											{% for chatroom in request.user.chat_groups.all %}
+												{% if chatroom.is_private %}
+													{% for member in chatroom.members.all %}
+														{% if member != user %}
+															<li>
+																<a href="{% url 'chat:chatroom' chatroom.group_name %}" class="text-decoration-none">{{ member.username }}</a>
+															</li>
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</section>
+			</div>
+			<div class="row w-100 mt-auto">
+				<section class="auth-buttons w-100 text-center">
+					{% if request.user.is_authenticated %}
+						<!-- Bouton de déconnexion -->
+						<a href="{% url 'user_manage:logout' %}" class="btn btn-danger w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
+							Se déconnecter
+						</a>
+					{% else %}
+						<!-- Bouton de connexion -->
+						<a href="{% url 'user_manage:connexion' %}" class="btn btn-primary w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
+							Se connecter
+						</a>
+					{% endif %}
+				</section>
+			</div>
+		</div>
+	</nav>
+
 	<main>
-		{% for message in messages %}
-			<p>{{ message }}</p>
-		{% endfor %}
-		{% block content %}
-		{% endblock %}
+		<section id="syst_messages" class="position-fixed top-0 start-0 p-3" style="z-index: 1050;">
+			{% for message in messages %}
+				<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+			{% endfor %}
+		</section>
+		<section id="content">
+			{% block content %}
+			{% endblock %}
+		</section>
 	</main>
 
 	<footer>
 		<p>&copy; 2024 ft_transcendence</p>
+		{% block javascript %}
+		{% endblock%}
+		<script>
+			document.getElementById('navbarToggle').addEventListener('click', function () {
+				var navbarContent = document.getElementById('navbarContent');
+				navbarContent.classList.toggle('show');
+			});
+		</script>
 	</footer>
 </body>
+
 </html>

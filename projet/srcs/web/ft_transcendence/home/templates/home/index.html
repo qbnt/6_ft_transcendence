@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="content-wrapper">
-        <h1>Page de l'application pong</h1>
-        <p>{{ message }}</p>
-        <img src="media/pong.jpg" alt="Le pong avant le pong">
+    <div class="container">
+		<div class="row">
+			<img src="media/pong.jpg" alt="Le pong avant le pong" class="img-fluid">
+			<p class="text-center">{{ message }}</p>
+		</div>
     </div>
 {% endblock %}
