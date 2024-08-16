@@ -43,7 +43,6 @@
 
 				{% if user == request.user %}
 					<a href="{% url 'user_manage:edit' %}" class="btn btn-primary">Modifier le profil</a>
-					<a href="{% url 'user_manage:logout' %}" class="btn btn-primary">Déconnexion</a>
 
 				{% else %}
 					<a href="{% url 'chat:start_chat' user.username %}" class="btn btn-primary">Envoyer un message</a>

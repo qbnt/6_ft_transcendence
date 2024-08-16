@@ -27,80 +27,151 @@
 	</header>
 
 	<nav class="navbar-container">
-		<button class="navbar-toggle">
-			<img src="{% static 'images/menu-icon.png' %}" alt="Menu" class="menu-icon">
+		<button class="btn navbar-toggle btn-outline-secondary" type="button" id="navbarToggle">
+			{% if request.user.is_authenticated %}
+				<div class="mid-pp rounded-circle overflow-hidden" style="width: 40px; height: 40px;">
+					<img src="{{ request.user.avatar.url }}" alt="Image Profil" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+				</div>
+			{% else %}
+				<div class="pp-container rounded-circle overflow-hidden" style="width: 40px; height: 40px;">
+					<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+				</div>
+			{% endif %}
 		</button>
-		<nav class="navbar">
-			<section class="profil">
-				{% if request.user.is_authenticated %}
-					<div class="mid-pp">
-						<a href="{% url 'user_manage:profile' request.user.username %}">
-							<img src="{{ request.user.avatar.url }}" alt="Image Profil">
+
+		<div class="navbar container-fluid border rounded shadow-sm" id="navbarContent" style="height: 100vh; flex-direction: column; align-items: center;">
+
+			<!-- Search Bar -->
+			<div class="row mb-4 w-100" style="margin-top: 54px;">
+				<section class="search w-100">
+					<form action="{% url 'user_manage:search' %}" method="get" class="search-form d-flex">
+						<input type="search" name="query" placeholder="Chercher un joueur" class="form-control rounded-pill" style="font-size: 1.2rem;">
+						<button type="submit" class="btn btn-sm btn-secondary rounded-pill ms-2" style="width: 45px;">
+							<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon" style="width: 100%;">
+						</button>
+					</form>
+				</section>
+			</div>
+
+			<!-- Navigation Links -->
+			 {% if request.user.is_authenticated %}
+				<div class="row mb-4 w-100" style="margin-top: 54px;">
+					<section class="nav-links w-100">
+						<ul class="list-unstyled">
+							<!-- Access Profile -->
+							<li class="mb-3">
+								<a href="{% url 'user_manage:profile' request.user.username %}" class="text-decoration-none btn btn-primary w-100 rounded-pill" style="font-size: 1.2rem;">
+									Mon Profil
+								</a>
+							</li>
+							<!-- Create Tournament (to be added) -->
+							<li class="mb-3">
+								<a href="#" class="text-decoration-none btn btn-outline-primary w-100 rounded-pill" style="font-size: 1.2rem;">
+									Créer un Tournoi
+								</a>
+							</li>
+						</ul>
+					</section>
+				</div>
+			{% endif %}
+
+			<!-- Friend List (Collapsible) -->
+			<div class="row mb-4 w-100 bordered" style="margin-top: 54px;">
+				<section class="friend-list w-100">
+					{% if request.user.is_authenticated %}
+						<div class="accordion" id="friendAccordion">
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="headingFriends">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFriends" aria-expanded="false" aria-controls="collapseFriends">
+										Liste d'amis
+									</button>
+								</h2>
+								<div id="collapseFriends" class="accordion-collapse collapse" aria-labelledby="headingFriends" data-bs-parent="#friendAccordion">
+									<div class="accordion-body">
+										<ul class="list-unstyled">
+											{% for friend in request.user.friends.all %}
+												<li class="friend mb-2 d-flex align-items-center">
+													<div class="mini-pp rounded-circle overflow-hidden me-2" style="width: 30px; height: 30px;">
+														<img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+													</div>
+													<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none">{{ friend.username }}</a>
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</section>
+			</div>
+
+			<!-- Chat Section -->
+			<div class="row flex-grow-1 w-100" style="margin-top: 10px;">
+				<section class="chat-section w-100">
+					{% if request.user.is_authenticated %}
+						<div class="accordion" id="chatAccordion">
+							<div class="accordion-item mb-3">
+								<h2 class="accordion-header" id="headingPublicChat">
+									<a href="{% url 'chat:chat_view' %}" class="text-decoration-none btn btn-outline-secondary w-100" style="font-size: 1.2rem;">
+										Channel Public
+									</a>
+								</h2>
+							</div>
+							<div class="accordion-item">
+								<h2 class="accordion-header" id="headingChats">
+									<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChats" aria-expanded="false" aria-controls="collapseChats">
+										Autres Chats
+									</button>
+								</h2>
+								<div id="collapseChats" class="accordion-collapse collapse" aria-labelledby="headingChats" data-bs-parent="#chatAccordion">
+									<div class="accordion-body">
+										<ul class="list-unstyled">
+											{% for chatroom in request.user.chat_groups.all %}
+												{% if chatroom.is_private %}
+													{% for member in chatroom.members.all %}
+														{% if member != user %}
+															<li>
+																<a href="{% url 'chat:chatroom' chatroom.group_name %}" class="text-decoration-none">{{ member.username }}</a>
+															</li>
+														{% endif %}
+													{% endfor %}
+												{% endif %}
+											{% endfor %}
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					{% endif %}
+				</section>
+			</div>
+			<div class="row w-100 mt-auto">
+				<section class="auth-buttons w-100 text-center">
+					{% if request.user.is_authenticated %}
+						<!-- Bouton de déconnexion -->
+						<a href="{% url 'user_manage:logout' %}" class="btn btn-danger w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
+							Se déconnecter
 						</a>
-					</div>
-				{% else %}
-					<div class="pp-container">
-						<a href="{% url 'user_manage:connexion' %}">
-							<img src="{% static 'images/default_avatar.jpg' %}" alt="Image de connexion">
+					{% else %}
+						<!-- Bouton de connexion -->
+						<a href="{% url 'user_manage:connexion' %}" class="btn btn-primary w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
+							Se connecter
 						</a>
-					</div>
-				{% endif %}
-			</section>
-			<section class="search">
-				<form action="{% url 'user_manage:search' %}" method="get" class="search-form">
-					<input type="text" name="query" placeholder="Rechercher un utilisateur..." class="search-input">
-					<button type="submit" class="search-button">
-						<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon">
-					</button>
-				</form>
-			</section>
-		</nav>
+					{% endif %}
+				</section>
+			</div>
+		</div>
 	</nav>
 
-	<section class="socialbar">
-		{% if request.user.is_authenticated %}
-			<div id="friend_list" class="socialbar-item">
-				<h3>Liste d'amis</h3>
-				<ul>
-					{% for friend in user.friends.all %}
-						<div class="friend">
-							<li>
-								<div class="mini-pp">
-									<img src="{{ friend.avatar.url }}" alt="friend pp">
-								</div>
-								<a href="{% url 'user_manage:profile' friend.username %}">{{ friend.username }}</a>
-							</li>
-						</div>
-					{% endfor %}
-				</ul>
-			</div>
-			<div id="chat" class="socialbar-item">
-				<h3>Live Chat</h3>
-				<ul>
-					<li><a href="{% url 'chat:chat_view' %}">Channel publique</a></li>
-					{% for chatroom in user.chat_groups.all %}
-						{% if chatroom.is_private %}
-							{% for member in chatroom.members.all %}
-								{% if member != user %}
-									<li><a href="{% url 'chat:chatroom' chatroom.group_name %}">{{ member.username }}</a></li>
-								{% endif %}
-							{%endfor %}
-						{% endif %}
-					{% endfor %}
-				</ul>
-			</div>
-		{% endif %}
-	</section>
-
 	<main>
-		<section id="syst_messages">
+		<section id="syst_messages" class="position-fixed top-0 start-0 p-3" style="z-index: 1050;">
 			{% for message in messages %}
-				<p>{{ message }}</p>
+				<div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+					{{ message }}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
 			{% endfor %}
-		</section>
-		<section id="game">
-			{% block game %}
-			{% endblock %}
 		</section>
 		<section id="content">
 			{% block content %}
@@ -113,8 +184,9 @@
 		{% block javascript %}
 		{% endblock%}
 		<script>
-			document.querySelector('.navbar-toggle').addEventListener('click', function() {
-				document.querySelector('.navbar').classList.toggle('active');
+			document.getElementById('navbarToggle').addEventListener('click', function () {
+				var navbarContent = document.getElementById('navbarContent');
+				navbarContent.classList.toggle('show');
 			});
 		</script>
 	</footer>

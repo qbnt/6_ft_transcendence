@@ -8,20 +8,19 @@ body {
 	height: 100vh;
 	line-height: 1.6;
 	color: #ffffff;
-	background: linear-gradient(to top left, #3f84a4, #28c980);
+	background: linear-gradient(to top right, #ae8234, #28c980);
 	display: grid;
-	grid-template-columns: 3fr 25% 0fr;
+	grid-template-columns: 1fr 0fr;
 	grid-template-rows: auto 1fr auto;
 	grid-template-areas:
-		"header header header"
-		"main socialbar navbar"
-		"footer footer footer";
+		"header header"
+		"main navbar"
+		"footer footer";
 }
 
 /*---------------------------------Header--------------------------------------*/
 
 header {
-	/* border: 2px dashed black; */
 	grid-area: header;
 	z-index: 1;
 	background-color: #244232b1;
@@ -42,41 +41,54 @@ header #logo {
 
 .navbar-container {
 	position: relative;
+	font-family: 'Roboto', sans-serif;
 }
 
 .navbar-toggle {
-	height: 35px;
-	width: 35px;
-	justify-content: center;
-	cursor: pointer;
-	background: none;
-	border: none;
 	position: fixed;
 	top: 20px;
-	left: calc(100% - (35px + 20px));
-	z-index: 1000;
+	right: 20px;
+	z-index: 1050;
+	background: none;
+	border: none;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	cursor: pointer;
+}
+
+.navbar-toggle img,
+.navbar-toggle .mid-pp img,
+.navbar-toggle .pp-container img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 50%;
 }
 
 .navbar {
-	/* border: 2px dashed black; */
-	grid-area: navbar;
-	z-index: 5;
-	background-color: #48514cd2;
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	align-items: center;
-	transition: transform 0.3s ease;
-	position: fixed;
-	right: 0;
-	top: 0;
-	height: 100%;
-	width: 25%;
-	transform: translateX(100%);
+    grid-area: navbar;
+    z-index: 1040;
+    background-color: #bcbcbcc5;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 300px;
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    overflow-y: auto;
 }
 
-.navbar.active {
-	transform: translateX(0);
+.navbar.show {
+    transform: translateX(0%);
 }
 
 .navbar-item {
@@ -88,23 +100,28 @@ header #logo {
 	align-items: center;
 }
 
-.navbar-toggle img {
-	height: 25px;
-}
-
 .search-form {
 	display: flex;
-	flex-direction: row;
 	justify-content: center;
 	align-items: center;
+	flex-direction: row;
+}
+
+.search-form input {
+	border: 1px solid #ced4da;
+	font-size: 1.2rem;
+	padding: 0.5rem;
+	transition: all 0.3s ease-in-out;
+}
+
+.search-form input:focus {
+	box-shadow: 0 0 10px rgba(0, 123, 255, 0.25);
+	border-color: #80bdff;
 }
 
 /*---------------------------------Socialbar-----------------------------------*/
 
 .socialbar {
-	/* border: 2px dashed black; */
-	background-color: #244232b1;
-	border-left: 2px solid rgba(0, 0, 0, 0.679);
 	grid-area: socialbar;
 	z-index: 2;
 	display: flex;
@@ -114,19 +131,33 @@ header #logo {
 }
 
 .socialbar-item {
-	/* border: 2px dashed black; */
-	border-bottom: 2px solid black;
-	border-top: 2px solid black;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 }
 
-.socialbar-item .friend {
+.socialbar-item h3 {
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
+.friend {
 	display: flex;
 	align-items: center;
 	margin-bottom: 10px;
+	transition: background-color 0.3s ease;
+}
+
+.friend:hover {
+	background-color: #f1f1f1;
+}
+
+.friend .mini-pp img,
+.chat-section ul img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 .socialbar-item .friend li {
@@ -138,7 +169,6 @@ header #logo {
 /*---------------------------------Main (jeu)----------------------------------*/
 
 main {
-	/* border: 2px dashed black; */
 	grid-area: main;
 	height: auto;
 	z-index: 1;
@@ -157,7 +187,6 @@ main #content {
 /*---------------------------------Footer--------------------------------------*/
 
 footer {
-	/* border: 2px dashed black; */
 	grid-area: footer;
 	z-index: 1;
 	max-height: 80px;
@@ -184,14 +213,11 @@ footer {
 	.navbar {
 		width: 100%;
 		height: 100%;
-		position: fixed;
-		right: 0;
-		top: 0;
 		transform: translateX(100%);
 	}
 
-	.navbar.active {
-		transform: translateX(0);
+	.navbar.show {
+		transform: translateX(0%);
 	}
 
 	.socialbar {
@@ -202,48 +228,78 @@ footer {
 
 /*---------------------------------Utils---------------------------------------*/
 
+.mini-pp,
+.mid-pp,
+.max-pp {
+	border-radius: 50%;
+	overflow: hidden;
+}
+
 .mini-pp {
 	width: 40px;
 	height: 40px;
 	margin: 5px;
-	border-radius: 50%;
-	overflow: hidden;
 	border: 2px solid #2c3e50;
-}
-
-.mini-pp img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 50%;
 }
 
 .mid-pp {
 	width: 100px;
 	height: 100px;
-	border-radius: 50%;
 	border: 2px solid #2c3e50;
-	overflow: hidden;
-}
-
-.mid-pp img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 50%;
 }
 
 .max-pp {
 	width: 250px;
 	height: 250px;
-	border-radius: 50%;
 	border: 2px solid #2c3e50;
-	overflow: hidden;
 }
 
-.max-pp img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	border-radius: 50%;
+a.text-decoration-none {
+	color: #343a40;
+	transition: color 0.3s ease;
+}
+
+a.text-decoration-none:hover {
+	color: #007bff;
+	text-decoration: underline;
+}
+
+.accordion-button {
+	background-color: #f8f9fa;
+	color: #343a40;
+	font-weight: bold;
+	font-size: 1.2rem;
+	padding: 0.75rem;
+}
+
+.accordion-button.collapsed::after {
+	transform: rotate(90deg);
+}
+
+.accordion-item {
+	border: none;
+	margin-bottom: 1rem;
+}
+
+/* Avatar normal (petit) */
+.avatar {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    z-index: 1050;
+}
+
+/* Avatar agrandi et centré lorsqu'on ouvre la navbar */
+.navbar.show .avatar {
+    position: static;
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+    transform: translateX(0); /* S'assure qu'il est centré */
+    transition: all 0.3s ease;
 }
