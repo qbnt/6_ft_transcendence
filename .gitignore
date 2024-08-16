@@ -5,6 +5,7 @@
 
 # Ignorer les dossiers __pycache__
 __pycache__/
+**/__pycache__/
 
 # Ignorer les environnements virtuels
 venv/
@@ -15,7 +16,7 @@ venv/
 *.log
 
 # Ignorer les fichiers de configuration
-# *.env
+*.env
 *.ini
 *.cfg
 
@@ -29,10 +30,12 @@ venv/
 .idea/
 .vscode/
 *.swp
-projet/srcs/web/ft_transcendence/user_manage/migrations/*
-projet/srcs/web/ft_transcendence/media/profile_avatars/*
-projet/srcs/web/ft_transcendence/home/__pycache__/*
-projet/srcs/web/ft_transcendence/live_chat/__pycache__/*
-projet/srcs/web/ft_transcendence/pong_game/__pycache__/*
-projet/srcs/web/ft_transcendence/tournament/__pycache__/*
-projet/srcs/web/ft_transcendence/user_manage/__pycache__/*
+
+# Exclure tous les fichiers de migration
+**/migrations/
+
+# Exclure les avatars de profil
+projet/srcs/web/ft_transcendence/media/profile_avatars/
+
+# Exclure tous les caches Python
+**/__pycache__/
