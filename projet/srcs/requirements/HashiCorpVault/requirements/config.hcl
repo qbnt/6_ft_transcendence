@@ -1,13 +1,17 @@
+ui = true
+disable_mlock = "true"
+
 storage "raft" {
-  path    = "../data"
+  path    = "/data"
   node_id = "node1"
 }
 
 listener "tcp" {
-  address     = "127.0.0.1:8200"
-  tls_disable = "true"
+  address = "[::]:8200"
+  tls_disable = "false"
+  tls_cert_file = "/requirements/certificate.pem"
+  tls_key_file  = "/requirements/key.pem"
 }
 
-api_addr = "http://127.0.0.1:8200"
-cluster_addr = "https://127.0.0.1:8201"
-ui = true
+api_addr = "https://localhost:8200"
+cluster_addr = "https://localhost:8201"

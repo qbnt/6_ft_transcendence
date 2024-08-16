@@ -169,13 +169,16 @@ services:
 #----------------------------------HashiCorpV----------------------------------#
 
   vault:
-    image: vault:1.13.3
+    image: hashicorp/vault
     container_name: vault
     restart: on-failure:10
     ports:
+      - "8200:8200"
       - "8201:8201"
     environment:
-      VAULT_ADDR: "http://127.0.0.1:8200"
+      VAULT_ADDR: "http://localhost:8200"
+      VAULT_API_ADDR: "https://localhost:8200"
+      VAULT_ADDRESS: "https://localhost:8200"
     cap_add:
       - IPC_LOCK
     volumes:
@@ -185,6 +188,7 @@ services:
       retries: 5
     networks:
       - app_network
+    entrypoint: vault server -config /requirements/config.hcl
 
 networks:
   app_network:
