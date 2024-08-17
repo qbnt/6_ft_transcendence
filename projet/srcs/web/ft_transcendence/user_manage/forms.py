@@ -1,17 +1,36 @@
 from django import forms
 from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 from .models import CustomUser
 
-# ----------------------Création et modification du User---------------------- #
+# ---------------------- Formulaires de création et de modification d'utilisateur ---------------------- #
 
 class CustomUserCreationForm(UserCreationForm):
-	email = forms.EmailField(required=True, help_text="Un email valide est requis.")
-	first_name = forms.CharField(max_length=30, required=False, help_text="Optionnel.")
-	last_name = forms.CharField(max_length=30, required=False, help_text="Optionnel.")
+	email = forms.EmailField(
+		required=True,
+		help_text="Un email valide est requis."
+	)
+	first_name = forms.CharField(
+		max_length=30,
+		required=False,
+		help_text="Optionnel."
+	)
+	last_name = forms.CharField(
+		max_length=30,
+		required=False,
+		help_text="Optionnel."
+	)
 	avatar = forms.ImageField(required=False)
-	win_count = forms.IntegerField(required=False, initial=0, widget=forms.HiddenInput())
-	lose_count = forms.IntegerField(required=False, initial=0, widget=forms.HiddenInput())
+	win_count = forms.IntegerField(
+		required=False,
+		initial=0,
+		widget=forms.HiddenInput()
+	)
+	lose_count = forms.IntegerField(
+		required=False,
+		initial=0,
+		widget=forms.HiddenInput()
+	)
 
 	class Meta:
 		model = CustomUser
@@ -24,7 +43,7 @@ class CustomUserCreationForm(UserCreationForm):
 		return email
 
 	def save(self, commit=True):
-		user = super(CustomUserCreationForm, self).save(commit=False)
+		user = super().save(commit=False)
 		user.email = self.cleaned_data['email']
 		user.first_name = self.cleaned_data['first_name']
 		user.last_name = self.cleaned_data['last_name']
@@ -51,4 +70,3 @@ class CustomUserUpdateForm(forms.ModelForm):
 		if user is None:
 			raise forms.ValidationError("Le mot de passe actuel est incorrect.")
 		return current_password
-
