@@ -23,7 +23,7 @@ def save_pong_result(request):
             player2 = CustomUser.objects.get(username=player2_username)
         except CustomUser.DoesNotExist:
             return JsonResponse({'error': 'One or both users not found'}, status=404)
-    
+
         if player1_score > player2_score:
             winner = player1
             loszer = player2
@@ -44,7 +44,7 @@ def save_pong_result(request):
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
 
-@csrf_exempt    
+@csrf_exempt
 def start_game(request):
     if request.method == 'POST':
         try:
