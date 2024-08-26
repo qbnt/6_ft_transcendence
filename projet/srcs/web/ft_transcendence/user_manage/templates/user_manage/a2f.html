@@ -11,9 +11,9 @@
             <h2 class="mb-0">Activer l'Authentification en 2 facteurs</h2>
         </div>
         <div class="card-body p-4">
-			<form action ="{% url 'user_manage:a2f_send_email'}", method="post">
-                {% csrf_token %}
-				<button type="submit" class="btn btn-primary w-100 py-2" style="border-radius: 10px;">Send Code</button>
+			<form action="{% url 'user_manage:a2f_send_mail' %}" method="post">
+				{% csrf_token %}
+				<button type="submit" class="btn btn-primary">Envoyer le Code</button>
 			</form>
             <form method="post" class="py-2">
                 {% csrf_token %}

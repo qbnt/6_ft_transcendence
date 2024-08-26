@@ -81,19 +81,26 @@ def edit_user(request):
 
 @login_required
 def send_email(request):
-	key = pyotp.random_base32()
-	request.user.a2f_code =  pyotp.TOTP(key)
-	subject = "2FA Verification Code"
-	body = "This is your verification code for Transcendence 2FA:"  + request.user.a2f_code.now() + "nPlease, activate it whithin 30 seconds."
-	client = request.user.email
-	msg = MIMEText(body)
-	msg['Subject'] = subject
-	msg['From'] = settings.SENDER_A2F
-	msg['To'] = client
-	with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
-		smtp_server.login(settings.SENDER_A2F, settings.PASSWORD_A2F)
-		smtp_server.sendmail(settings.SENDER_A2F, client, msg.as_string())
-	return render(request, 'user_manage/a2f.html', {'form': request.form})
+	if (request.method == 'POST'):
+		form = forms.A2F(request.POST)
+		if (form.is_valid()):
+			key = pyotp.random_base32()
+			code =  pyotp.TOTP(key)
+			subject = "2FA Verification Code"
+			body = "This is your verification code for Transcendence Authentification: "  + code.now() + " Please, activate it whithin 30 seconds."
+			client = "essence.de.femme1@gmail.com"
+			msg = MIMEText(body)
+			msg['Subject'] = subject
+			msg['From'] = settings.SENDER_A2F
+			msg['To'] = client
+			with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+				smtp_server.login(settings.SENDER_A2F, settings.PASSWORD_A2F)
+				smtp_server.sendmail(settings.SENDER_A2F, client, msg.as_string())
+			request.a2f_code = code.now()
+			return render(request, 'user_manage/a2f.html', {'form': form})
+	else:
+		form = forms.A2F(request.POST)
+	return render(request, 'user_manage/a2f.html', {'form': form})
 
 @login_required
 def	a2f_check_code(request, code):
