@@ -9,3 +9,4 @@ django-htmx
 channels[daphne]
 requests
 shortuuid
+pyotp

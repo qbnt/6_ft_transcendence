@@ -8,7 +8,10 @@ from django.shortcuts				import render, redirect
 from .models						import CustomUser
 from . 								import forms
 from io								import BytesIO
+from email.mime.text				import	MIMEText
 import requests
+import	smtplib
+import	pyotp
 
 # -----------------------Interactions avec le profil-------------------------- #
 
@@ -75,6 +78,43 @@ def edit_user(request):
 	return render(request, 'user_manage/edit.html', {
 		'user_form': user_form,
 	})
+
+@login_required
+def send_email(request):
+	key = pyotp.random_base32()
+	request.user.a2f_code =  pyotp.TOTP(key)
+	subject = "2FA Verification Code"
+	body = "This is your verification code for Transcendence 2FA:"  + request.user.a2f_code.now() + "nPlease, activate it whithin 30 seconds."
+	client = request.user.email
+	msg = MIMEText(body)
+	msg['Subject'] = subject
+	msg['From'] = settings.SENDER_A2F
+	msg['To'] = client
+	with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
+		smtp_server.login(settings.SENDER_A2F, settings.PASSWORD_A2F)
+		smtp_server.sendmail(settings.SENDER_A2F, client, msg.as_string())
+	return render(request, 'user_manage/a2f.html', {'form': request.form})
+
+@login_required
+def	a2f_check_code(request, code):
+	if request.user.a2f_code == code:
+		request.user.a2f = True
+	return render(request, 'user_manage/a2f.html', {'form': request.form})
+
+@login_required
+def a2f(request):
+	user = request.user
+	if request.method == 'POST':
+		form = forms.A2F(request.POST)
+		if form.is_valid():
+			user = form.save(commit=False)
+			a2f_check_code(request, request.post.code_client)
+			login(request, user)
+			messages.success(request, 'Code Validé')
+			return redirect('home:index')
+	else:
+		form = forms.A2F()
+	return render(request, 'user_manage/a2f.html', {'form': form})
 
 @login_required
 def pw_update(request):
