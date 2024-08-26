@@ -1,23 +1,23 @@
 {% if message.author == user %}
-<li class="user-message">
-	<div class="message-content">
-		<span>{{message.body}}</span>
-	</div>
+<li class="user-message list-group-item bg-primary text-white rounded mb-2 p-1 ms-auto" style="max-width: 75%; border-bottom-right-radius: 0;">
+    <div class="message-content">
+        <span>{{ message.body }}</span>
+    </div>
 </li>
 {% else %}
-<li class="message-item other-message">
-	<div class="message-avatar">
-		<a href="{% url 'user_manage:profile' message.author.username %}">
-			<div class="mini-pp">
-				<img class="avatar-image" src="{{message.author.avatar.url }}">
-			</div>
-		</a>
-	</div>
-	<div class="message-content other-message-content">
-		<span>{{message.body}}</span>
-	</div>
-	<div class="message-author">
-		<span class="author-name">{{message.author.username}}</span>
-	</div>
+<li class="message-item other-message list-group-item bg-light rounded mb-2 d-flex" style="max-width: 75%; border-bottom-left-radius: 0;">
+    <div class="message-avatar me-2">
+        <a href="{% url 'user_manage:profile' message.author.username %}" class="text-decoration-none">
+            <div class="mini-pp">
+                <img class="avatar-image rounded-circle img-fluid" src="{{ message.author.avatar.url }}" alt="Avatar de {{ message.author.username }}">
+            </div>
+        </a>
+    </div>
+    <div class="message-content other-message-content flex-grow-1 bg-white p-2 rounded">
+        <span>{{ message.body }}</span>
+    </div>
+    <div class="message-author text-muted ms-2">
+        <small class="author-name">{{ message.author.username }}</small>
+    </div>
 </li>
 {% endif %}
