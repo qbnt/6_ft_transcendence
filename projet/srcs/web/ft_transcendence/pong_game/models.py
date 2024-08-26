@@ -11,4 +11,4 @@ class PongResult(models.Model):
 	date_played = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-        return f"{self.player1.username} vs {self.player2.username} - Winner: {self.winner.username}"
+		return f"{self.player1.username} vs {self.player2.username} - Winner: {self.winner.username}"
