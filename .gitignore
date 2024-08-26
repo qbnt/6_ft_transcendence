@@ -31,9 +31,6 @@ venv/
 .vscode/
 *.swp
 
-# Exclure tous les fichiers de migration
-**/migrations/
-
 # Exclure les avatars de profil
 projet/srcs/web/ft_transcendence/media/profile_avatars/
 

@@ -1,39 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="chat-container">
-	<div class="chat-window">
-		<div class="chat-header">
+<div class="container d-flex align-items-center justify-content-center">
+    <div class="chat-window card shadow-lg" style="width: 100%; max-width: 450px;">
+		<!-- Chat Header -->
+		<div class="chat-header card-header bg-primary text-white d-flex align-items-center justify-content-center">
 			{% if other_user %}
-			<div id="mp-online-icon"></div>
-			<a href="{% url 'user_manage:profile' other_user.username %}">
-				<div class="mp-user-info">
-					<div class="mini-pp">
-						<img src={{ other_user.avatar.url }}>
-					</div>
-					<span>{{other_user.username}}</span>
+			<div id="mp-online-icon" class="me-2">
+				<!-- Icône de statut en ligne -->
+			</div>
+			<a href="{% url 'user_manage:profile' other_user.username %}" class="d-flex align-items-center text-decoration-none text-white">
+				<div class="mini-pp me-2">
+					<img src="{{ other_user.avatar.url }}" class="rounded-circle img-fluid" alt="Avatar de {{ other_user.username }}">
 				</div>
+				<span class="fw-bold">{{ other_user.username }}</span>
 			</a>
 			{% else %}
-				<div id="online-icon"></div>
-				<p><span id="online-count" class="online-count"></span> online</p>
+			<div id="online-icon" class="me-2">
+				<!-- Icône de statut en ligne -->
+			</div>
+			<p class="mb-0"><span id="online-count" class="fw-bold"></span> en ligne</p>
 			{% endif %}
 		</div>
-		<div id="chat_contain" class="message-container">
-			<ul class="message-list" id='chat_messages'>
+
+		<!-- Chat Messages -->
+		<div id="chat_contain" class="message-container card-body overflow-auto bg-light" style="max-height: 400px; padding: 1rem;">
+			<ul class="message-list list-unstyled" id='chat_messages'>
 				{% for message in chat_messages reversed %}
 				{% include "live_chat/chat_message.html" %}
 				{% endfor %}
 			</ul>
 		</div>
-		<div class="chat-input-area">
+
+		<!-- Chat Input Area -->
+		<div class="chat-input-area card-footer bg-light">
 			<form id="chat_message_form"
+				class="d-flex"
 				hx-ext="ws"
 				ws-connect="/ws/chatroom/{{ chatroom_name }}"
 				ws-send
 				_="on htmx:wsAfterSend reset() me">
 				{% csrf_token %}
-				{{ form }}
+				<div class="input-group">
+					{{ form.body }}
+					<button class="btn btn-primary" type="submit">Envoyer</button>
+				</div>
 			</form>
 		</div>
 	</div>
@@ -43,7 +54,6 @@
 
 {% block javascript %}
 <script>
-
 	function scrollToBottom(time=0) {
 		setTimeout(function() {
 			const container = document.getElementById('chat_contain');
@@ -51,6 +61,5 @@
 		}, time);
 	}
 	scrollToBottom()
-
 </script>
 {% endblock %}

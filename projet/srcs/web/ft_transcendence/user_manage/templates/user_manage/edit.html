@@ -1,17 +1,27 @@
 {% extends "base.html" %}
 
 {% block title %}
-	Modifier Utilisateur
+    Modifier Utilisateur
 {% endblock %}
 
 {% block content %}
-	<h2>Modifier Utilisateur</h2>
-	<form method="post" enctype="multipart/form-data">
-		{% csrf_token %}
-		{{ user_form.as_p }}
-		<button type="submit" class="btn btn-primary">Enregistrer</button>
-	</form>
-	<div class="password-change-container">
-		<a href="{% url 'user_manage:pw_update' %}" class="btn btn-secondary">Changer de mot de passe</a>
-	</div>
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg" style="width: 100%; max-width: 500px; border-radius: 15px;">
+        <div class="card-header bg-gradient text-white text-center" style="background: black; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h2 class="mb-0">Modifier Utilisateur</h2>
+        </div>
+        <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    {{ user_form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2" style="border-radius: 10px;">Enregistrer</button>
+            </form>
+        </div>
+        <div class="card-footer text-center bg-transparent" style="border-bottom-left-radius: 15px; border-bottom-right-radius: 15px;">
+            <a href="{% url 'user_manage:pw_update' %}" class="btn btn-outline-secondary w-100 py-2" style="border-radius: 10px;">Changer de mot de passe</a>
+        </div>
+    </div>
+</div>
 {% endblock %}
