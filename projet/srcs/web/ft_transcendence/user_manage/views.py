@@ -88,7 +88,7 @@ def send_email(request):
 			code =  pyotp.TOTP(key)
 			subject = "2FA Verification Code"
 			body = "This is your verification code for Transcendence Authentification: "  + code.now() + " Please, activate it whithin 30 seconds."
-			client = "essence.de.femme1@gmail.com"
+			client = request.email
 			msg = MIMEText(body)
 			msg['Subject'] = subject
 			msg['From'] = settings.SENDER_A2F
