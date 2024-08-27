@@ -97,9 +97,9 @@ def send_email(request):
 				smtp_server.login(settings.SENDER_A2F, settings.PASSWORD_A2F)
 				smtp_server.sendmail(settings.SENDER_A2F, client, msg.as_string())
 			request.a2f_code = code.now()
-			return render(request, 'user_manage/a2f.html', {'form': form})
+			return render(request, 'user_manage/a2f.html', {'form': form, 'message': 'A verification code has been sent to your email.'})
 	else:
-		form = forms.A2F(request.POST)
+		form = forms.A2F()
 	return render(request, 'user_manage/a2f.html', {'form': form})
 
 @login_required
