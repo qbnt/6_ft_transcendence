@@ -4,7 +4,7 @@ document.getElementById('startGameForm').addEventListener('submit', function(e) 
     const player1Username = document.getElementById('player1Username').value;
     const player2Username = document.getElementById('player2Username').value;
 
-    fetch('/start_game/', {
+    fetch('static/pong_game/start_game/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,6 +21,8 @@ document.getElementById('startGameForm').addEventListener('submit', function(e) 
             // Masquer le formulaire et afficher le jeu
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
+
+            startPongGame();
         } else {
             alert(data.message);
         }

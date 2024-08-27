@@ -13,3 +13,7 @@
         position: fixed;
         width: 100%;
 	}
+
+    #game-container {
+        display: none;
+    }

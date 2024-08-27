@@ -52,8 +52,8 @@ def start_game(request):
             player1_username = data.get('player1_username')
             player2_username = data.get('player2_username')
 
-            if not player1_username or not player2_username:
-                return JsonResponse({'status': 'error', 'message': 'Both usernames are required.'}, status=400)
+            # if not player1_username or not player2_username:
+            #     return JsonResponse({'status': 'error', 'message': 'Both usernames are required.'}, status=400)
 
             # try:
             #     player1 = CustomUser.objects.get(username=player1_username)
