@@ -25,7 +25,6 @@ def login_or_register(request):
 				password = login_form.cleaned_data.get('password')
 				user = authenticate(request, username=username, password=password)
 				if user is not None:
-					user.is_onsite = True
 					user.save()
 					login(request, user)
 					messages.success(request, f'Content de te revoir, {user.username} !')
@@ -60,7 +59,6 @@ def profile(request, username):
 
 @login_required
 def logout_user(request):
-	request.user.is_onsite = False
 	request.user.save()
 	logout(request)
 	messages.success(request, 'You have been logged out successfully.')
@@ -233,7 +231,6 @@ def api_42_callback(request):
 		)
 
 		if not created:
-			user.is_onsite = True
 			messages.success(request, f'Welcome back, {user.username}!')
 			user.save()
 		else:
