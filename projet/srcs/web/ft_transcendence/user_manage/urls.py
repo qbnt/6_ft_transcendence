@@ -10,6 +10,7 @@ urlpatterns = [
 	path ('edit/pw_update/', views.pw_update, name = 'pw_update'),
 	path ('edit/a2f/', views.a2f, name = 'a2f'),
 	path ('edit/a2f/send_mail', views.send_email, name = 'a2f_send_mail'),
+	path ('edit/a2f/verify_code', views.verify_code, name = 'a2f_verify_code'),
 	path ('profile/<str:username>', views.profile, name='profile'),
 
 	path ('search/', views.search, name='search'),

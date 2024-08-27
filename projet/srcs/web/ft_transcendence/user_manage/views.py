@@ -5,13 +5,15 @@ from django.core.files 				import File
 from django.contrib					import messages
 from django.conf					import settings
 from django.shortcuts				import render, redirect
+from django.http					import JsonResponse
 from .models						import CustomUser
 from . 								import forms
+from .forms							import A2F
 from io								import BytesIO
-from email.mime.text				import	MIMEText
+from email.mime.text				import MIMEText
 import requests
-import	smtplib
-import	pyotp
+import smtplib
+import pyotp
 
 # -----------------------Interactions avec le profil-------------------------- #
 
@@ -81,32 +83,47 @@ def edit_user(request):
 
 @login_required
 def send_email(request):
-	if (request.method == 'POST'):
-		form = forms.A2F(request.POST)
-		if (form.is_valid()):
-			key = pyotp.random_base32()
-			code =  pyotp.TOTP(key)
-			subject = "2FA Verification Code"
-			body = "This is your verification code for Transcendence Authentification: "  + code.now() + " Please, activate it whithin 30 seconds."
-			client = request.email
-			msg = MIMEText(body)
-			msg['Subject'] = subject
-			msg['From'] = settings.SENDER_A2F
-			msg['To'] = client
+	if request.method == 'POST':
+		key = pyotp.random_base32()
+		code =  pyotp.TOTP(key)
+		subject = "2FA Verification Code"
+		body = "This is your verification code for Transcendence Authentification: "  + code.now() + ". Please, activate it whithin 30 seconds."
+		client = request.user.email
+		msg = MIMEText(body)
+		msg['Subject'] = subject
+		msg['From'] = settings.SENDER_A2F
+		msg['To'] = client
+		try:
 			with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp_server:
 				smtp_server.login(settings.SENDER_A2F, settings.PASSWORD_A2F)
 				smtp_server.sendmail(settings.SENDER_A2F, client, msg.as_string())
-			request.a2f_code = code.now()
-			return render(request, 'user_manage/a2f.html', {'form': form, 'message': 'A verification code has been sent to your email.'})
+			request.user.a2f_code = code.now()
+			request.user.save()
+			return JsonResponse({'status': 'success', 'message': 'Email sent successfully'})
+		except Exception as e:
+			return JsonResponse({'status': 'error', 'message': str(e)})
 	else:
-		form = forms.A2F()
-	return render(request, 'user_manage/a2f.html', {'form': form})
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
 
 @login_required
-def	a2f_check_code(request, code):
-	if request.user.a2f_code == code:
-		request.user.a2f = True
-	return render(request, 'user_manage/a2f.html', {'form': request.form})
+def verify_code(request):
+    if request.method == 'POST':
+        form = A2F(request.POST)
+        if form.is_valid():
+            code_client = form.cleaned_data['code_client'].strip()
+            actual_code = str(request.user.a2f_code).strip()
+            if actual_code == code_client:
+                request.user.a2f = True
+                request.user.a2f_code = 0
+                request.user.save()
+                return redirect('home:index')
+            else:
+                messages.error(request, "Code incorrect. Veuillez réessayer.")
+        else:
+            messages.error(request, "Formulaire invalide. Veuillez vérifier vos entrées.")
+    else:
+        form = A2F()
+    return render(request, 'user_manage/a2f.html', {'form': form})
 
 @login_required
 def a2f(request):
@@ -114,14 +131,16 @@ def a2f(request):
 	if request.method == 'POST':
 		form = forms.A2F(request.POST)
 		if form.is_valid():
-			user = form.save(commit=False)
-			a2f_check_code(request, request.post.code_client)
 			login(request, user)
 			messages.success(request, 'Code Validé')
 			return redirect('home:index')
 	else:
 		form = forms.A2F()
-	return render(request, 'user_manage/a2f.html', {'form': form})
+	context = {
+		'form': form,
+		'a2f_active': request.user.a2f,
+	}
+	return render(request, 'user_manage/a2f.html', context)
 
 @login_required
 def pw_update(request):

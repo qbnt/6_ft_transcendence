@@ -71,5 +71,5 @@ class CustomUserUpdateForm(forms.ModelForm):
 			raise forms.ValidationError("Le mot de passe actuel est incorrect.")
 		return current_password
 	
-class	A2F(forms.Form):
-	code_client = forms.CharField(label="Code A2F", max_length=6)
+class A2F(forms.Form):
+    code_client = forms.CharField(label="Code A2F", max_length=6, required=True)
