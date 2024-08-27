@@ -27,18 +27,22 @@ def login_or_register(request):
 					user.is_onsite = True
 					user.save()
 					login(request, user)
-					messages.success(request, f'Welcome back, {user.username}!')
+					messages.success(request, f'Content de te revoir, {user.username} !')
 					return redirect('home:index')
 				else:
-					messages.error(request, 'Invalid username or password.')
+					messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 			else:
-				messages.error(request, 'Invalid username or password.')
+				messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 		elif 'register' in request.POST:
 			register_form = forms.CustomUserCreationForm(request.POST, request.FILES)
 			if register_form.is_valid():
 				user = register_form.save()
 				login(request, user)
+				messages.success(request, 'Inscription réussie ! Bienvenue !')
 				return redirect("home:index")
+			else:
+				for error in register_form.errors.values():
+					messages.error(request, error)
 
 	return render(request, 'user_manage/connexion.html', {
 		'login_form': login_form,
@@ -211,21 +215,26 @@ def api_42_callback(request):
 		user_response = requests.get('https://api.intra.42.fr/v2/me', headers={
 			'Authorization': f'Bearer {access_token}',
 		}).json()
+
 		username = user_response['login']
 		email = user_response['email']
 		first_name = user_response.get('first_name')
 		last_name = user_response.get('last_name')
 		image_url = user_response['image']['link']
-		user, created = CustomUser.objects.get_or_create(username=username, defaults={
-			'email': email,
-			'first_name': first_name,
-			'last_name': last_name,
-			'is_onsite': True,
-		})
+		user, created = CustomUser.objects.get_or_create(
+			username=username, defaults={
+				'email': email,
+				'first_name': first_name,
+				'last_name': last_name,
+			}
+		)
 
 		if not created:
 			user.is_onsite = True
+			messages.success(request, f'Welcome back, {user.username}!')
 			user.save()
+		else:
+			messages.success(request, f'Welcome, {user.username}!')
 
 		if image_url:
 			response = requests.get(image_url)
@@ -233,9 +242,8 @@ def api_42_callback(request):
 			img_temp = BytesIO(response.content)
 			user.avatar.save(f"{username}_avatar.jpg", File(img_temp), save=True)
 		login(request, user)
-		messages.success(request, f'Welcome back, {user.username}!')
 		return redirect('home:index')
 
 	except Exception as e:
-		print(e)
-		return redirect('user_manage:register')
+		messages.error(request, "Erreur lors de la communication avec les serveurs de 42.")
+		return redirect('user_manage:connexion')

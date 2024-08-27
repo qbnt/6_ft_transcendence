@@ -1,4 +1,4 @@
-from channels.generic.websocket import WebsocketConsumer
+from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from django.shortcuts 			import get_object_or_404
 from django.template.loader 	import render_to_string
 from asgiref.sync 				import async_to_sync
