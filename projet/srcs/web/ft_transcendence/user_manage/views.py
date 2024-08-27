@@ -6,6 +6,7 @@ from django.contrib					import messages
 from django.conf					import settings
 from django.shortcuts				import render, redirect
 from .models						import CustomUser
+from live_chat.models				import OnlineUsers
 from . 								import forms
 from io								import BytesIO
 import requests
@@ -51,8 +52,10 @@ def login_or_register(request):
 
 def profile(request, username):
 	user = CustomUser.objects.get(username=username)
+	online = OnlineUsers.objects.first()
 	return render(request, 'user_manage/profile.html', {
 		'user': user,
+		'online': online
 	})
 
 @login_required

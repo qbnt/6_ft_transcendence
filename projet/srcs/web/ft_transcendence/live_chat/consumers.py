@@ -1,9 +1,38 @@
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer
 from django.shortcuts 			import get_object_or_404
 from django.template.loader 	import render_to_string
+from channels.db				import database_sync_to_async
 from asgiref.sync 				import async_to_sync
 import json
 from .models 					import *
+
+class OnlineStatusConsumer(AsyncWebsocketConsumer):
+	async def connect(self):
+		user = self.scope['user']
+		if user.is_authenticated:
+			await self.add_user_online(user)
+			await self.channel_layer.group_add("online_users", self.channel_name)
+			await self.accept()
+
+	async def disconnect(self, close_code):
+		user = self.scope['user']
+		if user.is_authenticated:
+			await self.remove_user_online(user)
+			await self.channel_layer.group_discard("online_users", self.channel_name)
+
+	async def receive(self, text_data=None, bytes_data=None):
+		# Optionnel : si vous voulez gérer les messages entrants
+		pass
+
+	@database_sync_to_async
+	def add_user_online(self, user):
+		online_users, _ = OnlineUsers.objects.get_or_create(pk=1)
+		online_users.users_online.add(user)
+
+	@database_sync_to_async
+	def remove_user_online(self, user):
+		online_users, _ = OnlineUsers.objects.get_or_create(pk=1)
+		online_users.users_online.remove(user)
 
 class ChatroomConsumer(WebsocketConsumer):
 	def connect(self):

@@ -55,7 +55,10 @@
 
 			<!-- Navigation Links -->
 			 {% if request.user.is_authenticated %}
-				<div class="row mb-4 w-100" style="margin-top: 54px;">
+				<div class="row mb-4 w-100" style="margin-top: 54px;"
+					hx-ext="ws"
+					ws-connect="/ws/online-status/"
+					>
 					<section class="nav-links w-100">
 						<ul class="list-unstyled">
 							<!-- Access Profile -->
