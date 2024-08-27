@@ -55,7 +55,10 @@
 
 			<!-- Navigation Links -->
 			 {% if request.user.is_authenticated %}
-				<div class="row mb-4 w-100" style="margin-top: 54px;">
+				<div class="row mb-4 w-100" style="margin-top: 54px;"
+					hx-ext="ws"
+					ws-connect="/ws/online-status/"
+					>
 					<section class="nav-links w-100">
 						<ul class="list-unstyled">
 							<!-- Access Profile -->
@@ -94,7 +97,11 @@
 													<div class="mini-pp rounded-circle overflow-hidden me-2" style="width: 30px; height: 30px;">
 														<img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
 													</div>
-													<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none">{{ friend.username }}</a>
+													{% if friend in online.users_online.all %}
+														<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none text-success">{{ friend.username }}</a>
+													{% else %}
+														<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none">{{ friend.username }}</a>
+													{% endif %}
 												</li>
 											{% endfor %}
 										</ul>
