@@ -285,4 +285,5 @@ def api_42_callback(request):
 
 	except Exception as e:
 		print(e)
-		return redirect('user_manage:register')
+		messages.error(request, f'Erreur de connexion avec 42.')
+		return redirect('user_manage:connexion')
