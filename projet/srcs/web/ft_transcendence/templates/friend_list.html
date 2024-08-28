@@ -17,9 +17,19 @@
 											<img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
 										</div>
 										{% if friend in online.users_online.all %}
-											<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none text-success">{{ friend.username }}</a>
+											<a href="#"
+											   class="text-decoration-none text-success"
+											   hx-get="{% url 'user_manage:profile' friend.username %}"
+											   hx-target="#htmx_content">
+												{{ friend.username }}
+											</a>
 										{% else %}
-											<a href="{% url 'user_manage:profile' friend.username %}" class="text-decoration-none">{{ friend.username }}</a>
+											<a href="#"
+											   class="text-decoration-none"
+											   hx-get="{% url 'user_manage:profile' friend.username %}"
+											   hx-target="#htmx_content">
+												{{ friend.username }}
+											</a>
 										{% endif %}
 									</li>
 								{% endfor %}

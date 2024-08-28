@@ -28,11 +28,15 @@
 		</button>
 
 		<div class="navbar container-fluid border rounded shadow-sm" id="navbarContent" style="height: 100vh; flex-direction: column; align-items: center;">
-
 			<!-- Search Bar -->
 			<div class="row mb-4 w-100" style="margin-top: 54px;">
 				<section class="search w-100">
-					<form action="{% url 'user_manage:search' %}" method="get" class="search-form d-flex">
+					<form action="{% url 'user_manage:search' %}"
+						  method="get"
+						  class="search-form d-flex"
+						  hx-get="{% url 'user_manage:search' %}"
+						  hx-target="#htmx_content"
+						  hx-swap="innerHTML">
 						<input type="search" name="query" placeholder="Chercher un joueur" class="form-control rounded-pill" style="font-size: 1.2rem;">
 						<button type="submit" class="btn btn-sm btn-secondary rounded-pill ms-2" style="width: 45px;">
 							<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon" style="width: 100%;">
@@ -42,20 +46,23 @@
 			</div>
 
 			<!-- Navigation Links -->
-			 {% if request.user.is_authenticated %}
+			{% if request.user.is_authenticated %}
 				<div class="row mb-4 w-100" style="margin-top: 54px;"
 					hx-ext="ws"
-					ws-connect="/ws/online-status/"
-					>
+					ws-connect="/ws/online-status/">
 					<section class="nav-links w-100">
 						<ul class="list-unstyled">
 							<!-- Access Profile -->
 							<li class="mb-3">
-								<a href="{% url 'user_manage:profile' request.user.username %}" class="text-decoration-none btn btn-primary w-100 rounded-pill" style="font-size: 1.2rem;">
+								<button class="text-decoration-none btn btn-primary w-100 rounded-pill"
+									style="font-size: 1.2rem;"
+									hx-get="{% url 'user_manage:profile' request.user.username %}"
+									hx-trigger="click"
+									hx-target="#htmx_content">
 									Mon Profil
-								</a>
+								</button>
 							</li>
-							<!-- Create Tournament (to be added) -->
+							<!-- Create Tournament -->
 							<li class="mb-3">
 								<a href="#" class="text-decoration-none btn btn-outline-primary w-100 rounded-pill" style="font-size: 1.2rem;">
 									Créer un Tournoi
@@ -92,7 +99,6 @@
 	</nav>
 
 	<main class="d-flex flex-column">
-
 		<!-- Notifications -->
 		<section id="syst_messages" class="position-fixed top-0 start-0 p-3" style="z-index: 1050;">
 			{% for message in messages %}
@@ -104,39 +110,30 @@
 		</section>
 
 		<!-- App principale -->
-
-		<!-- Provisoire -->
-		<section id="content" class="flex-grow-1 d-flex flex-column justify-content-center">
+		<section id="htmx_content">
 			{% block content %}
 			{% endblock %}
 		</section>
-
-		<!-- Jeu -->
-		<section id="jeu">
-		</section>
-
-		<!-- Tournoi -->
-		<section id="tournoi">
-		</section>
-
-		<!-- Profil -->
-		<section id="profil">
-		</section>
-
-		<!-- Chat -->
-		<section id="chat">
-		</section>
-
 	</main>
 
 	<footer>
 		<p>&copy; 2024 ft_transcendence</p>
 		{% block javascript %}
-		{% endblock%}
+		{% endblock %}
 		<script>
 			document.getElementById('navbarToggle').addEventListener('click', function () {
 				var navbarContent = document.getElementById('navbarContent');
 				navbarContent.classList.toggle('show');
+			});
+		</script>
+		<script>
+			document.querySelectorAll('.btn-group button').forEach(button => {
+				button.addEventListener('click', function() {
+					document.querySelectorAll('.section').forEach(section => {
+						section.style.display = 'none';
+					});
+					document.querySelector(this.getAttribute('hx-get')).style.display = 'block';
+				});
 			});
 		</script>
 	</footer>
