@@ -27,7 +27,7 @@
 		<div id="chat_contain" class="message-container card-body overflow-auto bg-light" style="max-height: 400px; padding: 1rem;">
 			<ul class="message-list list-unstyled" id='chat_messages'>
 				{% for message in chat_messages reversed %}
-				{% include "live_chat/chat_message.html" %}
+					{% include "live_chat/chat_message.html" %}
 				{% endfor %}
 			</ul>
 		</div>

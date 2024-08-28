@@ -1,7 +1,7 @@
-from django import forms
-from django.contrib.auth import authenticate
-from django.contrib.auth.forms import UserCreationForm
-from .models import CustomUser
+from django 					import forms
+from django.contrib.auth 		import authenticate
+from django.contrib.auth.forms	import UserCreationForm
+from .models					import CustomUser
 
 # ---------------------- Formulaires de création et de modification d'utilisateur ---------------------- #
 
@@ -35,6 +35,12 @@ class CustomUserCreationForm(UserCreationForm):
 	class Meta:
 		model = CustomUser
 		fields = ('username', 'email', 'first_name', 'last_name', 'avatar', 'password1', 'password2')
+
+	def clean_username(self):
+		username = self.cleaned_data.get('username')
+		if CustomUser.objects.filter(username=username).exists():
+			raise forms.ValidationError("Un utilisateur avec ce pseudo existe déjà.")
+		return username
 
 	def clean_email(self):
 		email = self.cleaned_data.get('email')

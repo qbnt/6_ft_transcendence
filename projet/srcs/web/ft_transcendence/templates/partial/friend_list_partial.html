@@ -1,0 +1,22 @@
+{% for friend in friends %}
+	<li class="friend mb-2 d-flex align-items-center">
+		<div class="mini-pp rounded-circle overflow-hidden me-2" style="width: 30px; height: 30px;">
+			<img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+		</div>
+		{% if friend in online.users_online.all %}
+			<a href="#"
+			class="text-decoration-none text-success"
+			hx-get="{% url 'user_manage:profile' friend.username %}"
+			hx-target="#htmx_content">
+				{{ friend.username }}
+			</a>
+		{% else %}
+			<a href="#"
+			class="text-decoration-none"
+			hx-get="{% url 'user_manage:profile' friend.username %}"
+			hx-target="#htmx_content">
+				{{ friend.username }}
+			</a>
+		{% endif %}
+	</li>
+{% endfor %}

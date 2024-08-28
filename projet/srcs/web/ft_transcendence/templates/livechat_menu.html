@@ -1,0 +1,29 @@
+<div class="row flex-grow-1 w-100" style="margin-top: 10px;">
+	<section class="chat-section w-100">
+		{% if request.user.is_authenticated %}
+			<div class="accordion" id="chatAccordion">
+				<div class="accordion-item mb-3">
+					<h2 class="accordion-header" id="headingPublicChat">
+						<a href="{% url 'chat:chat_view' %}" class="text-decoration-none btn btn-outline-secondary w-100" style="font-size: 1.2rem;">
+							Channel Public
+						</a>
+					</h2>
+				</div>
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingChats">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChats" aria-expanded="false" aria-controls="collapseChats">
+							Autres Chats
+						</button>
+					</h2>
+					<div id="collapseChats" class="accordion-collapse collapse" aria-labelledby="headingChats" data-bs-parent="#chatAccordion">
+						<div class="accordion-body" hx-get="{% url 'chat:check_chat_rooms' %}" hx-trigger="load, every 5s" hx-target="#chat-list" hx-swap="innerHTML">
+							<div id="chat-list">
+								{% include 'partial/chat_list_partial.html' %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</section>
+</div>

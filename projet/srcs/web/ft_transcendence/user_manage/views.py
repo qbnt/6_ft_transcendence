@@ -4,8 +4,9 @@ from django.contrib.auth.decorators	import login_required
 from django.core.files 				import File
 from django.contrib					import messages
 from django.conf					import settings
-from django.shortcuts				import render, redirect
+from django.shortcuts				import render, redirect, get_object_or_404
 from .models						import CustomUser
+from live_chat.models				import OnlineUsers
 from . 								import forms
 from io								import BytesIO
 import requests
@@ -24,21 +25,24 @@ def login_or_register(request):
 				password = login_form.cleaned_data.get('password')
 				user = authenticate(request, username=username, password=password)
 				if user is not None:
-					user.is_onsite = True
 					user.save()
 					login(request, user)
-					messages.success(request, f'Welcome back, {user.username}!')
+					messages.success(request, f'Content de te revoir, {user.username} !')
 					return redirect('home:index')
 				else:
-					messages.error(request, 'Invalid username or password.')
+					messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 			else:
-				messages.error(request, 'Invalid username or password.')
+				messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 		elif 'register' in request.POST:
 			register_form = forms.CustomUserCreationForm(request.POST, request.FILES)
 			if register_form.is_valid():
 				user = register_form.save()
 				login(request, user)
+				messages.success(request, 'Inscription réussie ! Bienvenue !')
 				return redirect("home:index")
+			else:
+				for error in register_form.errors.values():
+					messages.error(request, error)
 
 	return render(request, 'user_manage/connexion.html', {
 		'login_form': login_form,
@@ -47,13 +51,14 @@ def login_or_register(request):
 
 def profile(request, username):
 	user = CustomUser.objects.get(username=username)
+	online = OnlineUsers.objects.first()
 	return render(request, 'user_manage/profile.html', {
 		'user': user,
+		'online': online
 	})
 
 @login_required
 def logout_user(request):
-	request.user.is_onsite = False
 	request.user.save()
 	logout(request)
 	messages.success(request, 'You have been logged out successfully.')
@@ -94,17 +99,13 @@ def pw_update(request):
 # ----------------------------------Social------------------------------------ #
 
 def search(request):
-	query = request.GET.get('query')
-	if query:
-		try:
-			user = CustomUser.objects.get(username=query)
-			return redirect('user_manage:profile', username=user.username)
-		except CustomUser.DoesNotExist:
-			messages.error(request, 'Profil non trouvé')
-			return redirect('home:index')
-	else:
-		messages.error(request, 'Veuillez entrer un pseudonyme pour la recherche.')
-		return redirect('home:index')
+    query = request.GET.get('query')
+    if query:
+        user = get_object_or_404(CustomUser, username=query)
+        return render(request, 'user_manage/profile.html', {'user': user})
+    else:
+        messages.error(request, 'Profil non trouvé')
+        return redirect('home:index')
 
 @login_required
 def add_friend(request, friend):
@@ -211,21 +212,25 @@ def api_42_callback(request):
 		user_response = requests.get('https://api.intra.42.fr/v2/me', headers={
 			'Authorization': f'Bearer {access_token}',
 		}).json()
+
 		username = user_response['login']
 		email = user_response['email']
 		first_name = user_response.get('first_name')
 		last_name = user_response.get('last_name')
 		image_url = user_response['image']['link']
-		user, created = CustomUser.objects.get_or_create(username=username, defaults={
-			'email': email,
-			'first_name': first_name,
-			'last_name': last_name,
-			'is_onsite': True,
-		})
+		user, created = CustomUser.objects.get_or_create(
+			username=username, defaults={
+				'email': email,
+				'first_name': first_name,
+				'last_name': last_name,
+			}
+		)
 
 		if not created:
-			user.is_onsite = True
+			messages.success(request, f'Welcome back, {user.username}!')
 			user.save()
+		else:
+			messages.success(request, f'Welcome, {user.username}!')
 
 		if image_url:
 			response = requests.get(image_url)
@@ -233,9 +238,14 @@ def api_42_callback(request):
 			img_temp = BytesIO(response.content)
 			user.avatar.save(f"{username}_avatar.jpg", File(img_temp), save=True)
 		login(request, user)
-		messages.success(request, f'Welcome back, {user.username}!')
 		return redirect('home:index')
 
 	except Exception as e:
-		print(e)
-		return redirect('user_manage:register')
+		messages.error(request, "Erreur lors de la communication avec les serveurs de 42.")
+		return redirect('user_manage:connexion')
+
+@login_required
+def check_online_status(request):
+    online_users = OnlineUsers.objects.first()
+    friends = request.user.friends.all()
+    return render(request, 'partial/friend_list_partial.html', {'friends': friends, 'online_users': online_users})

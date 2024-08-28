@@ -65,3 +65,8 @@ def get_or_create_chatroom(request, username):
 		chatroom.members.add(other_user, request.user)
 
 	return redirect('chat:chatroom', chatroom.group_name)
+
+@login_required
+def check_chat_rooms(request):
+    chat_rooms = request.user.chat_groups.all()
+    return render(request, 'partial/chat_list_partial.html', {'chat_rooms': chat_rooms})
