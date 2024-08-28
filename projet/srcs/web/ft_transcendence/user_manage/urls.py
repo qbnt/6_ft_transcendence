@@ -9,6 +9,7 @@ urlpatterns = [
 	path ('edit/', views.edit_user, name = 'edit'),
 	path ('edit/pw_update/', views.pw_update, name = 'pw_update'),
 	path ('profile/<str:username>', views.profile, name='profile'),
+	path ('check_online_status/', views.check_online_status, name='check_online_status'),
 
 	path ('search/', views.search, name='search'),
 	path ('add_friend/<str:friend>', views.add_friend, name='add_friend'),

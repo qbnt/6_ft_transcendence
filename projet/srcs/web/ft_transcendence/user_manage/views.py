@@ -247,3 +247,8 @@ def api_42_callback(request):
 	except Exception as e:
 		messages.error(request, "Erreur lors de la communication avec les serveurs de 42.")
 		return redirect('user_manage:connexion')
+
+@login_required
+def check_online_status(request):
+	online_users = OnlineUsers.objects.first()
+	return render(request, 'partial/friend_list_partial.html', {'online_users': online_users})
