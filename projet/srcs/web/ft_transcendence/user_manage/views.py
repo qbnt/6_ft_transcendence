@@ -4,7 +4,7 @@ from django.contrib.auth.decorators	import login_required
 from django.core.files 				import File
 from django.contrib					import messages
 from django.conf					import settings
-from django.shortcuts				import render, redirect
+from django.shortcuts				import render, redirect, get_object_or_404
 from .models						import CustomUser
 from live_chat.models				import OnlineUsers
 from . 								import forms
@@ -99,17 +99,13 @@ def pw_update(request):
 # ----------------------------------Social------------------------------------ #
 
 def search(request):
-	query = request.GET.get('query')
-	if query:
-		try:
-			user = CustomUser.objects.get(username=query)
-			return redirect('user_manage:profile', username=user.username)
-		except CustomUser.DoesNotExist:
-			messages.error(request, 'Profil non trouvé')
-			return redirect('home:index')
-	else:
-		messages.error(request, 'Veuillez entrer un pseudonyme pour la recherche.')
-		return redirect('home:index')
+    query = request.GET.get('query')
+    if query:
+        user = get_object_or_404(CustomUser, username=query)
+        return render(request, 'user_manage/profile.html', {'user': user})
+    else:
+        messages.error(request, 'Profil non trouvé')
+        return redirect('home:index')
 
 @login_required
 def add_friend(request, friend):
@@ -250,5 +246,6 @@ def api_42_callback(request):
 
 @login_required
 def check_online_status(request):
-	online_users = OnlineUsers.objects.first()
-	return render(request, 'partial/friend_list_partial.html', {'online_users': online_users})
+    online_users = OnlineUsers.objects.first()
+    friends = request.user.friends.all()
+    return render(request, 'partial/friend_list_partial.html', {'friends': friends, 'online_users': online_users})
