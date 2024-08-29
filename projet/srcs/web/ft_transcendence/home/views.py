@@ -9,5 +9,4 @@ def index(request):
 		"message": "[Ceci est le pong]",
 		"online": online,
 	}
-	template = loader.get_template("home/index.html")
-	return HttpResponse(template.render(context, request))
+	return render(request, "home/index.html", context)
