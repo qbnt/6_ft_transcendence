@@ -10,7 +10,7 @@
 					</h2>
 					<div id="collapseFriends" class="accordion-collapse collapse" aria-labelledby="headingFriends" data-bs-parent="#friendAccordion">
 						<div class="accordion-body">
-							<ul class="list-unstyled" id="friend-list" hx-get="{% url 'user_manage:check_online_status' %}" hx-trigger="load, every 10s">
+							<ul class="list-unstyled" id="friend-list" hx-get="{% url 'user_manage:check_online_status' %}" hx-trigger="load, every 5s">
 								{% include 'partial/friend_list_partial.html' %}
 							</ul>
 						</div>
