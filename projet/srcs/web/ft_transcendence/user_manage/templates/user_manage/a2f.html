@@ -26,6 +26,7 @@
                             {{ form.code_client.errors }}
                         </div>
                         <button type="submit" class="btn btn-primary w-100 py-2" style="border-radius: 10px;">Enregistrer</button>
+                        {% csrf_token %}
                     </form>
                 </div>
             </form>

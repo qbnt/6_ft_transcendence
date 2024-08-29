@@ -130,7 +130,7 @@ def verify_code(request):
 			messages.error(request, "Formulaire invalide. Veuillez vérifier vos entrées.")
 	else:
 		form = A2F()
-	return render(request, 'user_manage/a2f.html', {'form': form})
+	return render(request, 'user_manage/a2f.html')
 
 @login_required
 def a2f(request):
