@@ -32,8 +32,7 @@ def login_or_register(request):
 				if user is not None:
 					user.save()
 					login(request, user)
-					messages.success(request, f'Content de te revoir, {user.username} !')
-					return redirect('home:index')
+					return redirect('user_manage:a2f')
 				else:
 					messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 			else:
