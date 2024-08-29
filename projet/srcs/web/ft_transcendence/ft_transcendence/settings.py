@@ -27,6 +27,11 @@ SECRET_KEY = 'django-insecure-l940snh=!msg^xy)=^q4@*n08szdxjy+hhm)-)vwei4cuyn9x(
 CLIENT_ID_42 = os.getenv('UID_42')
 CLIENT_SECRET_42 = os.getenv('SECRET_42')
 
+# A2F information
+
+SENDER_A2F = os.getenv('SENDER_A2F')
+PASSWORD_A2F = os.getenv('PASSWORD_A2F')
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -69,6 +74,7 @@ INSTALLED_APPS = [
 	'live_chat',
 	'pong_game',
 	'tournament',
+	'pyotp',
 ]
 
 MIDDLEWARE = [

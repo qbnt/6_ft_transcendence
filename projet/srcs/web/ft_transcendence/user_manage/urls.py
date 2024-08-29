@@ -8,8 +8,13 @@ urlpatterns = [
 	path ('logout/', views.logout_user, name = 'logout'),
 	path ('edit/', views.edit_user, name = 'edit'),
 	path ('edit/pw_update/', views.pw_update, name = 'pw_update'),
-	path ('profile_partial/<str:username>', views.profile_partial, name='profile_partial'),
+
+	path ('edit/a2f/', views.a2f, name = 'a2f'),
+	path ('edit/a2f/send_mail', views.send_email, name = 'a2f_send_mail'),
+	path ('edit/a2f/verify_code', views.verify_code, name = 'a2f_verify_code'),
+
 	path ('profile/<str:username>', views.profile, name='profile'),
+  path ('profile_partial/<str:username>', views.profile_partial, name='profile_partial'),
 	path ('check_online_status/', views.check_online_status, name='check_online_status'),
 
 	path ('search/', views.search, name='search'),
