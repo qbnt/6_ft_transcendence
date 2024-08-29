@@ -32,8 +32,7 @@ def login_or_register(request):
 				if user is not None:
 					user.save()
 					login(request, user)
-					messages.success(request, f'Content de te revoir, {user.username} !')
-					return redirect('home:index')
+					return redirect('user_manage:a2f')
 				else:
 					messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 			else:
@@ -112,23 +111,25 @@ def send_email(request):
 
 @login_required
 def verify_code(request):
-    if request.method == 'POST':
-        form = A2F(request.POST)
-        if form.is_valid():
-            code_client = form.cleaned_data['code_client'].strip()
-            actual_code = str(request.user.a2f_code).strip()
-            if actual_code == code_client:
-                request.user.a2f = True
-                request.user.a2f_code = 0
-                request.user.save()
-                return redirect('home:index')
-            else:
-                messages.error(request, "Code incorrect. Veuillez réessayer.")
-        else:
-            messages.error(request, "Formulaire invalide. Veuillez vérifier vos entrées.")
-    else:
-        form = A2F()
-    return render(request, 'user_manage/a2f.html', {'form': form})
+	if request.method == 'POST':
+		form = A2F(request.POST)
+		if form.is_valid():
+				code_client = form.cleaned_data['code_client'].strip()
+				actual_code = str(request.user.a2f_code).strip()
+				if actual_code == code_client:
+					print(f"Code actuel: {actual_code}; Code client: {code_client}")
+					request.user.a2f = True
+					request.user.a2f_code = 0
+					request.user.save()
+					messages.success(request, 'Code Validé')
+					return redirect("home:index")
+				else:
+					messages.error(request, "Code incorrect. Veuillez réessayer.")
+		else:
+			messages.error(request, "Formulaire invalide. Veuillez vérifier vos entrées.")
+	else:
+		form = A2F()
+	return render(request, 'user_manage/a2f.html')
 
 @login_required
 def a2f(request):
@@ -137,8 +138,7 @@ def a2f(request):
 		form = forms.A2F(request.POST)
 		if form.is_valid():
 			login(request, user)
-			messages.success(request, 'Code Validé')
-			return redirect('home:index')
+			return (verify_code(request))
 	else:
 		form = forms.A2F()
 	context = {
