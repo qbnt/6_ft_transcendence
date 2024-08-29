@@ -28,14 +28,14 @@ jobs:
 
     - name: Create .env file
       run: |
-        echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env
-        echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> .env
-        echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> .env
-        echo DJANGO_ADMIN_USER=${{ secrets.DJANGO_ADMIN_USER }} >> .env
-        echo DJANGO_ADMIN_MAIL=${{ secrets.DJANGO_ADMIN_MAIL }} >> .env
-        echo DJANGO_ADMIN_PASS=${{ secrets.DJANGO_ADMIN_PASS }} >> .env
-        echo UID_42=${{ secrets.UID_42 }} >> .env
-        echo SECRET_42=${{ secrets.SECRET_42 }} >> .env
+        echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> projet/srcs/.env
+        echo POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }} >> projet/srcs/.env
+        echo POSTGRES_DB=${{ secrets.POSTGRES_DB }} >> projet/srcs/.env
+        echo DJANGO_ADMIN_USER=${{ secrets.DJANGO_ADMIN_USER }} >> projet/srcs/.env
+        echo DJANGO_ADMIN_MAIL=${{ secrets.DJANGO_ADMIN_MAIL }} >> projet/srcs/.env
+        echo DJANGO_ADMIN_PASS=${{ secrets.DJANGO_ADMIN_PASS }} >> projet/srcs/.env
+        echo UID_42=${{ secrets.UID_42 }} >> projet/srcs/.env
+        echo SECRET_42=${{ secrets.SECRET_42 }} >> projet/srcs/.env
 
     - name: Install Docker Compose
       run: |
