@@ -56,7 +56,7 @@
 							<li class="mb-3">
 								<button class="text-decoration-none btn btn-primary w-100 rounded-pill"
 									style="font-size: 1.2rem;"
-									hx-get="{% url 'user_manage:profile' request.user.username %}"
+									hx-get="{% url 'user_manage:profile_partial' request.user.username %}"
 									hx-trigger="click"
 									hx-target="#htmx_content">
 									Mon Profil

@@ -8,6 +8,7 @@ urlpatterns = [
 	path ('logout/', views.logout_user, name = 'logout'),
 	path ('edit/', views.edit_user, name = 'edit'),
 	path ('edit/pw_update/', views.pw_update, name = 'pw_update'),
+	path ('profile_partial/<str:username>', views.profile_partial, name='profile_partial'),
 	path ('profile/<str:username>', views.profile, name='profile'),
 	path ('check_online_status/', views.check_online_status, name='check_online_status'),
 

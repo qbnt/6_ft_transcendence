@@ -57,6 +57,14 @@ def profile(request, username):
 		'online': online
 	})
 
+def profile_partial(request, username):
+	user = CustomUser.objects.get(username=username)
+	online = OnlineUsers.objects.first()
+	return render(request, 'user_manage/partial/profile_partial.html', {
+		'user': user,
+		'online': online
+	})
+
 @login_required
 def logout_user(request):
 	request.user.save()
