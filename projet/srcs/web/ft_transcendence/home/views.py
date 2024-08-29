@@ -1,6 +1,4 @@
-from django.shortcuts	import render, redirect
-from django.http		import HttpResponse
-from django.template	import loader
+from django.shortcuts	import render
 from live_chat.models	import OnlineUsers
 
 def index(request):
@@ -9,4 +7,4 @@ def index(request):
 		"message": "[Ceci est le pong]",
 		"online": online,
 	}
-	return render(request, "home/index.html", context)
+	return render(request, "base.html", context)

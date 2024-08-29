@@ -66,7 +66,7 @@
 							<li class="mb-3">
 								<a href="{% url 'tournament:setup_players' %}" class="text-decoration-none btn btn-outline-primary w-100 rounded-pill" style="font-size: 1.2rem;">
 									Crée Un Tournament
-								</a>								
+								</a>
 							</li>
 						</ul>
 					</section>
@@ -111,8 +111,12 @@
 
 		<!-- App principale -->
 		<section id="htmx_content">
-			{% block content %}
-			{% endblock %}
+			<div class="container">
+				<div class="row">
+					<img src="media/pong.jpg" alt="Le pong avant le pong" class="img-fluid">
+					<p class="text-center">{{ message }}</p>
+				</div>
+			</div>
 		</section>
 	</main>
 
