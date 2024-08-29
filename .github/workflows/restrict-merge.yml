@@ -3,7 +3,7 @@ name: Restrict Merge to Main
 on:
   pull_request:
     branches:
-      - Dev
+      - main
 
 jobs:
   restrict-merge:
