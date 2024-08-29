@@ -16,7 +16,7 @@
 						</button>
 					</h2>
 					<div id="collapseChats" class="accordion-collapse collapse" aria-labelledby="headingChats" data-bs-parent="#chatAccordion">
-						<div class="accordion-body" hx-get="{% url 'chat:check_chat_rooms' %}" hx-trigger="load, every 5s" hx-target="#chat-list" hx-swap="innerHTML">
+						<div class="accordion-body" hx-get="{% url 'chat:check_chat_rooms' %}" hx-trigger="load, every 10s" hx-target="#chat-list" hx-swap="innerHTML">
 							<div id="chat-list">
 								{% include 'partial/chat_list_partial.html' %}
 							</div>
