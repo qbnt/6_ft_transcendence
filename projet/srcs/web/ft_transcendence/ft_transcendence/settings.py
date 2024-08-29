@@ -74,6 +74,7 @@ INSTALLED_APPS = [
 	'live_chat',
 	'pong_game',
 	'tournament',
+	'pyotp',
 ]
 
 MIDDLEWARE = [

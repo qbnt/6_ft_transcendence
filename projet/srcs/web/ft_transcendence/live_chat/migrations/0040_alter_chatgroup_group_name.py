@@ -5,7 +5,6 @@ import shortuuid.main
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('live_chat', '0039_alter_chatgroup_group_name'),
         ('live_chat', '0039_auto_20240827_1646'),
     ]
 
