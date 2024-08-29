@@ -32,7 +32,9 @@ def login_or_register(request):
 				if user is not None:
 					user.save()
 					login(request, user)
-					return redirect('user_manage:a2f')
+					if user.a2f == True:
+						return redirect('user_manage:a2f')
+					return redirect('home:index')
 				else:
 					messages.error(request, 'Nom d’utilisateur ou mot de passe incorrect.')
 			else:
