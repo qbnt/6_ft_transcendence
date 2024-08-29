@@ -111,12 +111,8 @@
 
 		<!-- App principale -->
 		<section id="htmx_content">
-			<div class="container">
-				<div class="row">
-					<img src="media/pong.jpg" alt="Le pong avant le pong" class="img-fluid">
-					<p class="text-center">{{ message }}</p>
-				</div>
-			</div>
+			{% block content %}
+			{% endblock %}
 		</section>
 	</main>
 

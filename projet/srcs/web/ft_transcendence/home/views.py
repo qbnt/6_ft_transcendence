@@ -7,4 +7,4 @@ def index(request):
 		"message": "[Ceci est le pong]",
 		"online": online,
 	}
-	return render(request, "base.html", context)
+	return render(request, "home/index.html", context)

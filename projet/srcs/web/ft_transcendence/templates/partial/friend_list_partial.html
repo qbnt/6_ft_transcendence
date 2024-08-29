@@ -3,20 +3,17 @@
         <div class="mini-pp rounded-circle overflow-hidden me-2" style="width: 30px; height: 30px;">
             <img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
         </div>
-		{% for onlines in online.users_online.all %}
-			<p> {{ onlines.username }} </p>
-		{% endfor %}
-        {% if friend in online.users_online.all %}
+        {% if friend in online_users.users_online.all %}
             <a class="btn text-success"
                 hx-get="{% url 'user_manage:profile_partial' friend.username %}"
                 hx-target="#htmx_content">
-                {{ friend.username }} ---------------
+                {{ friend.username }}
             </a>
         {% else %}
             <a class="btn"
                 hx-get="{% url 'user_manage:profile_partial' friend.username %}"
                 hx-target="#htmx_content">
-                {{ friend.username }} ===============
+                {{ friend.username }}
             </a>
         {% endif %}
     </li>
