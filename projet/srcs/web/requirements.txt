@@ -10,3 +10,5 @@ channels[daphne]
 requests
 shortuuid
 pyotp
+redis
+django-redis

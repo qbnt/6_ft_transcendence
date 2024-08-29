@@ -33,7 +33,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	first_name = models.CharField(max_length=30, blank=True)
 	last_name = models.CharField(max_length=30, blank=True)
 	avatar = models.ImageField(default='default_avatar.jpg', upload_to='profile_avatars')
-	is_onsite = models.BooleanField(default=True)
 
 	friends_request = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='users_requested')
 	friends = models.ManyToManyField('self', blank=True, related_name='friend_with')

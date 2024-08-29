@@ -1,0 +1,43 @@
+<div class="row mb-4 w-100 bordered" style="margin-top: 54px;">
+	<section class="friend-list w-100">
+		{% if request.user.is_authenticated %}
+			<div class="accordion" id="friendAccordion">
+				<div class="accordion-item">
+					<h2 class="accordion-header" id="headingFriends">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFriends" aria-expanded="false" aria-controls="collapseFriends">
+							Liste d'amis
+						</button>
+					</h2>
+					<div id="collapseFriends" class="accordion-collapse collapse" aria-labelledby="headingFriends" data-bs-parent="#friendAccordion">
+						<div class="accordion-body">
+							<ul class="list-unstyled" id="friend-list" hx-get="{% url 'user_manage:check_online_status' %}" hx-trigger="load, every 5s">
+								{% for friend in request.user.friends.all %}
+									<li class="friend mb-2 d-flex align-items-center">
+										<div class="mini-pp rounded-circle overflow-hidden me-2" style="width: 30px; height: 30px;">
+											<img src="{{ friend.avatar.url }}" alt="friend pp" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+										</div>
+										{% if friend in online.users_online.all %}
+											<a href="#"
+											   class="text-decoration-none text-success"
+											   hx-get="{% url 'user_manage:profile' friend.username %}"
+											   hx-target="#htmx_content">
+												{{ friend.username }}
+											</a>
+										{% else %}
+											<a href="#"
+											   class="text-decoration-none"
+											   hx-get="{% url 'user_manage:profile' friend.username %}"
+											   hx-target="#htmx_content">
+												{{ friend.username }}
+											</a>
+										{% endif %}
+									</li>
+								{% endfor %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	</section>
+</div>

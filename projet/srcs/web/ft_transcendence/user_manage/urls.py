@@ -12,6 +12,7 @@ urlpatterns = [
 	path ('edit/a2f/send_mail', views.send_email, name = 'a2f_send_mail'),
 	path ('edit/a2f/verify_code', views.verify_code, name = 'a2f_verify_code'),
 	path ('profile/<str:username>', views.profile, name='profile'),
+	path ('check_online_status/', views.check_online_status, name='check_online_status'),
 
 	path ('search/', views.search, name='search'),
 	path ('add_friend/<str:friend>', views.add_friend, name='add_friend'),
