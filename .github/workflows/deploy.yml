@@ -36,6 +36,8 @@ jobs:
         echo DJANGO_ADMIN_PASS=${{ secrets.DJANGO_ADMIN_PASS }} >> projet/srcs/.env
         echo UID_42=${{ secrets.UID_42 }} >> projet/srcs/.env
         echo SECRET_42=${{ secrets.SECRET_42 }} >> projet/srcs/.env
+        echo SENDER_A2F=${{ secrets.SENDER_A2F }} >> projet/srcs/.env
+        echo PASSWORD_A2F=${{ secrets.PASSWORD_A2F }} >> projet/srcs/.env
 
     - name: Install Docker Compose
       run: |
