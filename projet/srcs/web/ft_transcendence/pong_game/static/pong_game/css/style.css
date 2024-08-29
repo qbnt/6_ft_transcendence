@@ -17,3 +17,7 @@
     #game-container {
         display: none;
     }
+    
+    #game-container-ai {
+        display: none;
+    }
