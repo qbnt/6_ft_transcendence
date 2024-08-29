@@ -1,13 +1,15 @@
 <ul class="list-unstyled">
-    {% for chatroom in request.user.chat_groups.all %}
-        {% if chatroom.is_private %}
-            {% for member in chatroom.members.all %}
-                {% if member != user %}
-                    <li>
-                        <a href="{% url 'chat:chatroom' chatroom.group_name %}" class="text-decoration-none">{{ member.username }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
+	{% for chatroom in request.user.chat_groups.all %}
+		{% if chatroom.is_private %}
+			{% for member in chatroom.members.all %}
+				{% if member != user %}
+					{% if member not in request.user.blockeds.all and request.user not in member.blockeds.all %}
+						<li>
+							<a href="{% url 'chat:chatroom' chatroom.group_name %}" class="text-decoration-none">{{ member.username }}</a>
+						</li>
+					{% endif %}
+				{% endif %}
+			{% endfor %}
+		{% endif %}
+	{% endfor %}
 </ul>
