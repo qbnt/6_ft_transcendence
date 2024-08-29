@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Activation A2F
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 d-flex justify-content-center">
+    <div class="card shadow-lg" style="width: 100%; max-width: 500px; border-radius: 15px;">
+        <div class="card-header bg-gradient text-white text-center" style="background: black; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <h2 class="mb-0">Activer l'Authentification en 2 facteurs</h2>
+        </div>
+        <div class="card-body p-4">
+            <form id="sendEmailForm" method="post">
+                {% csrf_token %}
+                <button type="button" id="sendEmailButton" class="btn btn-primary">Envoyer le Code</button>
+            </form>
+            <form method="post" class="py-2">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <form method="post" class="py-2" action="{% url 'user_manage:a2f_verify_code' %}">
+                        {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="{{ form.code_client.id_for_label }}">Code A2F:</label>
+                            {{ form.code_client }}
+                            {{ form.code_client.errors }}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2" style="border-radius: 10px;">Enregistrer</button>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('sendEmailButton').addEventListener('click', function() {
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch("{% url 'user_manage:a2f_send_mail' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert(data.message);
+            } else {
+                alert('Erreur: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+</script>
+
+{% endblock %}

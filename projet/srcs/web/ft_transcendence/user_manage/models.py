@@ -45,6 +45,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 
+	a2f = models.BooleanField(default=False)
+	a2f_code = models.IntegerField(default=0);
+
 	objects = CustomUserManager()
 
 	USERNAME_FIELD = 'username'
