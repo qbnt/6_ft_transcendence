@@ -56,7 +56,7 @@
     <div class="buttons">
         <a href="{% url 'tournament:setup_players' %}" class="btn-link">Retourner à l'inscription</a>
 
-        <form action="{% url 'tournament:start' %}" method="POST" style="display: inline;">
+        <form action="{% url 'tournament:tournoi' %}" method="POST" style="display: inline;">
             {% csrf_token %}
             {% for player in players %}
                 <input type="hidden" name="players" value="{{ player }}">

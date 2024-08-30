@@ -4,6 +4,6 @@ from . import views
 app_name = "tournament"
 
 urlpatterns = [
-    path('tournament/start', views.start, name='start'),
+    path('tournament/Tournoi', views.Tournoi, name='tournoi'),
 	path('tournament/setup_players', views.setup_players, name="setup_players"),
 ]
