@@ -1,18 +1,49 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Confirmation tournament
+    Confirmation Tournament
 {% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmation du tournament</title>
-</head>
-<body>
+{% block content %}
+    <style>
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-link, .btn-submit {
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.2s;
+            display: inline-block;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-link {
+            color: #fff;
+            background-color: #007bff;
+        }
+
+        .btn-link:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit {
+            color: #fff;
+            background-color: #28a745;
+        }
+
+        .btn-submit:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+    </style>
 
     <h1>Confirmation des Participants</h1>
 
@@ -22,17 +53,15 @@
         {% endfor %}
     </ul>
 
-	<div class="buttons">
-		<a href="{% url tournament:setup_players %}">Retourner à l'inscription</a>
+    <div class="buttons">
+        <a href="{% url 'tournament:setup_players' %}" class="btn-link">Retourner à l'inscription</a>
 
-		<form action="{% url 'tournament:start'} %" method="POST" style="display: inline;">
-			{% csrf_token %}
-			{% for player in player %}
-				<input type="hidden" name="players" value="{{ player }}">
-			{% endfor %}
-			<button type="submit">Commencer Le tournament</button>
-		</form>
-	</div>
-
-</body>
-</html>
+        <form action="{% url 'tournament:start' %}" method="POST" style="display: inline;">
+            {% csrf_token %}
+            {% for player in players %}
+                <input type="hidden" name="players" value="{{ player }}">
+            {% endfor %}
+            <button type="submit" class="btn-submit">Commencer Le Tournament</button>
+        </form>
+    </div>
+{% endblock %}
