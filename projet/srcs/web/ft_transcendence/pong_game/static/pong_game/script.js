@@ -399,6 +399,10 @@ function startPongGame() {
         const data = new URLSearchParams();
         data.append('player1_score', player1Score);
         data.append('player2_score', player2Score);
+        const player1Username = document.getElementById('player1Username').value;
+        const player2Username = document.getElementById('player2Username').value;
+        data.append('player1_username', player1Username);
+        data.append('player2_username', player2Username);
 
         fetch('pong_game/save_result/', {
             method: 'POST',

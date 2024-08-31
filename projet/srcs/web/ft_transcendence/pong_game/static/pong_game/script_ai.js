@@ -405,9 +405,9 @@ function startAiPongGame() {
         const data = new URLSearchParams();
         data.append('player1_score', player1Score);
         data.append('player2_score', player2Score);
-        console.log(player1Score);
-        console.log(player2Score);
-        console.log(data);
+        const player1Username = document.getElementById('player1Username').value;
+        data.append('player1_username', player1Username);
+        data.append('player2_username', "__IA__de__bogoss");
         
         fetch('pong_game/save_result/', {
             method: 'POST',
@@ -417,7 +417,6 @@ function startAiPongGame() {
             },
             body: data
         })
-        .then(response => response.data.json())
         .then(data => {
             console.log('Success:', data);
         })
