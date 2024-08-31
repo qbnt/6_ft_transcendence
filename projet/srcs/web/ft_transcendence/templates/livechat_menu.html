@@ -1,18 +1,18 @@
-<div class="row flex-grow-1 w-100" style="margin-top: 10px;">
+<div class="row mb-4 w-100">
 	<section class="chat-section w-100">
 		{% if request.user.is_authenticated %}
 			<div class="accordion" id="chatAccordion">
-				<div class="accordion-item mb-3">
+				<div class="accordion-item" style="margin-bottom: 0">
 					<h2 class="accordion-header" id="headingPublicChat">
-						<a href="{% url 'chat:chat_view' %}" class="text-decoration-none btn btn-outline-secondary w-100" style="font-size: 1.2rem;">
-							Channel Public
+						<a href="{% url 'chat:chat_view' %}" class="btn accordion-button-custom w-100" style=";">
+							Canal publique
 						</a>
 					</h2>
 				</div>
-				<div class="accordion-item">
+				<div class="accordion-item" style="margin-bottom: 0">
 					<h2 class="accordion-header" id="headingChats">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChats" aria-expanded="false" aria-controls="collapseChats">
-							Autres Chats
+							Autres clavardage
 						</button>
 					</h2>
 					<div id="collapseChats" class="accordion-collapse collapse" aria-labelledby="headingChats" data-bs-parent="#chatAccordion">
