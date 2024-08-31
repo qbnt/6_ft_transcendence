@@ -26,6 +26,7 @@ header {
 	z-index: 1;
 	background-color: #244232b1;
 	border-bottom: 2px solid rgba(0, 0, 0, 0.679);
+	box-shadow: 0px 2px 5px 0px  #343a40;
 	padding: 10px 0;
 	max-height: 120px;
 	display: flex;
@@ -51,6 +52,8 @@ header #logo {
 	right: 20px;
 	z-index: 1050;
 	background: none;
+	box-shadow: 0px 2px 5px 0px  #343a40;
+	border-radius: 50%;
 	border: none;
 	padding: 0;
 	display: flex;
@@ -74,31 +77,24 @@ header #logo {
     grid-area: navbar;
     z-index: 1040;
     background-color: #bcbcbcc5;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+	box-shadow: 5px #343a40;
     position: fixed;
     right: 0;
     top: 0;
-    height: 100vh;
     width: 300px;
+	height: 100%;
+	justify-content: center;
     transform: translateX(100%);
     transition: transform 0.3s ease;
     overflow-y: auto;
 }
 
-.navbar.show {
-    transform: translateX(0%);
+.nav-content {
+	margin-top: minmax(20px, 100%);
 }
 
-.navbar-item {
-	border: 2px dashed black;
-	padding: 10px;
-	margin: 5px;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+.navbar.show {
+    transform: translateX(0%);
 }
 
 .search-form {
@@ -176,6 +172,7 @@ main {
 	align-items: center;
 	justify-content: center;
 	padding: 20px;
+	margin-bottom: 5%;
 }
 
 main #content {
@@ -189,9 +186,10 @@ main #content {
 footer {
 	grid-area: footer;
 	z-index: 1;
-	max-height: 80px;
-	background-color: #244232b1;
+	max-height: 12%;
+	background-color: #244232;
 	border-top: 2px solid rgba(0, 0, 0, 0.679);
+	box-shadow: 0px 0px 2px 0px  #343a40;
 	padding: 10px 0;
 	position: fixed;
 	bottom: 0;
@@ -305,4 +303,81 @@ a.text-decoration-none:hover {
     margin-top: 20px;
     transform: translateX(0); /* S'assure qu'il est centré */
     transition: all 0.3s ease;
+}
+
+.accordion-button-custom {
+	align-items: center;
+	appearance: button;
+	background-color: rgb(248, 249, 250);
+	border-bottom-color: rgb(52, 58, 64);
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+	border-bottom-style: none;
+	border-bottom-width: 0px;
+	border-image-outset: 0;
+	border-image-repeat: stretch;
+	border-image-slice: 100%;
+	border-image-source: none;
+	border-image-width: 1;
+	border-left-color: rgb(52, 58, 64);
+	border-left-style: none;
+	border-left-width: 0px;
+	border-right-color: rgb(52, 58, 64);
+	border-right-style: none;
+	border-right-width: 0px;
+	border-top-color: rgb(52, 58, 64);
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	border-top-style: none;
+	border-top-width: 0px;
+	box-sizing: border-box;
+	color: rgb(52, 58, 64);
+	cursor: pointer;
+	display: flex;
+	font-family: Roboto, sans-serif;
+	font-feature-settings: normal;
+	font-kerning: auto;
+	font-optical-sizing: auto;
+	font-size: 19.200001px;
+	font-size-adjust: none;
+	font-stretch: 100%;
+	font-style: normal;
+	font-variant-alternates: normal;
+	font-variant-caps: normal;
+	font-variant-east-asian: normal;
+	font-variant-ligatures: normal;
+	font-variant-numeric: normal;
+	font-variant-position: normal;
+	font-variation-settings: normal;
+	font-weight: 700;
+	height: 47px;
+	letter-spacing: normal;
+	line-height: 23.040001px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	padding-block-end: 12px;
+	padding-block-start: 12px;
+	padding-bottom: 12px;
+	padding-inline-end: 12px;
+	padding-inline-start: 12px;
+	padding-left: 12px;
+	padding-right: 12px;
+	padding-top: 12px;
+	position: relative;
+	text-align: left;
+	text-decoration: none;
+	text-decoration-line: none;
+	text-indent: 0px;
+	text-shadow: none;
+	text-transform: none;
+	transition-behavior: normal, normal, normal, normal;
+	transition-delay: 0s, 0s, 0s, 0s;
+	transition-duration: 0.15s, 0.15s, 0.15s, 0.15s;
+	transition-property: color, background-color, border-color, box-shadow;
+	transition-timing-function: ease-in-out, ease-in-out, ease-in-out, ease-in-out;
+	vertical-align: middle;
+	width: 274px;
+	word-spacing: 0px;
 }

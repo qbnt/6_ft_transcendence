@@ -27,16 +27,16 @@
 			{% endif %}
 		</button>
 
-		<div class="navbar container-fluid border rounded shadow-sm" id="navbarContent" style="height: 100vh; flex-direction: column; align-items: center;">
+		<div class="navbar container-fluid border rounded shadow-sm" id="navbarContent">
 			<!-- Search Bar -->
-			<div class="row mb-4 w-100" style="margin-top: 54px;">
+			<div class="row mb-4 w-100" style="margin-top: 50px;">
 				<section class="search w-100">
 					<form action="{% url 'user_manage:search' %}"
-						  method="get"
-						  class="search-form d-flex"
-						  hx-get="{% url 'user_manage:search' %}"
-						  hx-target="#htmx_content"
-						  hx-swap="innerHTML">
+						method="get"
+						class="search-form d-flex"
+						hx-get="{% url 'user_manage:search' %}"
+						hx-target="#htmx_content"
+						hx-swap="innerHTML">
 						<input type="search" name="query" placeholder="Chercher un joueur" class="form-control rounded-pill" style="font-size: 1.2rem;">
 						<button type="submit" class="btn btn-sm btn-secondary rounded-pill ms-2" style="width: 45px;">
 							<img src="{% static 'images/loupe.png' %}" alt="Rechercher" class="search-icon" style="width: 100%;">
@@ -46,36 +46,34 @@
 			</div>
 
 			<!-- Navigation Links -->
+			<div class="row mb-4 w-100"
+			hx-ext="ws"
+			ws-connect="/ws/online-status/">
 			{% if request.user.is_authenticated %}
-				<div class="row mb-4 w-100" style="margin-top: 54px;"
-					hx-ext="ws"
-					ws-connect="/ws/online-status/">
-					<section class="nav-links w-100">
-						<ul class="list-unstyled">
-							<!-- Access Profile -->
-							<li class="mb-3">
-								<button class="text-decoration-none btn btn-primary w-100 rounded-pill"
-									style="font-size: 1.2rem;"
-									hx-get="{% url 'user_manage:profile_partial' request.user.username %}"
-									hx-trigger="click"
-									hx-target="#htmx_content">
-									Mon Profil
-								</button>
-							</li>
-							<!-- Create Tournament -->
-							<li class="mb-3">
-								<a href="{% url 'tournament:setup_players' %}" class="text-decoration-none btn btn-outline-primary w-100 rounded-pill" style="font-size: 1.2rem;">
-									Crée Un Tournament
-								</a>
-							</li>
-						</ul>
-					</section>
-				</div>
-			{% endif %}
-
+				<section class="nav-links w-100">
+							<ul class="list-unstyled">
+								<!-- Access Profile -->
+								<li class="mb-3">
+									<button class="text-decoration-none btn btn-primary w-100 rounded-pill"
+										style="font-size: 1.2rem;"
+										hx-get="{% url 'user_manage:profile_partial' request.user.username %}"
+										hx-trigger="click"
+										hx-target="#htmx_content">
+										Mon Profil
+									</button>
+								</li>
+								<!-- Create Tournament -->
+								<li class="mb-3">
+									<a href="{% url 'tournament:setup_players' %}" class="text-decoration-none btn btn-outline-primary w-100 rounded-pill" style="font-size: 1.2rem;">
+										Crée Un Tournament
+									</a>
+								</li>
+							</ul>
+						</section>
+				{% endif %}
+			</div>
 			<!-- Friend List (Collapsible) -->
 			{% include "friend_list.html" %}
-
 			<!-- Chat Section -->
 			{% include "livechat_menu.html" %}
 
@@ -83,15 +81,15 @@
 			<div class="row w-100 mt-auto">
 				<section class="auth-buttons w-100 text-center">
 					{% if request.user.is_authenticated %}
-						<!-- Bouton de déconnexion -->
-						<a href="{% url 'user_manage:logout' %}" class="btn btn-danger w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
-							Se déconnecter
-						</a>
+					<!-- Bouton de déconnexion -->
+					<a href="{% url 'user_manage:logout' %}" class="btn btn-danger w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
+						Se déconnecter
+					</a>
 					{% else %}
-						<!-- Bouton de connexion -->
-						<a href="{% url 'user_manage:connexion' %}" class="btn btn-primary w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
-							Se connecter
-						</a>
+					<!-- Bouton de connexion -->
+					<a href="{% url 'user_manage:connexion' %}" class="btn btn-primary w-100 rounded-pill mb-1" style="font-size: 1.2rem;">
+						Se connecter
+					</a>
 					{% endif %}
 				</section>
 			</div>
