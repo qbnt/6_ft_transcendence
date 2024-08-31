@@ -7,7 +7,6 @@
 {% block content %}
     <h1>Tournoi de Pong</h1>
 
-    <!-- Container to display matches one at a time -->
     <div id="matches-container" class="matches-container">
         {% for match in matchs %}
             <div class="match-card" id="match-{{ forloop.counter }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
@@ -24,19 +23,15 @@
         let currentMatch = 1;
 
         function playMatch(matchNumber) {
-            // Simulate playing the match (could be replaced with actual logic)
             alert('Match ' + matchNumber + ' joué !');
 
-            // Hide the play button and show the next button
             document.querySelector(`#match-${matchNumber} .play-button`).style.display = 'none';
             document.querySelector(`#match-${matchNumber} .next-button`).style.display = 'inline-block';
         }
 
         function nextMatch(matchNumber) {
-            // Hide the current match
             document.getElementById(`match-${matchNumber}`).style.display = 'none';
 
-            // Show the next match if it exists
             currentMatch++;
             const nextMatch = document.getElementById(`match-${currentMatch}`);
             if (nextMatch) {

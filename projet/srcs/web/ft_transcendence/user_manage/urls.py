@@ -14,7 +14,7 @@ urlpatterns = [
 	path ('edit/a2f/verify_code', views.verify_code, name = 'a2f_verify_code'),
 
 	path ('profile/<str:username>', views.profile, name='profile'),
-  path ('profile_partial/<str:username>', views.profile_partial, name='profile_partial'),
+ 	path ('profile_partial/<str:username>', views.profile_partial, name='profile_partial'),
 	path ('check_online_status/', views.check_online_status, name='check_online_status'),
 
 	path ('search/', views.search, name='search'),

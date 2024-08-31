@@ -19,7 +19,7 @@ def make_matches():
         Players.players.insert(1, Players.players.pop())
             
 #Début du tournoi
-def Tournoi(request):
+def affichage_matchs(request):
     make_matches()
     matchs = []
     for i in Players.matchs:
