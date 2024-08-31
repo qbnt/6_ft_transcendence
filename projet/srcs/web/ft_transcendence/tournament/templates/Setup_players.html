@@ -18,7 +18,7 @@
     <form id="players-form" action="{% url 'tournament:setup_players' %}" method="POST">
         {% csrf_token %}
         <div id="player-names-container" class="player-names"></div>
-        <button type="submit" id="submit-button" style="display: none;">Soumettre</button>
+        <button type="submit" id="submit-button" style="display: none;" disabled>Soumettre</button>
     </form>
 
     <script>
@@ -26,10 +26,19 @@
             // Récupérer le nombre de joueurs
             const numberOfPlayers = parseInt(document.getElementById('number-of-players').value);
             const playerNamesContainer = document.getElementById('player-names-container');
+            const submitButton = document.getElementById('submit-button');
             playerNamesContainer.innerHTML = '';
 
             if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
                 alert('Veuillez entrer un nombre valide de joueurs.');
+                submitButton.style.display = 'none';
+                return;
+            }
+
+            // Vérifier si le nombre de joueurs est suffisant
+            if (numberOfPlayers < 4) {
+                alert('Le nombre minimum de joueurs est de 4 pour créer un tournoi.');
+                submitButton.style.display = 'none';
                 return;
             }
 
@@ -59,7 +68,8 @@
             }
 
             // Afficher le bouton de soumission une fois les champs générés
-            document.getElementById('submit-button').style.display = 'block';
+            submitButton.style.display = 'block';
+            submitButton.disabled = false;
         }
     </script>
 {% endblock %}

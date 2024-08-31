@@ -1,4 +1,4 @@
-from django.shortcuts   import render, redirect
+from django.shortcuts   import render
 from django.http        import HttpResponse
 from .models	        import *
 
@@ -21,7 +21,10 @@ def make_matches():
 #Début du tournoi
 def Tournoi(request):
     make_matches()
-    return render(request, 'Tournoi.html')
+    matchs = []
+    for i in Players.matchs:
+        matchs.extend(i)
+    return render(request, 'Tournoi.html', {'matchs': matchs})
 
 #Setup des joueurs, on les obtiens grâce au beau html Setup_players (svp rendez le plus beau)
 def setup_players(request):
