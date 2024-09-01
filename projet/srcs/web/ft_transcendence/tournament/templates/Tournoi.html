@@ -13,7 +13,7 @@
                 <h2>Match {{ forloop.counter }}</h2>
                 <p><strong>Joueur 1 :</strong> {{ match.0 }}</p>
                 <p><strong>Joueur 2 :</strong> {{ match.1 }}</p>
-                <button class="play-button" onclick="playMatch({{ forloop.counter }})">Jouer le match</button>
+                <button class="play-button" onclick="playMatch({{ forloop.counter }}, '{{ match.0 }}', '{{ match.1 }}')">Jouer le match</button>
                 <button class="next-button" onclick="nextMatch({{ forloop.counter }})" style="display: none;">Passer au match suivant</button>
             </div>
         {% endfor %}
@@ -22,13 +22,16 @@
     <script>
         let currentMatch = 1;
 
-        function playMatch(matchNumber) {
-            alert('Match ' + matchNumber + ' joué !');
+        // Function to start playing a match
+        function playMatch(matchNumber, joueur1, joueur2) {
+            // Construct the URL dynamically for the match start
+            const startGameUrl = "{% url 'pong:start_game' %}?match=" + matchNumber + "&joueur1=" + encodeURIComponent(joueur1) + "&joueur2=" + encodeURIComponent(joueur2);
 
-            document.querySelector(`#match-${matchNumber} .play-button`).style.display = 'none';
-            document.querySelector(`#match-${matchNumber} .next-button`).style.display = 'inline-block';
+            // Redirect to the URL
+            window.location.href = startGameUrl;
         }
 
+        // Function to move to the next match
         function nextMatch(matchNumber) {
             document.getElementById(`match-${matchNumber}`).style.display = 'none';
 
