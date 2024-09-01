@@ -29,7 +29,6 @@ def affichage_matchs(request):
 #Setup des joueurs, on les obtiens grâce au beau html Setup_players (svp rendez le plus beau)
 def setup_players(request):
     if request.method == 'POST':
-        # Clear the existing player list to avoid duplicates on subsequent POSTs
         Players.players.clear()
 
         # Récupérer tous les noms des joueurs envoyés depuis le formulaire
@@ -39,5 +38,4 @@ def setup_players(request):
 
         return render(request, 'Confirmation_Tournoi.html', {'players': Players.players})
 
-    # Redirect to the URL pattern name for the setup players page
     return render(request, 'Setup_players.html')
