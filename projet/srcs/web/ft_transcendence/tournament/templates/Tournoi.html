@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Tournoi
+{% endblock %}
+
+{% block content %}
+    <h1>Tournoi de Pong</h1>
+
+    <div id="matches-container" class="matches-container">
+        {% for match in matchs %}
+            <div class="match-card" id="match-{{ forloop.counter }}" style="display: {% if forloop.first %}block{% else %}none{% endif %};">
+                <h2>Match {{ forloop.counter }}</h2>
+                <p><strong>Joueur 1 :</strong> {{ match.0 }}</p>
+                <p><strong>Joueur 2 :</strong> {{ match.1 }}</p>
+                <button class="play-button" onclick="playMatch({{ forloop.counter }}, '{{ match.0 }}', '{{ match.1 }}')">Jouer le match</button>
+                <button class="next-button" onclick="nextMatch({{ forloop.counter }})" style="display: none;">Passer au match suivant</button>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        let currentMatch = 1;
+
+        // Function to start playing a match
+        function playMatch(matchNumber, joueur1, joueur2) {
+            // Construct the URL dynamically for the match start
+            const startGameUrl = "{% url 'pong:start_game' %}?match=" + matchNumber + "&joueur1=" + encodeURIComponent(joueur1) + "&joueur2=" + encodeURIComponent(joueur2);
+
+            // Redirect to the URL
+            window.location.href = startGameUrl;
+        }
+
+        // Function to move to the next match
+        function nextMatch(matchNumber) {
+            document.getElementById(`match-${matchNumber}`).style.display = 'none';
+
+            currentMatch++;
+            const nextMatch = document.getElementById(`match-${currentMatch}`);
+            if (nextMatch) {
+                nextMatch.style.display = 'block';
+            } else {
+                alert('Tous les matchs ont été joués !');
+            }
+        }
+    </script>
+
+    <style>
+        .matches-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .match-card {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .play-button {
+            background-color: #28a745;
+        }
+
+        .play-button:hover {
+            background-color: #218838;
+        }
+
+        .next-button {
+            background-color: #17a2b8;
+        }
+
+        .next-button:hover {
+            background-color: #138496;
+        }
+    </style>
+{% endblock %}

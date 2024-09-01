@@ -4,69 +4,21 @@
     Page des Joueurs
 {% endblock %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tournament de Pong</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-        }
-
-        .form-section {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
-        input[type="number"],
-        input[type="text"] {
-            padding: 8px;
-            margin-bottom: 10px;
-            width: calc(100% - 20px);
-        }
-
-        button {
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .player-names {
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-
-    <h1>Inscription au tournament de Pong</h1>
+{% block content %}
+    <h1>Inscription au tournoi de Pong</h1>
 
     <!-- Formulaire pour demander le nombre de joueurs -->
     <div class="form-section">
         <label for="number-of-players">Nombre de joueurs :</label>
-        <input type="number" id="number-of-players" min="1" placeholder="Entrez le nombre de joueurs">
+        <input type="number" id="number-of-players" min="1" placeholder="Nombre de Joueurs">
         <button type="button" onclick="generatePlayerInputs()">Valider</button>
     </div>
 
     <!-- Section pour les noms des joueurs -->
-    <form id="players-form" action="{% url 'tournament:joueurs' %}" method="POST">
+    <form id="players-form" action="{% url 'tournament:setup_players' %}" method="POST">
         {% csrf_token %}
         <div id="player-names-container" class="player-names"></div>
-        <button type="submit" id="submit-button" style="display: none;">Soumettre</button>
+        <button type="submit" id="submit-button" style="display: none;" disabled>Soumettre</button>
     </form>
 
     <script>
@@ -74,31 +26,50 @@
             // Récupérer le nombre de joueurs
             const numberOfPlayers = parseInt(document.getElementById('number-of-players').value);
             const playerNamesContainer = document.getElementById('player-names-container');
+            const submitButton = document.getElementById('submit-button');
             playerNamesContainer.innerHTML = '';
 
             if (isNaN(numberOfPlayers) || numberOfPlayers < 1) {
                 alert('Veuillez entrer un nombre valide de joueurs.');
+                submitButton.style.display = 'none';
+                return;
+            }
+
+            // Vérifier si le nombre de joueurs est suffisant
+            if (numberOfPlayers < 4) {
+                alert('Le nombre minimum de joueurs est de 4 pour créer un tournoi.');
+                submitButton.style.display = 'none';
                 return;
             }
 
             // Générer les champs pour les noms des joueurs
             for (let i = 1; i <= numberOfPlayers; i++) {
+                // Création d'un conteneur pour chaque champ de joueur
+                const playerContainer = document.createElement('div');
+                playerContainer.className = 'player-input-container';
+
                 const label = document.createElement('label');
                 label.textContent = `Nom du joueur ${i} :`;
+                label.className = 'player-label';
+
                 const input = document.createElement('input');
                 input.type = 'text';
                 input.name = `player${i}`;
                 input.placeholder = `Entrez le nom du joueur ${i}`;
+                input.className = 'player-input';
                 input.required = true;
 
-                playerNamesContainer.appendChild(label);
-                playerNamesContainer.appendChild(input);
+                // Ajouter le label et l'input dans le conteneur
+                playerContainer.appendChild(label);
+                playerContainer.appendChild(input);
+
+                // Ajouter le conteneur au formulaire principal
+                playerNamesContainer.appendChild(playerContainer);
             }
 
             // Afficher le bouton de soumission une fois les champs générés
-            document.getElementById('submit-button').style.display = 'block';
+            submitButton.style.display = 'block';
+            submitButton.disabled = false;
         }
     </script>
-
-</body>
-</html>
+{% endblock %}
