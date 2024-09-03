@@ -19,55 +19,33 @@ def save_pong_result(request):
         player1_score = int(request.POST.get('player1_score'))
         player2_score = int(request.POST.get('player2_score'))
 
-        user1 = CustomUser.objects.filter(username=player1_username).exists()
-        user2 = CustomUser.objects.filter(username=player2_username).exists()
+        user1 = CustomUser.objects.filter(username=player1_username).first()
+        user2 = CustomUser.objects.filter(username=player2_username).first()
 
         if player1_score > player2_score:
-            winner = player1_username
-            loser = player2_username
+            winner, loser = user1, user2
         else:
-            winner = player2_username
-            loser = player1_username
+            winner, loser = user2, user1
 
-        if user1:   
-            if winner == player1_username:
-                winner = CustomUser.objects.filter(username=player1_username)[0]
-            else:
-                loser = CustomUser.objects.filter(username=player1_username)[0]
-        else:
-            if winner == player1_username:
-                winner = None
-            else:
-                loser = None
-        if user2:
-            if winner == player2_username:
-                winner = CustomUser.objects.filter(username=player2_username)[0]
-            else:
-                loser = CustomUser.objects.filter(username=player2_username)[0]
-        else:
-            if winner == player2_username:
-                winner = None
-            else:
-                loser = None
-
-        print(winner)
-        print(loser)
-
-        PongResult.objects.create(
-            player1=player1_username,
-            player2=player2_username,
+        pong_result = PongResult.objects.create(
+            player1=user1.username if user1 else None,
+            player2=user2.username if user2 else None,
             player1_score=player1_score,
             player2_score=player2_score,
             winner=winner,
             loser=loser,
-	        date_played = datetime.now()
-
+            date_played=datetime.now()
         )
-       
+
+        if user1:
+            pong_result.players.add(user1)
+        if user2:
+            pong_result.players.add(user2)
+
         return JsonResponse({'status': 'success', 'message': 'Result saved successfully!'})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
-    
+
 # `def check_usernames(request):
 #     if request.method == 'POST':
 #         data = json.loads(request.body)
