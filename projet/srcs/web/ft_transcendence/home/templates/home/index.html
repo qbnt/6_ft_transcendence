@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-	<div class="row">
-		<a href="{% url 'pong:pong' %}"><img src="media/pong.jpg" alt="Le pong avant le pong" class="img-fluid"></a>
-		<p class="text-center">{{ message }}</p>
+	<div class="container d-flex" style="height: 100vh; margin-top: 15%;">
+		<a href="{% url 'pong:pong' %}">
+			<img src="media/start.png" alt="Le bouton sur lequel tu cliques pour lancer le pong." class="img-fluid" style="max-width: 100%; height: auto;">
+		</a>
 	</div>
-</div>
 {% endblock %}
