@@ -1,6 +1,6 @@
 <div class="container mt-5">
-	<div class="card">
-		<div class="card-header text-center bg-primary text-white">
+	<div class="card border-secondary" style="--bs-card-bg: #777777aa">
+		<div class="card-header text-center bg-secondary text-white">
 			<h2>Détails du Compte</h2>
 		</div>
 		<div class="card-body d-flex flex-column align-items-center">
@@ -13,12 +13,34 @@
 					<p><strong>Email:</strong> {{ user.email }}</p>
 					<p><strong>Prénom:</strong> {{ user.first_name }}</p>
 					<p><strong>Nom:</strong> {{ user.last_name }}</p>
-				</div>
+					<p> <strong>{{ user.username }}</strong> à gagné 
+						<strong>{{ user.won_games.count }} parties</strong> et à perdu 
+						<strong>{{ user.lost_games.count }} parties</strong>.</p>
+					<div class="accordion mt-4 w-100" id="accordionGame">
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingOne">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGames" aria-expanded="false" aria-controls="collapseGames">
+									Historique des parties
+								</button>
+							</h2>
+							<div id="collapseGames" class="accordion-collapse collapse" aria-labelledby="headingGame" data-bs-parents="#accordionGame">
+								<div class="accordion-body">
+									<ul class="list-group">
+										{% for game in user.pong_results.all reversed %}
+											<li class="list-group-item d-flex justify-content-center align-items-center">
+												{{ game }}
+											</li>
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
 				<div>
 					{% if user in online.users_online.all %}
-						<p class="text-success"><i class="fas fa-circle"></i> En ligne</p>
+						<p class="btn btn-success"><i class="fas fa-circle"></i> En ligne</p>
 					{% else %}
-						<p class="text-muted"><i class="fas fa-circle"></i> Hors ligne</p>
+						<p class="btn btn-muted"><i class="fas fa-circle"></i> Hors ligne</p>
 					{% endif %}
 				</div>
 			</div>
@@ -26,11 +48,11 @@
 				<div class="accordion mt-4 w-100" id="accordionExample">
 					<div class="accordion-item">
 						<h2 class="accordion-header" id="headingOne">
-							<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
 								Demandes d'amis reçus
 							</button>
 						</h2>
-						<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+						<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
 							<div class="accordion-body">
 								<ul class="list-group">
 									{% for friend in user.friends_request.all %}
