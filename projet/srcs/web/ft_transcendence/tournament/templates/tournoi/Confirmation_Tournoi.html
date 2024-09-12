@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Confirmation tournament
+{% endblock %}
+
+{% block content %}
+
+	<div class="card border-secondary text-center">
+		<h1 class="card-header text-center bg-secondary text-white">Confirmation des Participants</h1>
+
+		<div class="card-body d-flex flex-column align-items-center">
+			<ul>
+				{% for player in players %}
+					<li>{{ player }}</li>
+				{% endfor %}
+			</ul>
+
+			<div class="buttons">
+				<a href="{% url 'tournament:setup_players' %}" class="btn btn-danger m-3">Retourner à l'inscription</a>
+
+				<form action="{% url 'tournament:start'%}" method="POST" style="display: inline;">
+					{% csrf_token %}
+					{% for player in player %}
+						<input type="hidden" name="players" value="{{ player }}">
+					{% endfor %}
+					<button type="submit" class="btn btn-secondary m-3">Commencer Le tournament</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}

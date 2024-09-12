@@ -4,12 +4,12 @@ from user_manage.models import CustomUser
 class PongResult(models.Model):
 	player1 = models.CharField(max_length=255, default="", null=True)
 	player2 = models.CharField(max_length=255, 	default="", null=True)
-	players = models.ManyToManyField(CustomUser, related_name='pong_results')
-	player1_score = models.IntegerField()
-	player2_score = models.IntegerField()
+	players = models.ManyToManyField(CustomUser, related_name='pong_results', null=True)
+	player1_score = models.IntegerField(null=True)
+	player2_score = models.IntegerField(null=True)
 	winner = models.ForeignKey(CustomUser, related_name='won_games', on_delete=models.SET_NULL, null=True, blank=True)
 	loser = models.ForeignKey(CustomUser, related_name='lost_games', on_delete=models.SET_NULL, null=True, blank=True)
-	date_played = models.DateTimeField()
+	date_played = models.DateTimeField(null=True)
 
 	def __str__(self):
 		p1 = self.player1 or "Guest"

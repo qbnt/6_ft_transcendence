@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>{{tournament}}</h1>
+
+<ul>
+    {% for match in matches %}
+        <li>
+            {{ match.player1 }} vs {{ match.player2 }}
+            {% if match.winner %}
+                - Gagnant : {{ match.winner.username }}
+            {% else %}
+                <a href="{% url 'tournament:t_pong' match.id %}" class="btn btn-primary">Jouer</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+{% if not remaining_matches %}
+    <h2>Vainqueur : {{ winner.username }}</h2>
+{% endif %}
+
+{% endblock %}

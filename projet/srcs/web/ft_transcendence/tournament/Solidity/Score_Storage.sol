@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 contract GameScores{
-	
+
 	// Structure pour stocker les informations de score
 	struct Score {
 		uint256	score;
@@ -27,7 +27,7 @@ contract GameScores{
 		emit NewScore(msg.sender, _score);
 	}
 
-	// Fonction poyur récuperer le score d'un joueur 
+	// Fonction poyur récuperer le score d'un joueur
 	function getScore(address _player) public view returns (uint256, uint256){
 		Score memory playerscore = scores[_player];
 		return (playerscore.score, playerscore.time);

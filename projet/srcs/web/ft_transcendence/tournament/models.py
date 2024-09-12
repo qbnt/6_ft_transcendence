@@ -1,13 +1,15 @@
-from django.db							import models
-from user_manage.models					import CustomUser
+from django.db			import models
+from user_manage.models	import CustomUser
 
-# Create your models here.
-class	Players(CustomUser):
-	
-	nb_players = 0
-	players = []
-	matchs = []
+class Tournament(models.Model):
+	players = models.ManyToManyField(CustomUser, related_name='tournaments_palyers')
+	matches = models.ManyToManyField('pong_game.PongResult', related_name='tournaments_games')
 
-	def __init__(self, nb_players, players):
-		self.nb_players = nb_players
-		self.players = players
+	def get_next_match(self):
+		"""
+		Retourne le prochain match à jouer.
+		"""
+		return self.matches.filter(winner__isnull=True).first()
+
+	def __str__(self):
+		return f"Tournoi.{self.id}"
