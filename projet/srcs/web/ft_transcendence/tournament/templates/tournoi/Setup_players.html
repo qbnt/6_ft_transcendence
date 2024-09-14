@@ -1,29 +1,29 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% block title %}
-	Page des Joueurs
+	Inscription des Joueurs
 {% endblock %}
 
 {% block content %}
 
-	<div class="card border-secondary text-center">
+	<div class="card border-secondary text-center my-5">
 		<h1 class="card-header text-center bg-secondary text-white">Inscription au tournoi de Pong</h1>
 
 		<div class="card-body d-flex flex-column align-items-center">
 			<!-- Formulaire pour demander le nombre de joueurs -->
-			<div class="form-section">
-				<label for="number-of-players">Nombre de joueurs :</label>
-				<input type="number" id="number-of-players" min="4">
-				<button type="button" class="btn btn-primary mt-3" onclick="generatePlayerInputs()">Valider</button>
+			<div class="form-section w-75">
+				<div class="input-group mb-3">
+					<label for="number-of-players" class="input-group-text">Nombre de joueurs :</label>
+					<input type="number" id="number-of-players" min="4" class="form-control" placeholder="Entrez un nombre de joueurs">
+					<button type="button" class="btn btn-primary ms-2" onclick="generatePlayerInputs()">Valider</button>
+				</div>
 
 				<!-- Section pour les noms des joueurs -->
-				<form id="players-form" action="{% url 'tournament:setup_players' %}" method="POST">
+				<form id="players-form" action="" method="POST" class="mt-4">
 					{% csrf_token %}
-					<div id="player-names-container" class="player-names d-flex flex-column align-items-center m-1"></div>
+					<div id="player-names-container" class="player-names d-flex flex-column align-items-center"></div>
 
-					<!-- Nouveau div pour centrer le bouton -->
 					<div class="d-flex justify-content-center">
-						<button type="submit" id="submit-button" class="btn btn-secondary m-3" style="display: none;">
+						<button type="submit" id="submit-button" class="btn btn-secondary mt-4" style="display: none;">
 							Soumettre
 						</button>
 					</div>
@@ -34,35 +34,34 @@
 
 	<script>
 		function generatePlayerInputs() {
-			// Récupérer le nombre de joueurs
 			const numberOfPlayers = parseInt(document.getElementById('number-of-players').value);
 			const playerNamesContainer = document.getElementById('player-names-container');
-			playerNamesContainer.innerHTML = ''; // Réinitialiser les inputs
+			playerNamesContainer.innerHTML = '';
 
-			// Validation du nombre de joueurs
-			if (isNaN(numberOfPlayers) || numberOfPlayers < 4) {
-				alert('Veuillez entrer un nombre valide de joueurs (au moins 4).');
+			if (isNaN(numberOfPlayers) || numberOfPlayers < 4 || numberOfPlayers > 12) {
+				alert('Veuillez entrer un nombre valide de joueurs (au moins 4 et maximum 12).');
+				return;
+			} else if (numberOfPlayers % 2 != 0) {
+				alert('Veuillez entrer un nombre paire de joueurs.');
 				return;
 			}
 
-			// Générer les champs pour les noms des joueurs
 			for (let i = 1; i <= numberOfPlayers; i++) {
 				const label = document.createElement('label');
 				label.textContent = `Nom du joueur ${i} :`;
-				label.classList.add('mt-2');
+				label.classList.add('form-label');
 
 				const input = document.createElement('input');
 				input.type = 'text';
 				input.name = `player${i}`;
 				input.placeholder = `Entrez le nom du joueur ${i}`;
+				input.classList.add('form-control', 'mb-3');
 				input.required = true;
-				input.classList.add('form-control', 'mt-1');
 
 				playerNamesContainer.appendChild(label);
 				playerNamesContainer.appendChild(input);
 			}
 
-			// Afficher le bouton de soumission une fois les champs générés
 			document.getElementById('submit-button').style.display = 'block';
 		}
 	</script>

@@ -24,7 +24,6 @@ def setup_players(request):
 		for player in player_ids:
 			try:
 				user = CustomUser.objects.get(username=player)
-				print(f"Joueur trouvé : {user.username}")
 			except CustomUser.DoesNotExist:
 				messages.error(request, f"{player} n'est pas un compte existant sur le site.")
 				return redirect('tournament:setup_players')
@@ -37,8 +36,12 @@ def setup_players(request):
 			player1 = players_list.pop()
 			player2 = players_list.pop()
 
-			match = PongResult.objects.create(player1=player1.username, player2=player2.username)
-			tournament.matches.add(match)
+			match = PongResult.objects.create(
+				player1=player1,
+				player2=player2,
+				tournament=tournament,
+				round_number=1
+			)
 
 		return redirect('tournament:tournament_detail', tournament_id=tournament.id)
 
@@ -46,22 +49,22 @@ def setup_players(request):
 
 @login_required
 def tournament_detail(request, tournament_id):
-	tournament = get_object_or_404(Tournament, id=tournament_id)
-	matches = tournament.matches.all()
+	tournament = Tournament.objects.get(id=tournament_id)
 
-	# Vérifier s'il reste des matchs à jouer
-	remaining_matches = tournament.matches.filter(winner__isnull=True).exists()
+	matches_exist = tournament.matches.filter(winner__isnull=True, round_number=tournament.current_round).exists()
+	matches = tournament.matches.filter(winner__isnull=True, round_number=tournament.current_round)
+	matches_end = tournament.matches.filter(winner__isnull=False)
+	winner = tournament.winner
 
-	# Récupérer le gagnant si tous les matchs sont joués
-	last_match = tournament.matches.order_by('-date_played').first()
-	winner = last_match.winner if last_match is not None else None
-
-	return render(request, 'tournoi/Tournoi_Matches.html', {
+	context = {
 		'tournament': tournament,
+		'matches_exist': matches_exist,
 		'matches': matches,
-		'remaining_matches': remaining_matches,
-		'winner': winner
-	})
+		'matches_end': matches_end,
+		'winner': winner,
+	}
+
+	return render(request, 'tournoi/Tournoi_Matches.html', context)
 
 
 @login_required
@@ -76,36 +79,38 @@ def t_pong(request, pong_id):
 
 @login_required
 def save_pong_result(request):
-    if request.method == 'POST':
-        # Récupérer les informations des scores
-        player1_username = request.POST.get('player1_username')
-        player2_username = request.POST.get('player2_username')
-        player1_score = int(request.POST.get('player1_score'))
-        player2_score = int(request.POST.get('player2_score'))
+	if request.method == 'POST':
+		player1_username = request.POST.get('player1_username')
+		player2_username = request.POST.get('player2_username')
+		player1_score = int(request.POST.get('player1_score'))
+		player2_score = int(request.POST.get('player2_score'))
 
-        user1 = CustomUser.objects.filter(username=player1_username).first()
-        user2 = CustomUser.objects.filter(username=player2_username).first()
+		user1 = CustomUser.objects.filter(username=player1_username).first()
+		user2 = CustomUser.objects.filter(username=player2_username).first()
 
-        if player1_score > player2_score:
-            winner, loser = user1, user2
-        else:
-            winner, loser = user2, user1
+		if player1_score > player2_score:
+			winner, loser = user1, user2
+		else:
+			winner, loser = user2, user1
 
-        # Récupérer le match spécifique par ID
-        pong_id = request.POST.get('pong_id')
-        match = get_object_or_404(PongResult, id=pong_id)
+		pong_id = request.POST.get('pong_id')
+		match = PongResult.objects.get(id=pong_id)
 
-        # Mettre à jour le match avec les résultats
-        match.player1_score = player1_score
-        match.player2_score = player2_score
-        match.winner = winner
-        match.loser = loser
-        match.save()
+		match.player1_score = player1_score
+		match.player2_score = player2_score
+		match.winner = winner
+		match.loser = loser
+		if user1:
+			match.players.add(user1)
+		if user2:
+			match.players.add(user2)
+		match.save()
 
-        # Si tu veux récupérer le tournoi auquel appartient le match
-        tournament = match.tournaments_games.first()
+		tournament = match.tournament
 
-        # Renvoie une réponse JSON avec succès
-        return JsonResponse({'status': 'success', 'tournament_id': tournament.id})
+		if not tournament.matches.filter(winner__isnull=True, round_number=tournament.current_round).exists():
+			tournament.advance_round()
 
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+		return JsonResponse({'status': 'success', 'tournament_id': tournament.id})
+
+	return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
