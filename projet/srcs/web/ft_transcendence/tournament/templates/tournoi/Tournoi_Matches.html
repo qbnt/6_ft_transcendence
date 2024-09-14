@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container my-5">
+	<div class="card shadow">
+		<div class="card-header text-center bg-secondary text-white">
+			<h3 class="mb-0">Détail du tournoi</h3>
+		</div>
+		<div class="card-body">
+			{% if winner is null %}
+				<p class="text-center">Tour actuel : {{ tournament.current_round }}</p>
+			{% endif %}
+
+			{% if matches_exist %}
+				<h4 class="text-center mt-4">Matchs à jouer dans le tour {{ tournament.current_round }} :</h4>
+				<ul class="list-group my-3">
+					{% for match in matches %}
+						<li class="list-group-item d-flex justify-content-between align-items-center">
+							<span>
+								<strong>{{ match.player1 }}</strong> VS <strong>{{ match.player2 }}</strong>
+							</span>
+							<a href="{% url 'tournament:t_pong' match.id %}" class="btn btn-primary">Jouer</a>
+						</li>
+					{% endfor %}
+				</ul>
+			{% elif winner is not null %}
+				<div class="alert alert-success text-center">
+					<h2> Le gagnant est {{ winner }}</h2>
+				</div>
+			{% else %}
+				<div class="alert alert-warning text-center">
+					<h4>Aucun match à jouer pour ce tour.</h4>
+				</div>
+			{% endif %}
+			{% if matches_end %}
+				<h4 class="text-center mt-4">Matchs finis :</h4>
+				<ul class="list-group my-3">
+					{% for match in matches_end %}
+						<li class="list-group-item">
+							<strong>ROUND {{ match.round_number }}:</strong> {{ match.player1 }} VS {{ match.player2 }} - 
+							<span class="text-success">Winner: {{ match.winner.username }}</span>
+						</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+	</div>
+</div>
+{% endblock %}
