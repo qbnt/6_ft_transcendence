@@ -10,8 +10,6 @@ import random
 @login_required
 def setup_players(request):
 	if request.method == 'POST':
-		tournament = Tournament.objects.create()
-
 		player_ids = []
 		for key, value in request.POST.items():
 			if key.startswith('player'):
@@ -21,15 +19,19 @@ def setup_players(request):
 			messages.error(request, "Aucun joueur n'a été sélectionné.")
 			return redirect('tournament:setup_players')
 
-		for player in player_ids:
+		players = []
+		for player_username in player_ids:
 			try:
-				user = CustomUser.objects.get(username=player)
+				user = CustomUser.objects.get(username=player_username)
+				players.append(user)
 			except CustomUser.DoesNotExist:
-				messages.error(request, f"{player} n'est pas un compte existant sur le site.")
+				messages.error(request, f"{player_username} n'est pas un compte existant sur le site.")
 				return redirect('tournament:setup_players')
-			tournament.players.add(user)
 
-		players_list = list(tournament.players.all())
+		tournament = Tournament.objects.create()
+		tournament.players.set(players)
+
+		players_list = list(players)
 		random.shuffle(players_list)
 
 		while len(players_list) > 1:
