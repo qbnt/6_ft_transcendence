@@ -13,9 +13,9 @@
 					<p><strong>Email:</strong> {{ user.email }}</p>
 					<p><strong>Prénom:</strong> {{ user.first_name }}</p>
 					<p><strong>Nom:</strong> {{ user.last_name }}</p>
-					<p> <strong>{{ user.username }}</strong> à gagné 
-						<strong>{{ user.won_games.count }} parties</strong> et à perdu 
-						<strong>{{ user.lost_games.count }} parties</strong>.</p>
+					<p><strong>{{ user.username }}</strong> a gagné <strong>{{ user.won_games.count }} parties</strong> et a perdu <strong>{{ user.lost_games.count }} parties</strong>.</p>
+					<p><strong>{{ user.username }}</strong> a gagné <strong>{{ user.won_tournaments.count }} tournois</strong>.</p>
+
 					<div class="accordion mt-4 w-100" id="accordionGame">
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="headingOne">
@@ -23,27 +23,67 @@
 									Historique des parties
 								</button>
 							</h2>
-							<div id="collapseGames" class="accordion-collapse collapse" aria-labelledby="headingGame" data-bs-parents="#accordionGame">
+							<div id="collapseGames" class="accordion-collapse collapse" aria-labelledby="headingGame" data-bs-parent="#accordionGame">
 								<div class="accordion-body">
 									<ul class="list-group">
 										{% for game in user.pong_results.all reversed %}
-											<li class="list-group-item d-flex justify-content-center align-items-center">
-												{{ game }}
-											</li>
+											{% if game.tournament is None %}
+												<li class="list-group-item d-flex justify-content-center align-items-center">
+													{{ game }}
+												</li>
+											{% else %}
+												<li class="list-group-item d-flex justify-content-center align-items-center">
+													(T) {{ game }}
+												</li>
+											{% endif %}
+										{% endfor %}
+									</ul>
+								</div>
+							</div>
+						</div>
+
+						<div class="accordion-item">
+							<h2 class="accordion-header" id="headingTwo">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTournaments" aria-expanded="false" aria-controls="collapseTournaments">
+									Historique des tournois
+								</button>
+							</h2>
+							<div id="collapseTournaments" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionGame">
+								<div class="accordion-body">
+									<ul class="list-group">
+										{% for tournament in user.tournaments.all reversed %}
+											{% if tournament.winner == user %}
+												<li class="list-group-item d-flex justify-content-between align-items-center">
+													<a href="{% url 'tournament:tournament_detail' tournament.pk %}" class="text-decoration-none fw-bold text-success">
+														{{ tournament }} (Top 1)
+													</a>
+													<span class="badge bg-primary rounded-pill">Détails</span>
+												</li>
+											{% else %}
+												<li class="list-group-item d-flex justify-content-between align-items-center">
+													<a href="{% url 'tournament:tournament_detail' tournament.pk %}" class="text-decoration-none fw-bold text-secondary">
+														{{ tournament }}
+													</a>
+													<span class="badge bg-primary rounded-pill">Détails</span>
+												</li>
+											{% endif %}
 										{% endfor %}
 									</ul>
 								</div>
 							</div>
 						</div>
 					</div>
-				<div>
-					{% if user in online.users_online.all %}
-						<p class="btn btn-success"><i class="fas fa-circle"></i> En ligne</p>
-					{% else %}
-						<p class="btn btn-muted"><i class="fas fa-circle"></i> Hors ligne</p>
-					{% endif %}
+
+					<div>
+						{% if user in online.users_online.all %}
+							<p class="btn btn-success"><i class="fas fa-circle"></i> En ligne</p>
+						{% else %}
+							<p class="btn btn-muted"><i class="fas fa-circle"></i> Hors ligne</p>
+						{% endif %}
+					</div>
 				</div>
 			</div>
+		</div>
 			{% if user == request.user %}
 				<div class="accordion mt-4 w-100" id="accordionExample">
 					<div class="accordion-item">
