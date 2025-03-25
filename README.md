@@ -1,76 +1,75 @@
+# ft_transcendence Project
 
-# Projet ft_transcendence
+This project consists of building a web application that lets users play Pong locally — either solo against a bot or in 2-player mode on a shared keyboard. It includes a frontend, backend, database, Django server, security and monitoring services, all deployed with Docker Compose.
 
-Ce projet consiste à créer un site web permettant de jouer à Pong en local seul contre un bot ou a deux sur clavier partagé. Ce projet inclu un frontend, un backend, une base de données, un serveur Django, et des services de sécurité et de surveillance, le tout déployé avec Docker Compose.
-
-## Prérequis
+## 🛠️ Prerequisites
 
 - [Docker](https://www.docker.com/get-started)
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
-## Installation
+## ⚙️ Installation
 
-1. Clonez le dépôt :  
-   ```
-   bash  
-      git clone https://github.com/qbnt/6_ft_transcendence.git  
-      cd 6_ft_transcendence
-   ```
-
-3. Configurez les variables d'environnement :
-   ```
-   bash  
-      touch .env
-   ```
-    
-    Ajoutez-y les variables nécessaires :
-   ```
-   # .env  
-      POSTGRES_USER=user  
-      POSTGRES_PASSWORD=password  
-      POSTGRES_DB=pongdb  
-      DJANGO_ADMIN_USER: admin  
-      DJANGO_ADMIN_MAIL: admin@test.test  
-      DJANGO_ADMIN_PASS: admin
-      UID_42: ***************
-      SECRET_42: *****************
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/qbnt/6_ft_transcendence.git
+   cd 6_ft_transcendence
    ```
 
-5. Démarrez les services avec Docker Compose :
+2. Set up environment variables:
+   ```bash
+   touch .env
    ```
-   bash
-      docker-compose up --build
+
+   Add the necessary values:
+   ```env
+   POSTGRES_USER=user
+   POSTGRES_PASSWORD=password
+   POSTGRES_DB=pongdb
+   DJANGO_ADMIN_USER=admin
+   DJANGO_ADMIN_MAIL=admin@test.test
+   DJANGO_ADMIN_PASS=admin
+   UID_42=***************
+   SECRET_42=*****************
    ```
 
-## Utilisation
+3. Start the services with Docker Compose:
+   ```bash
+   docker-compose up --build
+   ```
 
-1. Accédez à l'interface utilisateur à l'adresse :
-    http://localhost
+## 💡 Usage
 
-2. Jouez à Pong et expérimentez les fonctionnalités
+1. Open the user interface in your browser:  
+   [http://localhost](http://localhost)
 
-3. Visualisez les métriques de surveillance sur Grafana :
-    http://localhost:3000
+2. Play Pong and explore available features.
 
-4. Visualisez les recapitulatif de Logs sur Kibana :
-    http://localhost:5601
+3. View monitoring metrics on Grafana:  
+   [http://localhost:3000](http://localhost:3000)
 
-## Services Configurés
+4. Check logs and summaries on Kibana:  
+   [http://localhost:5601](http://localhost:5601)
 
-- **frontend**      : Serveur frontend (Node.js)
-- **backend**       : Serveur backend (Django)
-- **db**            : Base de données (PostgreSQL)
-- **nginx**         : Reverse proxy (Nginx)
-- **blockchain**    : Nœud blockchain (Ethereum)
-- **prometheus**    : Surveillance (Prometheus)
-- **grafana**       : Visualisation (Grafana)
-- **vault**         : Gestion des secrets (HashiCorp Vault)
-- **ELK**           : Gestion des Logs (Elasticsearch/Logstash/Kibana)
+## 🧩 Configured Services
 
-## Contributions
+- **backend**: Backend server (Django)
+- **db**: PostgreSQL database
+- **nginx**: Reverse proxy (Nginx)
+- **blockchain**: Ethereum blockchain node
+- **prometheus**: Monitoring (Prometheus)
+- **grafana**: Metrics visualization (Grafana)
+- **vault**: Secret management (HashiCorp Vault)
+- **ELK**: Log management (Elasticsearch/Logstash/Kibana)
 
-1. Créez une branche (`git checkout -b feature/ma-fonctionnalite`).
-2. Committez vos changements (`git commit -m 'Ajout de ma fonctionnalité'`).
-3. Pushez la branche (`git push origin feature/ma-fonctionnalite`).
-4. Ouvrez une Pull Request.
+## 🤝 Contributions
 
+1. Create a new branch:  
+   `git checkout -b feature/my-feature`
+
+2. Commit your changes:  
+   `git commit -m 'Add my feature'`
+
+3. Push the branch:  
+   `git push origin feature/my-feature`
+
+4. Open a Pull Request.
